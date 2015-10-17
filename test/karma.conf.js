@@ -66,7 +66,7 @@ module.exports = function(config) {
     port: 9876,
 
     browserStack: {
-      project: 'grunt-dactylographsy',
+      project: 'browser-dactylographsy',
       username: process.env.BS_USERNAME,
       accessKey: process.env.BS_ACCESSKEY
     },
