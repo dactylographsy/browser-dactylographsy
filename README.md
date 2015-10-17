@@ -1,7 +1,6 @@
 # browser-dactylographsy
 
 [![Build Status](https://travis-ci.org/dactylographsy/browser-dactylographsy.svg?branch=master)](https://travis-ci.org/dactylographsy/browser-dactylographsy) ♦️
-[![Coverage Status](https://coveralls.io/repos/dactylographsy/browser-dactylographsy/badge.png)](https://coveralls.io/r/dactylographsy/browser-dactylographsy) ♦️
 [![Dependency Status](https://david-dm.org/dactylographsy/browser-dactylographsy.svg?style=flat)](https://david-dm.org/dactylographsy/browser-dactylographsy) ♦️
 [![devDependency Status](https://david-dm.org/dactylographsy/browser-dactylographsy/dev-status.svg)](https://david-dm.org/dactylographsy/browser-dactylographsy#info=devDependencies) ♦️
 [![Bower version](https://badge.fury.io/bo/dactylographsy.svg)](http://badge.fury.io/bo/dactylographsy)
@@ -28,7 +27,7 @@ If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out th
 ### Install via bower
 
 ```shell
-bower browser-dactylographsy --save
+bower dactylographsy --save
 ```
 
 ## The client-side application
@@ -69,15 +68,17 @@ enableLogging: false
 
 ## Developing & Contributing
 
+### Install npm dependencies
+
 ```bash
-npm i
+npm install
 ```
 
 Developing on the task alone is fairly easy just `git clone https://github.com/dactylographsy/browser-dactylographsy.git` then `cd browser-dactylographsy`. Now just work the `src/**.js` run tests with `grunt karma:local` and check results - feel free to submit a pull-request!
 
 ## Release History
 
-- 1.0.0 Initial release after migrating sources from `grunt-dactylographsy`
+- 1.13.0 Initial release after migrating sources from `grunt-dactylographsy`
 
 ## Acknowledgements
 
