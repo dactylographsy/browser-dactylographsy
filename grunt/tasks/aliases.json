@@ -1,0 +1,21 @@
+{
+  "default": [
+    "clean",
+    "webpack",
+    "uglify",
+    "copy"
+  ],
+  "test": [
+    "eslint",
+    "karma:local"
+  ],
+  "ci-test": [
+    "eslint",
+    "karma:travis_ci",
+    "karma:bs_desktop_ci"
+  ],
+  "dev": [
+    "default",
+    "watch:dev"
+  ]
+}
