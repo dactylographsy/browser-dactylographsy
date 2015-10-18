@@ -22,11 +22,10 @@
     "url": "https://github.com/dactylographsy/browser-dactylographsy/issues"
   },
   "homepage": "https://github.com/dactylographsy/browser-dactylographsy",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "grunt-cli": "0.1.13",
-    "grunt-dactylographsy": "1.0.0",
+    "grunt-dactylographsy": "1.12.0",
     "babel": "5.8.23",
     "babel-core": "5.8.25",
     "babel-eslint": "4.1.3",
