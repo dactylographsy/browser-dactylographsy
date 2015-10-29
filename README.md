@@ -78,7 +78,9 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
 
 ## Release History
 
-- 1.13.0 Initial release after migrating sources from `grunt-dactylographsy`
+- 1.13.0/1.0.0 Initial release after migrating sources from `grunt-dactylographsy`
+- 1.0.1 Fix typo in when logging
+
 
 ## Acknowledgements
 

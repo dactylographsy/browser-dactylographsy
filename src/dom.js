@@ -84,7 +84,7 @@ export class Js {
     return new Promise((resolve, reject) => {
         if (this.cache.has(url)) { resolve(); }
 
-        this.log.info(`Loading CSS from ${url} for cache in ${delay}.`);
+        this.log.info(`Loading JavaScript from ${url} for cache in ${delay}.`);
 
         window.setTimeout(() => {
           return new Ajax()
@@ -94,7 +94,7 @@ export class Js {
 
               this.cache.set(responseText, 'js', url, singularBy);
 
-              this.log.info(`Loaded CSS from ${url} now cached.`);
+              this.log.info(`Loaded JavaScript from ${url} now cached.`);
 
               resolve();
             })
