@@ -21,13 +21,9 @@ module.exports = {
     failOnError: true,
     module: {
       loaders: [{
-        test: /\.js?$/,
-        loaders: ['babel'],
-        exclude: /node_modules/
-      }, {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: 'babel',
         query: {
           presets: ['es2015']
         }
