@@ -4,12 +4,16 @@ module.exports = {
     target: 'web',
     debug: true,
     devtool: 'inline-source-map',
-    entry: './src/index.js',
+    entry: [
+      'babel-polyfill',
+      './src/index.js'
+    ],
     output: {
       path: './dist/',
       filename: 'dactylographsy.js',
     },
     modulesDirectories: [
+      'node_modules',
       './src'
     ],
     stats: {
