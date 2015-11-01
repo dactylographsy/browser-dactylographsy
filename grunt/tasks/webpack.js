@@ -20,10 +20,18 @@ module.exports = {
     progress: true,
     failOnError: true,
     module: {
-      loaders: [
-        { test: /\.js?$/, loaders: ['babel'], exclude: /node_modules/ },
-        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?optional[]=runtime'}
-      ]
+      loaders: [{
+        test: /\.js?$/,
+        loaders: ['babel'],
+        exclude: /node_modules/
+      }, {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015']
+        }
+      }]
     }
   }
 };
