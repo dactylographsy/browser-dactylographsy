@@ -49,7 +49,10 @@ module.exports = function(config) {
         }, {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'babel-loader?optional[]=runtime'
+          loader: 'babel-loader',
+          query: {
+            presets: ['es2015']
+          }
         }, {
           test: /\.css/,
           loader: 'style-loader!css-loader'
@@ -124,7 +127,7 @@ module.exports = function(config) {
       'karma-browserstack-launcher',
       'karma-firefox-launcher',
       'karma-mocha-reporter',
-      'karma-mocha',
+      'karma-mocha'
     ],
 
     singleRun: true,
