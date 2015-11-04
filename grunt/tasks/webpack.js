@@ -4,12 +4,16 @@ module.exports = {
     target: 'web',
     debug: true,
     devtool: 'inline-source-map',
-    entry: './src/index.js',
+    entry: [
+      'babel-polyfill',
+      './src/index.js'
+    ],
     output: {
       path: './dist/',
       filename: 'dactylographsy.js',
     },
     modulesDirectories: [
+      'node_modules',
       './src'
     ],
     stats: {
@@ -20,10 +24,14 @@ module.exports = {
     progress: true,
     failOnError: true,
     module: {
-      loaders: [
-        { test: /\.js?$/, loaders: ['babel'], exclude: /node_modules/ },
-        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?optional[]=runtime'}
-      ]
+      loaders: [{
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel',
+        query: {
+          presets: ['es2015']
+        }
+      }]
     }
   }
 };
