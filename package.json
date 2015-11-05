@@ -25,7 +25,7 @@
   "dependencies": {},
   "devDependencies": {
     "babel": "6.0.15",
-    "babel-core": "6.0.20",
+    "babel-core": "6.1.2",
     "babel-eslint": "4.1.4",
     "babel-loader": "6.0.0",
     "babel-polyfill": "^6.0.16",
