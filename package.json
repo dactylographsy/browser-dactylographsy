@@ -25,11 +25,11 @@
   "dependencies": {},
   "devDependencies": {
     "babel": "6.0.15",
-    "babel-core": "6.0.20",
+    "babel-core": "6.1.2",
     "babel-eslint": "4.1.4",
     "babel-loader": "6.0.0",
     "babel-polyfill": "^6.0.16",
-    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-es2015": "^6.1.2",
     "babel-runtime": "6.0.14",
     "chai": "3.4.0",
     "chai-as-promised": "5.1.0",
@@ -49,7 +49,7 @@
     "grunt-mocha-test": "0.12.7",
     "grunt-shell": "1.1.2",
     "grunt-webpack": "1.0.11",
-    "isparta": "3.5.0",
+    "isparta": "3.5.3",
     "isparta-instrumenter-loader": "0.2.1",
     "istanbul": "0.4.0",
     "karma": "0.13.15",
@@ -67,7 +67,7 @@
     "sinon": "git+https://github.com/uberVU/Sinon.JS",
     "sinon-chai": "2.8.0",
     "time-grunt": "1.2.2",
-    "webpack": "1.12.2",
+    "webpack": "1.12.3",
     "webpack-dev-server": "1.12.1"
   },
   "peerDependencies": {
