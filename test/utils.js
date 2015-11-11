@@ -51,15 +51,17 @@ export class DOMUtil {
       styles = this.findAllCss();
 
     for (var i = 0; i < styles.length; i++) {
-      nodes.push(styles[i]);
+      let
+        style = styles[i];
+
+      style.parentNode.removeChild(style);
     }
 
     for (var i = 0; i < scripts.length; i++) {
-      nodes.push(scripts[i]);
-    }
+      let
+        script = scripts[i];
 
-    for (let node of nodes) {
-      node.parentNode.removeChild(node);
+      script.parentNode.removeChild(script);
     }
   }
 }
