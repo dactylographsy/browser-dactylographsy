@@ -3,7 +3,9 @@ import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
 import chaiString from 'chai-string';
-import babelPolyfill from 'babel-polyfill';
+import es6Promise from 'es6-promise';
+
+es6Promise.polyfill();
 
 chai.should();
 chai.use(sinonChai);
