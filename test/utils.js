@@ -8,18 +8,36 @@ export class DOMUtil {
 
   findCssByDataUrl(url) {
     let
+      nodes = [],
       styles = document.querySelectorAll(`style[data-dactylographsy-url="${url}"]`),
       links = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`)
 
-    return [...links, ...styles];
+    for (var i = 0; i < styles.length; i++) {
+      nodes.push(styles[i]);
+    }
+
+    for (var i = 0; i < scripts.length; i++) {
+      nodes.push(scripts[i]);
+    }
+
+    return nodes;
   }
 
   findAllCss() {
     let
+      nodes = [],
       styles = document.querySelectorAll(`style[data-dactylographsy-url]`),
       links = document.querySelectorAll(`link[data-dactylographsy-url]`)
 
-    return [...links, ...styles];
+    for (var i = 0; i < styles.length; i++) {
+      nodes.push(styles[i]);
+    }
+
+    for (var i = 0; i < scripts.length; i++) {
+      nodes.push(scripts[i]);
+    }
+
+    return nodes;
   }
 
   findAllJs() {
