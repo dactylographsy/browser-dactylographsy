@@ -16,8 +16,8 @@ export class DOMUtil {
       nodes.push(styles[i]);
     }
 
-    for (var i = 0; i < scripts.length; i++) {
-      nodes.push(scripts[i]);
+    for (var i = 0; i < links.length; i++) {
+      nodes.push(links[i]);
     }
 
     return nodes;
@@ -33,8 +33,8 @@ export class DOMUtil {
       nodes.push(styles[i]);
     }
 
-    for (var i = 0; i < scripts.length; i++) {
-      nodes.push(scripts[i]);
+    for (var i = 0; i < links.length; i++) {
+      nodes.push(links[i]);
     }
 
     return nodes;
