@@ -5,7 +5,6 @@ module.exports = {
     debug: true,
     devtool: 'inline-source-map',
     entry: [
-      'babel-polyfill',
       './src/index.js'
     ],
     output: {
