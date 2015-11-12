@@ -82,6 +82,7 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
 - 1.0.1 Fix typo in when logging
 - 1.0.2 Update major set of dependencies among them babel@6.0.x
 - 1.0.3 Reduce amount of polyfills to just es6-promises
+- 1.0.4 Update dependencies touching dist assets (minor version bump babel)
 
 ## Acknowledgements
 
