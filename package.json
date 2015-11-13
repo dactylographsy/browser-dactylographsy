@@ -67,7 +67,7 @@
     "sinon": "git+https://github.com/uberVU/Sinon.JS",
     "sinon-chai": "2.8.0",
     "time-grunt": "1.2.2",
-    "webpack": "1.12.4",
+    "webpack": "1.12.5",
     "webpack-dev-server": "1.12.1"
   },
   "peerDependencies": {
