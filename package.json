@@ -62,7 +62,7 @@
     "karma-sourcemap-loader": "0.3.6",
     "karma-webpack": "1.7.0",
     "load-grunt-config": "0.19.0",
-    "mocha": "2.3.3",
+    "mocha": "2.3.4",
     "node-libs-browser": "0.5.3",
     "sinon": "git+https://github.com/uberVU/Sinon.JS",
     "sinon-chai": "2.8.0",
