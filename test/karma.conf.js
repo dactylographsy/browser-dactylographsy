@@ -16,12 +16,7 @@ module.exports = function(config) {
       'test/src/**/*.js': ['webpack', 'sourcemap']
     },
 
-    reporters: ['progress', 'coverage'],
-
-    coverageReporter: {
-      type: 'html',
-      dir: 'test/coverage/'
-    },
+    reporters: ['progress'],
 
     webpack: {
       plugins: [],
@@ -38,11 +33,6 @@ module.exports = function(config) {
       },
       externals: {},
       module: {
-        preLoaders: [{
-          test: /(\.jsx)|(\.js)$/,
-          exclude: /(node_modules|bower_components|test)/,
-          loader: 'isparta-instrumenter'
-        }],
         loaders: [{
           test: /\.json/,
           loader: 'json-loader'
@@ -122,7 +112,6 @@ module.exports = function(config) {
     plugins: [
       'karma-webpack',
       'karma-sourcemap-loader',
-      'karma-coverage',
       'karma-chrome-launcher',
       'karma-browserstack-launcher',
       'karma-firefox-launcher',
