@@ -84,6 +84,7 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
 - 1.0.3 Reduce amount of polyfills to just es6-promises
 - 1.0.4 Update dependencies touching dist assets (minor version bump babel)
 - 1.0.5 Sole rebuilt caused by dependency update
+- 1.1.0 Add `//# sourceURL=...` to inline JS scripts (visibility in Dev Tools)
 
 ## Acknowledgements
 

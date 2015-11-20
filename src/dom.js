@@ -27,7 +27,10 @@ export class Js {
 
       script.setAttribute('data-dactylographsy-url', url);
 
-      script.text = text;
+      script.text = `
+        ${text}
+        //# sourceURL=${url}
+      `;
 
       if (this.injectInto) { resolve(this.injectInto.appendChild(script)); }
       else { resolve(script); }

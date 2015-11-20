@@ -311,7 +311,7 @@ describe('DOM', () => {
         expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
       });
 
-      it('should should flag the injection with a data-url', () => {
+      it('should flag the injection with a data-url', () => {
         let
           url = 'js-data-url-check.js',
           injection = js.injectWithText(code, url);
@@ -319,12 +319,20 @@ describe('DOM', () => {
         expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
       });
 
-      it('should should inject the code into the script-tag', () => {
+      it('should inject the code into the script-tag', () => {
         let
           url = 'js-code-check.js',
           injection = js.injectWithText(code, url);
 
-        expect(domUtils.findJsByDataUrl(url)[0].textContent).to.equal(code);
+        expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain(code);
+      });
+
+      it('should amend an "sourceURL" to injected code', () => {
+        let
+          url = 'js-sourceurl-check.js',
+          injection = js.injectWithText(code, url);
+
+        expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain('//# sourceURL=');
       });
     });
 
