@@ -1,6 +1,6 @@
 {
   "name": "browser-dactylographsy",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": " Front end components for consuming manifests produced by grunt-dactylographsy.",
   "scripts": {
     "test": "grunt ci-test"
@@ -24,17 +24,17 @@
   "homepage": "https://github.com/dactylographsy/browser-dactylographsy",
   "dependencies": {},
   "devDependencies": {
-    "babel": "6.1.18",
-    "babel-core": "6.3.2",
+    "babel": "6.3.13",
+    "babel-core": "6.3.13",
     "babel-eslint": "4.1.6",
     "babel-loader": "6.2.0",
-    "babel-preset-es2015": "6.1.18",
-    "babel-runtime": "6.2.0",
+    "babel-preset-es2015": "6.3.13",
+    "babel-runtime": "6.3.13",
     "chai": "3.4.1",
     "chai-as-promised": "5.1.0",
     "chai-string": "1.1.4",
     "es6-promise": "3.0.2",
-    "eslint": "1.10.2",
+    "eslint": "1.10.3",
     "grunt": "0.4.5",
     "grunt-cli": "0.1.13",
     "grunt-contrib-clean": "0.7.0",
