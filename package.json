@@ -49,7 +49,7 @@
     "grunt-mocha-test": "0.12.7",
     "grunt-shell": "1.1.2",
     "grunt-webpack": "1.0.11",
-    "karma": "0.13.15",
+    "karma": "0.13.17",
     "karma-browserstack-launcher": "0.1.8",
     "karma-chrome-launcher": "0.2.2",
     "karma-firefox-launcher": "0.1.7",
