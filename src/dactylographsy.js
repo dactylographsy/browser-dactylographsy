@@ -1,6 +1,7 @@
 import Cache from './cache';
 import Injector, {Manifest} from './injector';
 import Log from './log';
+import getUrlParam from './url';
 
 export default class Dactylographsy {
   constructor(options = {}) {
@@ -68,11 +69,14 @@ export default class Dactylographsy {
   }
 
   run() {
-    if (this.config.ttl) {
+    const
+      ttl = getUrlParam('dactylographsy-ttl', this.config.ttl);
+
+    if (ttl) {
       this.cache.get('clt', 0)
         .then(clt => {
-          if (clt >= this.config.ttl) {
-            this.log.info(`Flushing cache due to exeeding TTL of ${this.config.ttl}.`);
+          if (clt >= ttl) {
+            this.log.info(`Flushing cache due to exeeding TTL of ${ttl}.`);
 
             this.cache.flush();
           } else {

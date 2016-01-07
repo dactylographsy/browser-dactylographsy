@@ -85,7 +85,8 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
 - 1.0.4 Update dependencies touching dist assets (minor version bump babel)
 - 1.0.5 Sole rebuilt caused by dependency update
 - 1.1.0 Add `//# sourceURL=...` to inline JS scripts (visibility in Dev Tools)
-- 1.1.1 Minior update to babel and its ecosystem
+- 1.1.1 Minor update to babel and its ecosystem
+- 1.2.0 Add feature of disabling dactylographsy with url-param (overwrites ttl-config) ?dactylographsy-ttl=0
 
 ## Acknowledgements
 
