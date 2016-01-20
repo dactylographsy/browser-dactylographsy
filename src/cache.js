@@ -1,4 +1,5 @@
 import Log from './log';
+import getUrlParam from './url';
 
 export default class Cache {
   constructor(options = {}) {
@@ -6,7 +7,10 @@ export default class Cache {
       defaultPrefix = '__dactylographsy',
       { enableLogging = false } = options;
 
-    this.log = new Log(enableLogging);
+    this.log = new Log(
+      getUrlParam('dactylographsy-enableLogging', enableLogging)
+    );
+    
     this.options = options;
     this.cachePrefix = this.options.cachePrefix || defaultPrefix;
     this.isSupported = this.supported();

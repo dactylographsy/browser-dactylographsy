@@ -1,12 +1,16 @@
 import {Css, Js} from './dom';
 import Ajax from './ajax';
 import Log from './log';
+import getUrlParam from './url';
 
 export class Manifest {
   constructor(url, config) {
     const { enableLogging = false } = config;
 
-    this.log = new Log(enableLogging);
+    this.log = new Log(
+      getUrlParam('dactylographsy-enableLogging', enableLogging)
+    );
+
     this.url = url;
   }
 
@@ -34,7 +38,10 @@ export default class Injector {
       enableLogging = false
     } = options;
 
-    this.log = new Log(enableLogging);
+    this.log = new Log(
+      getUrlParam('dactylographsy-enableLogging', enableLogging)
+    );
+
     this.manifests = {};
     this.injectInto = injectInto;
 

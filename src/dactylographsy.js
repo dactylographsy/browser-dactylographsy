@@ -9,7 +9,9 @@ export default class Dactylographsy {
       { autorun = false } = options,
       { enableLogging = false } = options;
 
-    this.log = new Log(enableLogging);
+    this.log = new Log(
+      getUrlParam('dactylographsy-enableLogging', enableLogging)
+    );
     this.hookIntoDom();
     this.readConfiguration();
     this.cache = new Cache({

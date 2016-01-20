@@ -1,10 +1,16 @@
 import Cache from './cache';
 import Ajax from './ajax';
 import Log from './log';
+import getUrlParam from './url';
 
 export class Js {
   constructor(injectInto, config = {}) {
-    const { enableLogging = false } = config;
+    let { enableLogging = false } = config;
+
+    enableLogging = getUrlParam(
+      'dactylographsy-enableLogging',
+      enableLogging
+    );
 
     this.injectInto = injectInto;
 
@@ -120,7 +126,12 @@ export class Js {
 
 export class Css {
   constructor(injectInto, config = {}) {
-    const { enableLogging = false } = config;
+    let { enableLogging = false } = config;
+
+    enableLogging = getUrlParam(
+      'dactylographsy-enableLogging',
+      enableLogging
+    );
 
     this.injectInto = injectInto;
 
