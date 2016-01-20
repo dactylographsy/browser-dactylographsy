@@ -62,7 +62,11 @@ export default class Injector {
 
         if (elem === undefined) { return; }
         else if (elem.getAttribute('data-dactylographsy-uncached-js')) {
-          this.injectInto.appendChild(elem);
+          if (this.injectInto) {
+            this.log.info(`Injecting tag:`, elem);
+
+            this.injectInto.appendChild(elem);
+          }
 
           elem.addEventListener('load', () => {
             injectIntoDOM(dependencies, ++idx);
@@ -72,7 +76,7 @@ export default class Injector {
             injectIntoDOM(dependencies, ++idx);
           });
         } else {
-          this.injectInto.appendChild(elem);
+          if (this.injectInto) { this.injectInto.appendChild(elem); }
 
           injectIntoDOM(dependencies, ++idx);
         }

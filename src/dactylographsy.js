@@ -14,6 +14,7 @@ export default class Dactylographsy {
     );
     this.hookIntoDom();
     this.readConfiguration();
+
     this.cache = new Cache({
       appPrefix: this.config.appPrefix
     });
@@ -87,22 +88,27 @@ export default class Dactylographsy {
         });
     }
 
-    return (this.config.cacheManifests === false) ? this.refresh() : this.restore()
-      .then(injectedFromCache => {
-        let {
-          refreshDelay = 5000
-        } = this.config;
+    // Prefetching means fetching all manifests without injecting
+    if (this.config.cacheOnly) { return this.refresh(false); }
+    // ...else restore or refresh the app (with injection of dependencies)
+    else {
+      return (this.config.cachedManifests === false) ? this.refresh() : this.restore()
+        .then(injectedFromCache => {
+          let {
+            refreshDelay = 5000
+          } = this.config;
 
-        return new Promise((resolve, reject) => {
-          window.setTimeout(() => {
-            this.refresh(injectedFromCache)
-              .then(resolve, reject);
-          }, refreshDelay );
+          return new Promise((resolve, reject) => {
+            window.setTimeout(() => {
+              this.refresh(injectedFromCache)
+                .then(resolve, reject);
+            }, refreshDelay );
+          });
+        }).catch(() => {
+          this.log.info(`No manifests in cache, refreshing via network.`);
+
+          return this.refresh();
         });
-      }).catch(() => {
-        this.log.info(`No manifests in cache, refreshing via network.`);
-
-        return this.refresh();
-      });
+    }
   }
 }

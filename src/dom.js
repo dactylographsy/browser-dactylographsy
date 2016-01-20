@@ -28,6 +28,8 @@ export class Js {
     return new Promise(resolve => {
       let script = document.createElement('script');
 
+      this.log.info(`Creating <script />-tag with text for ${url}.`);
+
       script.defer = false;
       script.async = false;
 
@@ -38,8 +40,11 @@ export class Js {
         //# sourceURL=${url}
       `;
 
-      if (this.injectInto) { resolve(this.injectInto.appendChild(script)); }
-      else { resolve(script); }
+      if (this.injectInto) {
+        this.log.info(`Injecting <script />-tag with url: ${url}.`);
+
+        resolve(this.injectInto.appendChild(script));
+      } else { resolve(script); }
     });
   }
 
@@ -50,7 +55,7 @@ export class Js {
         script = document.createElement('script'),
         url = urls[whichUrl];
 
-      this.log.info(`Injecting JavaScript from ${url}.`);
+      this.log.info(`Creating <script />-tag with url: ${url}.`);
 
       script.async = false;
       script.defer = false;
@@ -84,8 +89,16 @@ export class Js {
 
       script.src = url;
 
-      if (this.injectInto) { resolve(this.injectInto.appendChild(script)); }
-      else { resolve(script); }
+      if (this.injectInto) {
+        this.log.info(`Injecting <script />-tag with url: ${url}.`);
+
+        resolve(this.injectInto.appendChild(script));
+      } else {
+        // ...needs caching manually cause never injected
+        if (whichUrl === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
+
+        resolve(script);
+      }
     });
   }
 
@@ -108,7 +121,7 @@ export class Js {
               resolve();
             })
             .catch(() => {
-              reject();
+              this.log.info(`Failed attempting to cache JavaScript from ${url}.`);
             });
         }, delay);
     });
@@ -145,7 +158,7 @@ export class Css {
   }
 
   ensureCache(url, singularBy = false, delay = 0) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (this.cache.has(url)) { resolve(); }
 
       this.log.info(`Loading CSS from ${url} for cache in ${delay}.`);
@@ -162,7 +175,7 @@ export class Css {
 
             resolve();
           }).catch(() => {
-            reject();
+            this.log.info(`Failed attempting to cache CSS from ${url}.`);
           });
       }, delay);
     });
@@ -173,6 +186,8 @@ export class Css {
       let
         link = document.createElement('link'),
         url = urls[whichUrl];
+
+      this.log.info(`Creating <link />-tag with url: ${url}.`);
 
       link = document.createElement('link');
 
@@ -195,8 +210,11 @@ export class Css {
           });
       }
 
-      if (this.injectInto) { resolve(this.injectInto.appendChild(link)); }
-      else { resolve(link); }
+      if (this.injectInto) {
+        this.log.info(`Injecting <link />-tag with url: ${url}.`);
+
+        resolve(this.injectInto.appendChild(link));
+      } else { resolve(link); }
     });
   }
 
@@ -205,14 +223,19 @@ export class Css {
       let
         link = document.createElement('link');
 
+      this.log.info(`Creating <link />-tag with text for url: ${url}.`);
+
       link = document.createElement('style');
 
       link.setAttribute('data-dactylographsy-url', url);
 
       link.textContent = text;
 
-      if (this.injectInto) { resolve(this.injectInto.appendChild(link)); }
-      else { resolve(link); }
+      if (this.injectInto) {
+        this.log.info(`Injecting <link />-tag with url: ${url}.`);
+
+        resolve(this.injectInto.appendChild(link));
+      } else { resolve(link); }
     });
   }
 

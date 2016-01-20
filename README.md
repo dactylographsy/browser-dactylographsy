@@ -61,9 +61,11 @@ refreshDelay: null
 cacheDelay: null
 // Boolean indicating if manifests shall be cached - if false app always resolves to
 // current version but slows down launch
-cacheManifests: true
+cachedManifests: true
 // Enable logging as opt-in giving output of what dactylographsy is doing
 enableLogging: false
+// Only fetches all manifests and dependencies and cache
+cacheOnly: false
 ```
 
 ## Developing & Contributing
@@ -89,6 +91,7 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
 - 1.2.0 Add feature of disabling dactylographsy with url-param (overwrites ttl-config) ?dactylographsy-ttl=0
 - 1.3.0 Add support for enabling logging per url-param (overwrites enableLogging) ?dactylographsy-enableLogging=true
 - 1.3.1 Fix build issue (some mangling issue)
+- 1.4.0 Add `cacheOnly`-option to only prefetch app and rename `cacheManifests` to `cachedManifests`
 
 ## Acknowledgements
 
