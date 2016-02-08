@@ -24,12 +24,12 @@
   "homepage": "https://github.com/dactylographsy/browser-dactylographsy",
   "dependencies": {},
   "devDependencies": {
-    "babel": "6.3.26",
-    "babel-core": "6.4.5",
+    "babel": "6.5.1",
+    "babel-core": "6.5.1",
     "babel-eslint": "4.1.8",
     "babel-loader": "6.2.1",
-    "babel-preset-es2015": "6.3.13",
-    "babel-runtime": "6.3.19",
+    "babel-preset-es2015": "6.5.0",
+    "babel-runtime": "6.5.0",
     "chai": "3.5.0",
     "chai-as-promised": "5.2.0",
     "chai-string": "1.1.6",
@@ -64,7 +64,7 @@
     "sinon-chai": "2.8.0",
     "time-grunt": "1.3.0",
     "webpack": "1.12.13",
-    "webpack-dev-server": "1.14.0"
+    "webpack-dev-server": "1.14.1"
   },
   "peerDependencies": {
     "grunt": "~0.4.5",
