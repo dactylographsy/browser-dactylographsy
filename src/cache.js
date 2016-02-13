@@ -10,7 +10,7 @@ export default class Cache {
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
     );
-    
+
     this.options = options;
     this.cachePrefix = this.options.cachePrefix || defaultPrefix;
     this.isSupported = this.supported();
@@ -104,7 +104,7 @@ export default class Cache {
 
       return true;
     } catch(e) {
-      this.log.warn(`Localstorage not supported in browser - no caching!`);
+      this.log.warn('Localstorage not supported in browser - no caching!');
 
       return false;
     }

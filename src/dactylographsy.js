@@ -53,7 +53,7 @@ export default class Dactylographsy {
   restore(inject = true) {
     return this.cache.get('manifests')
       .then(manifests => {
-        this.log.info(`Resotring with manifests in cache later refreshing via network (delayed).`);
+        this.log.info('Resotring with manifests in cache later refreshing via network (delayed).');
 
         return new Injector(
           inject ? this.injectInto : undefined,
@@ -105,7 +105,7 @@ export default class Dactylographsy {
             }, refreshDelay );
           });
         }).catch(() => {
-          this.log.info(`No manifests in cache, refreshing via network.`);
+          this.log.info('No manifests in cache, refreshing via network.');
 
           return this.refresh();
         });

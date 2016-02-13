@@ -63,7 +63,7 @@ export default class Injector {
         if (elem === undefined) { return; }
         else if (elem.getAttribute('data-dactylographsy-uncached-js')) {
           if (this.injectInto) {
-            this.log.info(`Injecting tag:`, elem);
+            this.log.info('Injecting tag:', elem);
 
             this.injectInto.appendChild(elem);
           }
