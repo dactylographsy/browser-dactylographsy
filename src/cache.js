@@ -28,9 +28,11 @@ export default class Cache {
     return this.cachePrefix;
   }
 
-  isItemValid(body, sha1) {
+  isItemValid(code, sha1) {
     return (
-      this.rusha.digestFromString(body) === sha1
+      this.rusha.digestFromString(
+        code
+      ) === sha1
     );
   }
 
@@ -52,13 +54,17 @@ export default class Cache {
 
         return;
       }
+
       if (_item !== null && sha1 !== false) {
+        const
+          _parsed = this.parse(_item);
+
         this.log.info(`Found item with key: ${key} in cache which needs validation...`);
 
-        if (this.isItemValid(_item, sha1)) {
+        if (this.isItemValid(_parsed.code, sha1)) {
           this.log.info(`...matches expected sha1 ${sha1}.`);
 
-          resolve(this.parse(_item).code);
+          resolve(_parsed.code);
         } else {
           this.log.info(`...does not match expected sha1 ${sha1} - pruning.`);
 
