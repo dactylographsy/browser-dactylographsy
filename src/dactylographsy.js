@@ -92,7 +92,13 @@ export default class Dactylographsy {
     if (this.config.cacheOnly) { return this.refresh(false); }
     // ...else restore or refresh the app (with injection of dependencies)
     else {
-      return (this.config.cachedManifests === false) ? this.refresh() : this.restore()
+      // Either the configuration of non cached
+      // manifests or requested bundle verification
+      // forces a refresh or all manifests.
+      return (
+        this.config.cachedManifests === false ||
+        this.config.verification === true
+      ) ? this.refresh() : this.restore()
         .then(injectedFromCache => {
           let {
             refreshDelay = 5000

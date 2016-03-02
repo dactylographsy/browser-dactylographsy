@@ -44,259 +44,259 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(1);
+        module.exports = __webpack_require__(1);
 
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	var _dactylographsy = __webpack_require__(2);
-	
-	var _dactylographsy2 = _interopRequireDefault(_dactylographsy);
-	
+        'use strict';
+
+        var _dactylographsy = __webpack_require__(2);
+
+        var _dactylographsy2 = _interopRequireDefault(_dactylographsy);
+
         var _es6Promise = __webpack_require__(10);
-	
-	var _es6Promise2 = _interopRequireDefault(_es6Promise);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	_es6Promise2.default.polyfill();
-	
-	if (typeof window !== 'undefined') {
-	  window.dactylographsy = new _dactylographsy2.default({
-	    autorun: true
-	  });
-	}
+
+        var _es6Promise2 = _interopRequireDefault(_es6Promise);
+
+        function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+        _es6Promise2.default.polyfill();
+
+        if (typeof window !== 'undefined') {
+          window.dactylographsy = new _dactylographsy2.default({
+            autorun: true
+          });
+        }
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
+        'use strict';
+
+        Object.defineProperty(exports, "__esModule", {
+          value: true
+        });
+
         var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _cache = __webpack_require__(3);
-	
-	var _cache2 = _interopRequireDefault(_cache);
-	
-        var _injector = __webpack_require__(7);
-	
-	var _injector2 = _interopRequireDefault(_injector);
-	
-	var _log = __webpack_require__(4);
-	
-	var _log2 = _interopRequireDefault(_log);
-	
-	var _url = __webpack_require__(5);
-	
-	var _url2 = _interopRequireDefault(_url);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Dactylographsy = function () {
-	  function Dactylographsy() {
-	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	
-	    _classCallCheck(this, Dactylographsy);
-	
-	    var _options$autorun = options.autorun;
-	
-	    var autorun = _options$autorun === undefined ? false : _options$autorun;
-	    var _options$enableLoggin = options.enableLogging;
-	    var enableLogging = _options$enableLoggin === undefined ? false : _options$enableLoggin;
-	
+        var _cache = __webpack_require__(3);
 
-	    this.log = new _log2.default((0, _url2.default)('dactylographsy-enableLogging', enableLogging));
-	    this.hookIntoDom();
-	    this.readConfiguration();
-	
-	    this.cache = new _cache2.default({
-	      appPrefix: this.config.appPrefix
-	    });
-	
-	    if (autorun) {
-	      this.run();
-	    }
-	  }
-	
-	  _createClass(Dactylographsy, [{
-	    key: 'hookIntoDom',
-	    value: function hookIntoDom() {
-	      if (typeof document === 'undefined') {
-	        return;
-	      }
-	
-	      this.executingScript = document.getElementById('dactylographsy');
-	      this.injectInto = document.body || document.head || document.getElementsByTagName('script')[0];
-	    }
-	  }, {
-	    key: 'readConfiguration',
-	    value: function readConfiguration() {
-	      this.manifestUrls = this.readAttrOnScript('manifests');
-	      this.config = this.readAttrOnScript('config');
-	    }
-	  }, {
-	    key: 'refresh',
-	    value: function refresh() {
-	      var _this = this;
-	
-	      var inject = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
-	
-	      return Promise.all(this.manifestUrls.map(function (url) {
-	        return new _injector.Manifest(url, _this.config).get();
-	      })).then(function (manifests) {
-	        _this.log.info('Fetched all manifests, ' + manifests.length + ' in total.');
-	
-	        _this.cache.set(manifests, 'manifests', 'manifests');
-	
-	        return new _injector2.default(inject ? _this.injectInto : undefined, manifests, _this.config).inject();
-	      });
-	    }
-	  }, {
-	    key: 'restore',
-	    value: function restore() {
-	      var _this2 = this;
-	
-	      var inject = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
-	
-	      return this.cache.get('manifests').then(function (manifests) {
-	        _this2.log.info('Resotring with manifests in cache later refreshing via network (delayed).');
-	
-	        return new _injector2.default(inject ? _this2.injectInto : undefined, manifests, _this2.config).inject();
-	      });
-	    }
-	  }, {
-	    key: 'readAttrOnScript',
-	    value: function readAttrOnScript(attr) {
-	      if (!this.executingScript) {
-	        return false;
-	      }
-	
-	      var _attr = this.executingScript.getAttribute('data-' + attr);
-	
-	      return _attr ? JSON.parse(_attr) : undefined;
-	    }
-	  }, {
-	    key: 'run',
-	    value: function run() {
-	      var _this3 = this;
-	
-	      var ttl = (0, _url2.default)('dactylographsy-ttl', this.config.ttl);
-	
-	      if (ttl) {
-	        this.cache.get('clt', 0).then(function (clt) {
-	          if (clt >= ttl) {
-	            _this3.log.info('Flushing cache due to exeeding TTL of ' + ttl + '.');
-	
-	            _this3.cache.flush();
-	          } else {
-	            _this3.cache.set(++clt, 'plain', 'clt');
-	          }
-	        });
-	      }
-	
-	      // Prefetching means fetching all manifests without injecting
-	      if (this.config.cacheOnly) {
-	        return this.refresh(false);
-	      }
-	      // ...else restore or refresh the app (with injection of dependencies)
-	      else {
+        var _cache2 = _interopRequireDefault(_cache);
+
+        var _injector = __webpack_require__(7);
+
+        var _injector2 = _interopRequireDefault(_injector);
+
+        var _log = __webpack_require__(4);
+
+        var _log2 = _interopRequireDefault(_log);
+
+        var _url = __webpack_require__(5);
+
+        var _url2 = _interopRequireDefault(_url);
+
+        function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+        function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+        var Dactylographsy = function () {
+          function Dactylographsy() {
+            var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+            _classCallCheck(this, Dactylographsy);
+
+            var _options$autorun = options.autorun;
+
+            var autorun = _options$autorun === undefined ? false : _options$autorun;
+            var _options$enableLoggin = options.enableLogging;
+            var enableLogging = _options$enableLoggin === undefined ? false : _options$enableLoggin;
+
+
+            this.log = new _log2.default((0, _url2.default)('dactylographsy-enableLogging', enableLogging));
+            this.hookIntoDom();
+            this.readConfiguration();
+
+            this.cache = new _cache2.default({
+              appPrefix: this.config.appPrefix
+            });
+
+            if (autorun) {
+              this.run();
+            }
+          }
+
+          _createClass(Dactylographsy, [{
+            key: 'hookIntoDom',
+            value: function hookIntoDom() {
+              if (typeof document === 'undefined') {
+                return;
+              }
+
+              this.executingScript = document.getElementById('dactylographsy');
+              this.injectInto = document.body || document.head || document.getElementsByTagName('script')[0];
+            }
+          }, {
+            key: 'readConfiguration',
+            value: function readConfiguration() {
+              this.manifestUrls = this.readAttrOnScript('manifests');
+              this.config = this.readAttrOnScript('config');
+            }
+          }, {
+            key: 'refresh',
+            value: function refresh() {
+              var _this = this;
+
+              var inject = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+              return Promise.all(this.manifestUrls.map(function (url) {
+                return new _injector.Manifest(url, _this.config).get();
+              })).then(function (manifests) {
+                _this.log.info('Fetched all manifests, ' + manifests.length + ' in total.');
+
+                _this.cache.set(manifests, 'manifests', 'manifests');
+
+                return new _injector2.default(inject ? _this.injectInto : undefined, manifests, _this.config).inject();
+              });
+            }
+          }, {
+            key: 'restore',
+            value: function restore() {
+              var _this2 = this;
+
+              var inject = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+              return this.cache.get('manifests').then(function (manifests) {
+                _this2.log.info('Resotring with manifests in cache later refreshing via network (delayed).');
+
+                return new _injector2.default(inject ? _this2.injectInto : undefined, manifests, _this2.config).inject();
+              });
+            }
+          }, {
+            key: 'readAttrOnScript',
+            value: function readAttrOnScript(attr) {
+              if (!this.executingScript) {
+                return false;
+              }
+
+              var _attr = this.executingScript.getAttribute('data-' + attr);
+
+              return _attr ? JSON.parse(_attr) : undefined;
+            }
+          }, {
+            key: 'run',
+            value: function run() {
+              var _this3 = this;
+
+              var ttl = (0, _url2.default)('dactylographsy-ttl', this.config.ttl);
+
+              if (ttl) {
+                this.cache.get('clt', 0).then(function (clt) {
+                  if (clt >= ttl) {
+                    _this3.log.info('Flushing cache due to exeeding TTL of ' + ttl + '.');
+
+                    _this3.cache.flush();
+                  } else {
+                    _this3.cache.set(++clt, 'plain', 'clt');
+                  }
+                });
+              }
+
+              // Prefetching means fetching all manifests without injecting
+              if (this.config.cacheOnly) {
+                return this.refresh(false);
+              }
+              // ...else restore or refresh the app (with injection of dependencies)
+              else {
                   // Either the configuration of non cached
                   // manifests or requested bundle verification
                   // forces a refresh or all manifests.
                   return this.config.cachedManifests === false || this.config.verification === true ? this.refresh() : this.restore().then(function (injectedFromCache) {
-	            var _config$refreshDelay = _this3.config.refreshDelay;
-	            var refreshDelay = _config$refreshDelay === undefined ? 5000 : _config$refreshDelay;
-	
+                    var _config$refreshDelay = _this3.config.refreshDelay;
+                    var refreshDelay = _config$refreshDelay === undefined ? 5000 : _config$refreshDelay;
 
-	            return new Promise(function (resolve, reject) {
-	              window.setTimeout(function () {
-	                _this3.refresh(injectedFromCache).then(resolve, reject);
-	              }, refreshDelay);
-	            });
-	          }).catch(function () {
-	            _this3.log.info('No manifests in cache, refreshing via network.');
-	
-	            return _this3.refresh();
-	          });
-	        }
-	    }
-	  }]);
-	
-	  return Dactylographsy;
-	}();
 
-	exports.default = Dactylographsy;
+                    return new Promise(function (resolve, reject) {
+                      window.setTimeout(function () {
+                        _this3.refresh(injectedFromCache).then(resolve, reject);
+                      }, refreshDelay);
+                    });
+                  }).catch(function () {
+                    _this3.log.info('No manifests in cache, refreshing via network.');
+
+                    return _this3.refresh();
+                  });
+                }
+            }
+          }]);
+
+          return Dactylographsy;
+        }();
+
+        exports.default = Dactylographsy;
 
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
+        'use strict';
+
+        Object.defineProperty(exports, "__esModule", {
+          value: true
+        });
+
         var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _log = __webpack_require__(4);
-	
-	var _log2 = _interopRequireDefault(_log);
-	
-	var _url = __webpack_require__(5);
-	
-	var _url2 = _interopRequireDefault(_url);
-	
+        var _log = __webpack_require__(4);
+
+        var _log2 = _interopRequireDefault(_log);
+
+        var _url = __webpack_require__(5);
+
+        var _url2 = _interopRequireDefault(_url);
+
         var _rusha = __webpack_require__(6);
 
         var _rusha2 = _interopRequireDefault(_rusha);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Cache = function () {
-	  function Cache() {
-	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	
-	    _classCallCheck(this, Cache);
-	
-	    var defaultPrefix = '__dactylographsy';
-	    var _options$enableLoggin = options.enableLogging;
-	    var enableLogging = _options$enableLoggin === undefined ? false : _options$enableLoggin;
-	
+        function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	    this.log = new _log2.default((0, _url2.default)('dactylographsy-enableLogging', enableLogging));
+        function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+        var Cache = function () {
+          function Cache() {
+            var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+            _classCallCheck(this, Cache);
+
+            var defaultPrefix = '__dactylographsy';
+            var _options$enableLoggin = options.enableLogging;
+            var enableLogging = _options$enableLoggin === undefined ? false : _options$enableLoggin;
+
+
+            this.log = new _log2.default((0, _url2.default)('dactylographsy-enableLogging', enableLogging));
             this.rusha = new _rusha2.default();
-	
-	    this.options = options;
-	    this.cachePrefix = this.options.cachePrefix || defaultPrefix;
-	    this.isSupported = this.supported();
-	
-	    if (this.options.appPrefix) {
-	      this.cachePrefix = this.cachePrefix + '--' + this.options.appPrefix;
-	    } else if (!this.options.cachePrefix) {
-	      this.cachePrefix += '__';
-	    }
-	  }
-	
-	  _createClass(Cache, [{
-	    key: 'getPrefix',
-	    value: function getPrefix() {
-	      return this.cachePrefix;
-	    }
-	  }, {
+
+            this.options = options;
+            this.cachePrefix = this.options.cachePrefix || defaultPrefix;
+            this.isSupported = this.supported();
+
+            if (this.options.appPrefix) {
+              this.cachePrefix = this.cachePrefix + '--' + this.options.appPrefix;
+            } else if (!this.options.cachePrefix) {
+              this.cachePrefix += '__';
+            }
+          }
+
+          _createClass(Cache, [{
+            key: 'getPrefix',
+            value: function getPrefix() {
+              return this.cachePrefix;
+            }
+          }, {
             key: 'isItemValid',
             value: function isItemValid(body, sha1) {
               return this.rusha.digestFromString(body) === sha1;
@@ -307,29 +307,29 @@
               return JSON.parse(item);
             }
           }, {
-	    key: 'get',
-	    value: function get(key, defaultValue) {
-	      var _this = this;
-	
+            key: 'get',
+            value: function get(key, defaultValue) {
+              var _this = this;
+
               var sha1 = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
-	      return new Promise(function (resolve, reject) {
-	        if (!_this.isSupported) {
-	          reject();
-	        }
-	
+              return new Promise(function (resolve, reject) {
+                if (!_this.isSupported) {
+                  reject();
+                }
+
                 var _item = localStorage.getItem(_this.cachePrefix + '-' + key);
-	
-	        if (_item === null && defaultValue !== undefined) {
-	          _this.set(defaultValue, 'plain', key);
-	
-	          resolve(defaultValue);
-	
-	          return;
-	        }
+
+                if (_item === null && defaultValue !== undefined) {
+                  _this.set(defaultValue, 'plain', key);
+
+                  resolve(defaultValue);
+
+                  return;
+                }
                 if (_item !== null && sha1 !== false) {
                   _this.log.info('Found item with key: ' + key + ' in cache which needs validation...');
-	
+
                   if (_this.isItemValid(_item, sha1)) {
                     _this.log.info('...matches expected sha1 ' + sha1 + '.');
 
@@ -342,26 +342,26 @@
                     reject();
                   }
                 } else if (_item) {
-	          _this.log.info('Found item with key: ' + key + ' in cache.');
-	
+                  _this.log.info('Found item with key: ' + key + ' in cache.');
+
                   resolve(_this.parse(_item).code);
-	        } else {
-	          _this.log.info('Couldn\'t find item with key: ' + key + ' in cache.');
-	
-	          reject();
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'has',
-	    value: function has(key) {
-	      if (!this.isSupported) {
-	        return false;
-	      }
-	
-	      return localStorage.getItem(this.cachePrefix + '-' + key) !== null;
-	    }
-	  }, {
+                } else {
+                  _this.log.info('Couldn\'t find item with key: ' + key + ' in cache.');
+
+                  reject();
+                }
+              });
+            }
+          }, {
+            key: 'has',
+            value: function has(key) {
+              if (!this.isSupported) {
+                return false;
+              }
+
+              return localStorage.getItem(this.cachePrefix + '-' + key) !== null;
+            }
+          }, {
             key: 'remove',
             value: function remove(url) {
               if (!this.isSupported) {
@@ -371,206 +371,206 @@
               return localStorage.removeItem(this.cachePrefix + '-' + key);;
             }
           }, {
-	    key: 'set',
+            key: 'set',
             value: function set(code, type, key) {
-	      var singularBy = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
-	
-	      if (!this.isSupported) {
-	        return false;
-	      }
-	      if (singularBy) {
-	        this.dedupe(singularBy);
-	      }
-	
-	      var cached = {
-	        now: +new Date(),
+              var singularBy = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+
+              if (!this.isSupported) {
+                return false;
+              }
+              if (singularBy) {
+                this.dedupe(singularBy);
+              }
+
+              var cached = {
+                now: +new Date(),
                 url: key,
-	        code: code,
-	        type: type,
-	        singularBy: typeof singularBy === 'string' ? singularBy : undefined
-	      };
-	
+                code: code,
+                type: type,
+                singularBy: typeof singularBy === 'string' ? singularBy : undefined
+              };
+
               localStorage.setItem(this.cachePrefix + '-' + key, JSON.stringify(cached));
-	
-	      return cached;
-	    }
-	  }, {
-	    key: 'flush',
-	    value: function flush() {
-	      if (!this.isSupported) {
-	        return false;
-	      }
-	
+
+              return cached;
+            }
+          }, {
+            key: 'flush',
+            value: function flush() {
+              if (!this.isSupported) {
+                return false;
+              }
+
               for (var _key in localStorage) {
                 if (_key.indexOf(this.cachePrefix) >= 0) {
                   this.log.log('Removing item ' + _key + ' requested by flush.');
-	
+
                   localStorage.removeItem(_key);
-	        }
-	      }
-	
-	      return true;
-	    }
-	  }, {
-	    key: 'supported',
-	    value: function supported() {
-	      var item = '__dactylographsy__feature-detection';
-	
-	      try {
-	        localStorage.setItem(item, item);
-	        localStorage.removeItem(item);
-	
-	        return true;
-	      } catch (e) {
-	        this.log.warn('Localstorage not supported in browser - no caching!');
-	
-	        return false;
-	      }
-	    }
-	  }, {
-	    key: 'dedupe',
-	    value: function dedupe(singularBy) {
+                }
+              }
+
+              return true;
+            }
+          }, {
+            key: 'supported',
+            value: function supported() {
+              var item = '__dactylographsy__feature-detection';
+
+              try {
+                localStorage.setItem(item, item);
+                localStorage.removeItem(item);
+
+                return true;
+              } catch (e) {
+                this.log.warn('Localstorage not supported in browser - no caching!');
+
+                return false;
+              }
+            }
+          }, {
+            key: 'dedupe',
+            value: function dedupe(singularBy) {
               for (var _key2 in localStorage) {
                 var dactylographsyItem = _key2.indexOf(this.cachePrefix) >= 0;
-	        var item = undefined;
-	
-	        if (!dactylographsyItem) {
-	          continue;
-	        }
-	
-                item = JSON.parse(localStorage.getItem(_key2));
-	
-	        if (typeof singularBy === 'string' && typeof item.singularBy === 'string' && item.singularBy === singularBy) {
-                  this.log.log('Deduping by ' + singularBy + ' before adding dupe in ' + _key2 + '.');
-	
-                  localStorage.removeItem(_key2);
-	        }
-	      }
-	    }
-	  }]);
-	
-	  return Cache;
-	}();
+                var item = undefined;
 
-	exports.default = Cache;
+                if (!dactylographsyItem) {
+                  continue;
+                }
+
+                item = JSON.parse(localStorage.getItem(_key2));
+
+                if (typeof singularBy === 'string' && typeof item.singularBy === 'string' && item.singularBy === singularBy) {
+                  this.log.log('Deduping by ' + singularBy + ' before adding dupe in ' + _key2 + '.');
+
+                  localStorage.removeItem(_key2);
+                }
+              }
+            }
+          }]);
+
+          return Cache;
+        }();
+
+        exports.default = Cache;
 
 /***/ },
 /* 4 */
 /***/ function(module, exports) {
 
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", {
+          value: true
+        });
+
         var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Log = function () {
-	
-	  // Not level bound logging needed yet
-	
-	  function Log() {
-	    var enabled = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
-	
-	    _classCallCheck(this, Log);
-	
-	    this.enabled = enabled;
-	
-	    if (this.enabled) {
-	      this.console = window.console;
-	    }
-	  }
-	
-	  _createClass(Log, [{
-	    key: "log",
-	    value: function log() {
-	      if (this.enabled) {
-	        var _console;
-	
-	        (_console = this.console).log.apply(_console, arguments);
-	      }
-	    }
-	  }, {
-	    key: "info",
-	    value: function info() {
-	      if (this.enabled) {
-	        var _console2;
-	
-	        (_console2 = this.console).info.apply(_console2, arguments);
-	      }
-	    }
-	  }, {
-	    key: "warn",
-	    value: function warn() {
-	      if (this.enabled) {
-	        var _console3;
-	
-	        (_console3 = this.console).warn.apply(_console3, arguments);
-	      }
-	    }
-	  }, {
-	    key: "debug",
-	    value: function debug() {
-	      if (this.enabled) {
-	        var _console4;
-	
-	        (_console4 = this.console).debug.apply(_console4, arguments);
-	      }
-	    }
-	  }, {
-	    key: "error",
-	    value: function error() {
-	      if (this.enabled) {
-	        var _console5;
-	
-	        (_console5 = this.console).error.apply(_console5, arguments);
-	      }
-	    }
-	  }]);
-	
-	  return Log;
-	}();
+        function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	exports.default = Log;
+        var Log = function () {
+
+          // Not level bound logging needed yet
+
+          function Log() {
+            var enabled = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+            _classCallCheck(this, Log);
+
+            this.enabled = enabled;
+
+            if (this.enabled) {
+              this.console = window.console;
+            }
+          }
+
+          _createClass(Log, [{
+            key: "log",
+            value: function log() {
+              if (this.enabled) {
+                var _console;
+
+                (_console = this.console).log.apply(_console, arguments);
+              }
+            }
+          }, {
+            key: "info",
+            value: function info() {
+              if (this.enabled) {
+                var _console2;
+
+                (_console2 = this.console).info.apply(_console2, arguments);
+              }
+            }
+          }, {
+            key: "warn",
+            value: function warn() {
+              if (this.enabled) {
+                var _console3;
+
+                (_console3 = this.console).warn.apply(_console3, arguments);
+              }
+            }
+          }, {
+            key: "debug",
+            value: function debug() {
+              if (this.enabled) {
+                var _console4;
+
+                (_console4 = this.console).debug.apply(_console4, arguments);
+              }
+            }
+          }, {
+            key: "error",
+            value: function error() {
+              if (this.enabled) {
+                var _console5;
+
+                (_console5 = this.console).error.apply(_console5, arguments);
+              }
+            }
+          }]);
+
+          return Log;
+        }();
+
+        exports.default = Log;
 
 /***/ },
 /* 5 */
 /***/ function(module, exports) {
 
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = getUrlParam;
-	var getParams = function getParams(url) {
-	  var query = url,
-	      regex = /[?&;](.+?)=([^&;]+)/g;
-	  var params = undefined,
-	      match = undefined;
-	
-	  params = {};
-	
-	  if (query) {
-	    while (match = regex.exec(query)) {
-	      params[match[1]] = decodeURIComponent(match[2]);
-	    }
-	  }
-	
-	  return params;
-	};
-	
-	function getUrlParam(param) {
-	  var ifUnset = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-	  var url = arguments.length <= 2 || arguments[2] === undefined ? window.location.search : arguments[2];
-	
-	  var params = getParams(url);
-	
-	  return params.hasOwnProperty(param) ? params[param] : ifUnset;
-	};
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", {
+          value: true
+        });
+        exports.default = getUrlParam;
+        var getParams = function getParams(url) {
+          var query = url,
+              regex = /[?&;](.+?)=([^&;]+)/g;
+          var params = undefined,
+              match = undefined;
+
+          params = {};
+
+          if (query) {
+            while (match = regex.exec(query)) {
+              params[match[1]] = decodeURIComponent(match[2]);
+            }
+          }
+
+          return params;
+        };
+
+        function getUrlParam(param) {
+          var ifUnset = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+          var url = arguments.length <= 2 || arguments[2] === undefined ? window.location.search : arguments[2];
+
+          var params = getParams(url);
+
+          return params.hasOwnProperty(param) ? params[param] : ifUnset;
+        };
 
 /***/ },
 /* 6 */
@@ -995,561 +995,561 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.Manifest = undefined;
-	
+        'use strict';
+
+        Object.defineProperty(exports, "__esModule", {
+          value: true
+        });
+        exports.Manifest = undefined;
+
         var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
+
         var _dom = __webpack_require__(8);
 
         var _ajax = __webpack_require__(9);
-	
-	var _ajax2 = _interopRequireDefault(_ajax);
-	
-	var _log = __webpack_require__(4);
-	
-	var _log2 = _interopRequireDefault(_log);
-	
-	var _url2 = __webpack_require__(5);
-	
-	var _url3 = _interopRequireDefault(_url2);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Manifest = exports.Manifest = function () {
-	  function Manifest(url, config) {
-	    _classCallCheck(this, Manifest);
-	
-	    var _config$enableLogging = config.enableLogging;
-	    var enableLogging = _config$enableLogging === undefined ? false : _config$enableLogging;
-	
 
-	    this.log = new _log2.default((0, _url3.default)('dactylographsy-enableLogging', enableLogging));
-	
-	    this.url = url;
-	  }
-	
-	  _createClass(Manifest, [{
-	    key: 'get',
-	    value: function get() {
-	      var _this = this;
-	
-	      return new _ajax2.default().get(this.url).then(function (response) {
-	        var responseText = response.text;
-	        var responseUrl = response.url;
-	
+        var _ajax2 = _interopRequireDefault(_ajax);
 
-	        _this.log.info('Fetched manifest from url: ' + responseUrl + '.');
-	
-	        return JSON.parse(responseText);
-	      }, function (xhr) {
-	        _this.log.error('Could not fetch manifest with url: ' + xhr.responseURL + '!');
-	      });
-	    }
-	  }]);
-	
-	  return Manifest;
-	}();
-	
-	var Injector = function () {
-	  function Injector(injectInto, manifests) {
-	    var _this2 = this;
-	
-	    var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-	
-	    _classCallCheck(this, Injector);
-	
-	    var _options$enableLoggin = options.enableLogging;
-	    var enableLogging = _options$enableLoggin === undefined ? false : _options$enableLoggin;
-	
+        var _log = __webpack_require__(4);
 
-	    this.log = new _log2.default((0, _url3.default)('dactylographsy-enableLogging', enableLogging));
-	
-	    this.manifests = {};
-	    this.injectInto = injectInto;
-	
-	    manifests.forEach(function (manifest) {
-	      _this2.manifests[manifest.package] = manifest;
-	    });
-	
-	    this.options = options;
-	    this.prefix = options.prefix;
-	    this.order = options.order;
-	  }
-	
-	  _createClass(Injector, [{
-	    key: 'inject',
-	    value: function inject() {
-	      var _this3 = this;
-	
-	      var flatten = function flatten(list) {
-	        return list.reduce(function (a, b) {
-	          return a.concat(Array.isArray(b) ? flatten(b) : b);
-	        }, []);
-	      },
-	          injectIntoDOM = function injectIntoDOM(dependencies) {
-	        var idx = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
-	
-	        var elem = dependencies[idx];
-	
-	        if (elem === undefined) {
-	          return;
-	        } else if (elem.getAttribute('data-dactylographsy-uncached-js')) {
-	          if (_this3.injectInto) {
-	            _this3.log.info('Injecting tag:', elem);
-	
-	            _this3.injectInto.appendChild(elem);
-	          }
-	
-	          elem.addEventListener('load', function () {
-	            injectIntoDOM(dependencies, ++idx);
-	          });
-	
-	          elem.addEventListener('error', function () {
-	            injectIntoDOM(dependencies, ++idx);
-	          });
-	        } else {
-	          if (_this3.injectInto) {
-	            _this3.injectInto.appendChild(elem);
-	          }
-	
-	          injectIntoDOM(dependencies, ++idx);
-	        }
-	      };
-	
-	      return Promise.all(this.order.map(function (_package) {
-	        if (!_this3.manifests[_package]) {
-	          _this3.log.error('Couldn\'t find package ' + _package + ' from injection order.');
-	
-	          return Promise.reject();
-	        } else {
-	          return _this3.injectManifest(_this3.manifests[_package]);
-	        }
-	      })).then(function (manifests) {
-	        var dependencies = flatten(manifests);
-	
-	        injectIntoDOM(dependencies);
-	
-	        return Promise.resolve(dependencies);
-	      });
-	    }
-	  }, {
-	    key: 'injectManifest',
-	    value: function injectManifest(manifest) {
-	      var _this4 = this;
-	
-	      var hashes = Object.keys(manifest.hashes);
-	
-	      return Promise.all(hashes.map(function (hash) {
-	        var dependency = manifest.hashes[hash],
-	            rootUrl = undefined;
-	
-	        rootUrl = [manifest.rootUrl, manifest.packageUrl].filter(function (_url) {
-	          return _url !== undefined && _url !== null;
-	        }).join('/');
-	
-	        return _this4.injectDependency(dependency, rootUrl);
-	      }));
-	    }
-	  }, {
-	    key: 'injectDependency',
-	    value: function injectDependency(dependency, rootUrl) {
-	      switch (dependency.extension) {
-	        case '.css':
-	          return new _dom.Css(undefined, this.options).inject(this.urls(dependency, rootUrl));
-	        case '.js':
-	          return new _dom.Js(undefined, this.options).inject(this.urls(dependency, rootUrl));
-	        default:
-	          Promise.resolve(false);
-	      }
-	    }
-	  }, {
-	    key: 'basename',
-	    value: function basename(path) {
-	      return path.replace(/.*\/|\.[^.]*$/g, '');
-	    }
-	  }, {
-	    key: 'urls',
-	    value: function urls(dependency) {
-	      var rootUrl = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
-	
-	      var basename = this.basename(dependency.file),
-	          url = undefined;
-	
+        var _log2 = _interopRequireDefault(_log);
+
+        var _url2 = __webpack_require__(5);
+
+        var _url3 = _interopRequireDefault(_url2);
+
+        function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+        function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+        var Manifest = exports.Manifest = function () {
+          function Manifest(url, config) {
+            _classCallCheck(this, Manifest);
+
+            var _config$enableLogging = config.enableLogging;
+            var enableLogging = _config$enableLogging === undefined ? false : _config$enableLogging;
+
+
+            this.log = new _log2.default((0, _url3.default)('dactylographsy-enableLogging', enableLogging));
+
+            this.url = url;
+          }
+
+          _createClass(Manifest, [{
+            key: 'get',
+            value: function get() {
+              var _this = this;
+
+              return new _ajax2.default().get(this.url).then(function (response) {
+                var responseText = response.text;
+                var responseUrl = response.url;
+
+
+                _this.log.info('Fetched manifest from url: ' + responseUrl + '.');
+
+                return JSON.parse(responseText);
+              }, function (xhr) {
+                _this.log.error('Could not fetch manifest with url: ' + xhr.responseURL + '!');
+              });
+            }
+          }]);
+
+          return Manifest;
+        }();
+
+        var Injector = function () {
+          function Injector(injectInto, manifests) {
+            var _this2 = this;
+
+            var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+            _classCallCheck(this, Injector);
+
+            var _options$enableLoggin = options.enableLogging;
+            var enableLogging = _options$enableLoggin === undefined ? false : _options$enableLoggin;
+
+
+            this.log = new _log2.default((0, _url3.default)('dactylographsy-enableLogging', enableLogging));
+
+            this.manifests = {};
+            this.injectInto = injectInto;
+
+            manifests.forEach(function (manifest) {
+              _this2.manifests[manifest.package] = manifest;
+            });
+
+            this.options = options;
+            this.prefix = options.prefix;
+            this.order = options.order;
+          }
+
+          _createClass(Injector, [{
+            key: 'inject',
+            value: function inject() {
+              var _this3 = this;
+
+              var flatten = function flatten(list) {
+                return list.reduce(function (a, b) {
+                  return a.concat(Array.isArray(b) ? flatten(b) : b);
+                }, []);
+              },
+                  injectIntoDOM = function injectIntoDOM(dependencies) {
+                var idx = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+
+                var elem = dependencies[idx];
+
+                if (elem === undefined) {
+                  return;
+                } else if (elem.getAttribute('data-dactylographsy-uncached-js')) {
+                  if (_this3.injectInto) {
+                    _this3.log.info('Injecting tag:', elem);
+
+                    _this3.injectInto.appendChild(elem);
+                  }
+
+                  elem.addEventListener('load', function () {
+                    injectIntoDOM(dependencies, ++idx);
+                  });
+
+                  elem.addEventListener('error', function () {
+                    injectIntoDOM(dependencies, ++idx);
+                  });
+                } else {
+                  if (_this3.injectInto) {
+                    _this3.injectInto.appendChild(elem);
+                  }
+
+                  injectIntoDOM(dependencies, ++idx);
+                }
+              };
+
+              return Promise.all(this.order.map(function (_package) {
+                if (!_this3.manifests[_package]) {
+                  _this3.log.error('Couldn\'t find package ' + _package + ' from injection order.');
+
+                  return Promise.reject();
+                } else {
+                  return _this3.injectManifest(_this3.manifests[_package]);
+                }
+              })).then(function (manifests) {
+                var dependencies = flatten(manifests);
+
+                injectIntoDOM(dependencies);
+
+                return Promise.resolve(dependencies);
+              });
+            }
+          }, {
+            key: 'injectManifest',
+            value: function injectManifest(manifest) {
+              var _this4 = this;
+
+              var hashes = Object.keys(manifest.hashes);
+
+              return Promise.all(hashes.map(function (hash) {
+                var dependency = manifest.hashes[hash],
+                    rootUrl = undefined;
+
+                rootUrl = [manifest.rootUrl, manifest.packageUrl].filter(function (_url) {
+                  return _url !== undefined && _url !== null;
+                }).join('/');
+
+                return _this4.injectDependency(dependency, rootUrl);
+              }));
+            }
+          }, {
+            key: 'injectDependency',
+            value: function injectDependency(dependency, rootUrl) {
+              switch (dependency.extension) {
+                case '.css':
+                  return new _dom.Css(undefined, this.options).inject(this.urls(dependency, rootUrl));
+                case '.js':
+                  return new _dom.Js(undefined, this.options).inject(this.urls(dependency, rootUrl));
+                default:
+                  Promise.resolve(false);
+              }
+            }
+          }, {
+            key: 'basename',
+            value: function basename(path) {
+              return path.replace(/.*\/|\.[^.]*$/g, '');
+            }
+          }, {
+            key: 'urls',
+            value: function urls(dependency) {
+              var rootUrl = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
+
+              var basename = this.basename(dependency.file),
+                  url = undefined;
+
               // Filter out potential null values
               // passed in as various parts of an url.
-	      url = [this.prefix, rootUrl, dependency.path].filter(function (_url) {
-	        return _url !== undefined && _url !== null;
-	      }).join('/');
-	
-	      return {
-                hash: dependency.hash,
-	        printed: '/' + url + '/' + basename + '-' + dependency.hash + dependency.extension,
-	        raw: '/' + url + '/' + basename + dependency.extension,
-	        singularBy: '/' + url + '/' + basename + dependency.extension
-	      };
-	    }
-	  }]);
-	
-	  return Injector;
-	}();
+              url = [this.prefix, rootUrl, dependency.path].filter(function (_url) {
+                return _url !== undefined && _url !== null;
+              }).join('/');
 
-	exports.default = Injector;
+              return {
+                hash: dependency.hash,
+                printed: '/' + url + '/' + basename + '-' + dependency.hash + dependency.extension,
+                raw: '/' + url + '/' + basename + dependency.extension,
+                singularBy: '/' + url + '/' + basename + dependency.extension
+              };
+            }
+          }]);
+
+          return Injector;
+        }();
+
+        exports.default = Injector;
 
 /***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.Css = exports.Js = undefined;
-	
+        'use strict';
+
+        Object.defineProperty(exports, "__esModule", {
+          value: true
+        });
+        exports.Css = exports.Js = undefined;
+
         var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _cache = __webpack_require__(3);
-	
-	var _cache2 = _interopRequireDefault(_cache);
-	
+        var _cache = __webpack_require__(3);
+
+        var _cache2 = _interopRequireDefault(_cache);
+
         var _ajax = __webpack_require__(9);
-	
-	var _ajax2 = _interopRequireDefault(_ajax);
-	
-	var _log = __webpack_require__(4);
-	
-	var _log2 = _interopRequireDefault(_log);
-	
-	var _url = __webpack_require__(5);
-	
-	var _url2 = _interopRequireDefault(_url);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
+
+        var _ajax2 = _interopRequireDefault(_ajax);
+
+        var _log = __webpack_require__(4);
+
+        var _log2 = _interopRequireDefault(_log);
+
+        var _url = __webpack_require__(5);
+
+        var _url2 = _interopRequireDefault(_url);
+
+        function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+        function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
         var Js = function () {
-	  function Js(injectInto) {
-	    var config = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	
-	    _classCallCheck(this, Js);
-	
-	    var _config$enableLogging = config.enableLogging;
-	    var enableLogging = _config$enableLogging === undefined ? false : _config$enableLogging;
+          function Js(injectInto) {
+            var config = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+            _classCallCheck(this, Js);
+
+            var _config$enableLogging = config.enableLogging;
+            var enableLogging = _config$enableLogging === undefined ? false : _config$enableLogging;
             var _config$verification = config.verification;
             var verification = _config$verification === undefined ? false : _config$verification;
 
-	
-	    enableLogging = (0, _url2.default)('dactylographsy-enableLogging', enableLogging);
-	
-	    this.injectInto = injectInto;
-	
-	    this.cache = new _cache2.default({
-	      appPrefix: config.appPrefix,
-	      enableLogging: enableLogging
-	    });
-	
-	    this.cacheDelay = config.cacheDelay || 5000;
-            this.verification = verification;
-	
-	    this.log = new _log2.default(enableLogging);
-	  }
-	
-	  _createClass(Js, [{
-	    key: 'injectWithText',
-	    value: function injectWithText(text, url) {
-	      var _this = this;
-	
-	      return new Promise(function (resolve) {
-	        var script = document.createElement('script');
-	
-	        _this.log.info('Creating <script />-tag with text for ' + url + '.');
-	
-	        script.defer = false;
-	        script.async = false;
-	
-	        script.setAttribute('data-dactylographsy-url', url);
-	
-	        script.text = '\n        ' + text + '\n        //# sourceURL=' + url + '\n      ';
-	
-	        if (_this.injectInto) {
-	          _this.log.info('Injecting <script />-tag with url: ' + url + '.');
-	
-	          resolve(_this.injectInto.appendChild(script));
-	        } else {
-	          resolve(script);
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'injectWithUrl',
-	    value: function injectWithUrl(urls) {
-	      var _this2 = this;
-	
-	      var whichUrl = arguments.length <= 1 || arguments[1] === undefined ? 'printed' : arguments[1];
-	
-	      return new Promise(function (resolve) {
-	        // Create script element and set its type
-	        var script = document.createElement('script'),
-	            url = urls[whichUrl];
-	
-	        _this2.log.info('Creating <script />-tag with url: ' + url + '.');
-	
-	        script.async = false;
-	        script.defer = false;
-	
-	        script.setAttribute('data-dactylographsy-url', url);
-	        script.setAttribute('data-dactylographsy-uncached-js', true);
-	
-	        // Bind to readyState or register ´onload´ callback
-	        if (script.readyState) {
-	          // Callback for IE's `onreadystatechange` (I feel seesick)
-	          script.onreadystatechange = function () {
-	            if (script.readyState === 'loaded' || script.readyState === 'complete') {
-	              script.onreadystatechange = null;
-	
-	              _this2.ensureCache(url, urls.singularBy, _this2.cacheDelay);
-	            }
-	          };
-	        } else {
-	          // Bind `onload` callback on script element
-	          script.onload = function () {
-	            if (whichUrl === 'printed') {
-	              _this2.ensureCache(url, urls.singularBy, _this2.cacheDelay);
-	            }
-	          };
-	
-	          // Inject unprinted without caching in case of error
-	          script.onerror = function () {
-	            _this2.log.info('Could not fetch JavaScript from ' + url + ' - falling back to unprinted version.');
-	
-	            if (whichUrl === 'printed') {
-	              _this2.injectWithUrl(urls, 'raw');
-	            }
-	          };
-	        }
-	
-	        script.src = url;
-	
-	        if (_this2.injectInto) {
-	          _this2.log.info('Injecting <script />-tag with url: ' + url + '.');
-	
-	          resolve(_this2.injectInto.appendChild(script));
-	        } else {
-	          // ...needs caching manually cause never injected
-	          if (whichUrl === 'printed') {
-	            _this2.ensureCache(url, urls.singularBy, _this2.cacheDelay);
-	          }
-	
-	          resolve(script);
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'ensureCache',
-	    value: function ensureCache(url) {
-	      var _this3 = this;
-	
-	      var singularBy = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-	      var delay = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-	
-	      return new Promise(function (resolve, reject) {
-	        if (_this3.cache.has(url)) {
-	          resolve();
-	        }
-	
-	        _this3.log.info('Loading JavaScript from ' + url + ' for cache in ' + delay + '.');
-	
-	        window.setTimeout(function () {
-	          return new _ajax2.default().get(url).then(function (response) {
-	            var responseText = response.text;
-	
 
-	            _this3.cache.set(responseText, 'js', url, singularBy);
-	
-	            _this3.log.info('Loaded JavaScript from ' + url + ' now cached.');
-	
-	            resolve();
-	          }).catch(function () {
-	            _this3.log.info('Failed attempting to cache JavaScript from ' + url + '.');
-	          });
-	        }, delay);
-	      });
-	    }
-	  }, {
+            enableLogging = (0, _url2.default)('dactylographsy-enableLogging', enableLogging);
+
+            this.injectInto = injectInto;
+
+            this.cache = new _cache2.default({
+              appPrefix: config.appPrefix,
+              enableLogging: enableLogging
+            });
+
+            this.cacheDelay = config.cacheDelay || 5000;
+            this.verification = verification;
+
+            this.log = new _log2.default(enableLogging);
+          }
+
+          _createClass(Js, [{
+            key: 'injectWithText',
+            value: function injectWithText(text, url) {
+              var _this = this;
+
+              return new Promise(function (resolve) {
+                var script = document.createElement('script');
+
+                _this.log.info('Creating <script />-tag with text for ' + url + '.');
+
+                script.defer = false;
+                script.async = false;
+
+                script.setAttribute('data-dactylographsy-url', url);
+
+                script.text = '\n        ' + text + '\n        //# sourceURL=' + url + '\n      ';
+
+                if (_this.injectInto) {
+                  _this.log.info('Injecting <script />-tag with url: ' + url + '.');
+
+                  resolve(_this.injectInto.appendChild(script));
+                } else {
+                  resolve(script);
+                }
+              });
+            }
+          }, {
+            key: 'injectWithUrl',
+            value: function injectWithUrl(urls) {
+              var _this2 = this;
+
+              var whichUrl = arguments.length <= 1 || arguments[1] === undefined ? 'printed' : arguments[1];
+
+              return new Promise(function (resolve) {
+                // Create script element and set its type
+                var script = document.createElement('script'),
+                    url = urls[whichUrl];
+
+                _this2.log.info('Creating <script />-tag with url: ' + url + '.');
+
+                script.async = false;
+                script.defer = false;
+
+                script.setAttribute('data-dactylographsy-url', url);
+                script.setAttribute('data-dactylographsy-uncached-js', true);
+
+                // Bind to readyState or register ´onload´ callback
+                if (script.readyState) {
+                  // Callback for IE's `onreadystatechange` (I feel seesick)
+                  script.onreadystatechange = function () {
+                    if (script.readyState === 'loaded' || script.readyState === 'complete') {
+                      script.onreadystatechange = null;
+
+                      _this2.ensureCache(url, urls.singularBy, _this2.cacheDelay);
+                    }
+                  };
+                } else {
+                  // Bind `onload` callback on script element
+                  script.onload = function () {
+                    if (whichUrl === 'printed') {
+                      _this2.ensureCache(url, urls.singularBy, _this2.cacheDelay);
+                    }
+                  };
+
+                  // Inject unprinted without caching in case of error
+                  script.onerror = function () {
+                    _this2.log.info('Could not fetch JavaScript from ' + url + ' - falling back to unprinted version.');
+
+                    if (whichUrl === 'printed') {
+                      _this2.injectWithUrl(urls, 'raw');
+                    }
+                  };
+                }
+
+                script.src = url;
+
+                if (_this2.injectInto) {
+                  _this2.log.info('Injecting <script />-tag with url: ' + url + '.');
+
+                  resolve(_this2.injectInto.appendChild(script));
+                } else {
+                  // ...needs caching manually cause never injected
+                  if (whichUrl === 'printed') {
+                    _this2.ensureCache(url, urls.singularBy, _this2.cacheDelay);
+                  }
+
+                  resolve(script);
+                }
+              });
+            }
+          }, {
+            key: 'ensureCache',
+            value: function ensureCache(url) {
+              var _this3 = this;
+
+              var singularBy = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+              var delay = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+              return new Promise(function (resolve, reject) {
+                if (_this3.cache.has(url)) {
+                  resolve();
+                }
+
+                _this3.log.info('Loading JavaScript from ' + url + ' for cache in ' + delay + '.');
+
+                window.setTimeout(function () {
+                  return new _ajax2.default().get(url).then(function (response) {
+                    var responseText = response.text;
+
+
+                    _this3.cache.set(responseText, 'js', url, singularBy);
+
+                    _this3.log.info('Loaded JavaScript from ' + url + ' now cached.');
+
+                    resolve();
+                  }).catch(function () {
+                    _this3.log.info('Failed attempting to cache JavaScript from ' + url + '.');
+                  });
+                }, delay);
+              });
+            }
+          }, {
             key: 'hash',
             value: function hash(_hash) {
               return this.verification === true ? _hash : false;
             }
           }, {
-	    key: 'inject',
-	    value: function inject(urls) {
-	      var _this4 = this;
-	
+            key: 'inject',
+            value: function inject(urls) {
+              var _this4 = this;
+
               return this.cache.get(urls.printed, undefined, this.hash(urls.hash)).then(function (text) {
-	        return _this4.injectWithText(text, urls.printed);
-	      }, function () {
-	        return _this4.injectWithUrl(urls);
-	      });
-	    }
-	  }]);
-	
-	  return Js;
-	}();
-	
+                return _this4.injectWithText(text, urls.printed);
+              }, function () {
+                return _this4.injectWithUrl(urls);
+              });
+            }
+          }]);
+
+          return Js;
+        }();
+
         exports.Js = Js;
 
         var Css = function () {
-	  function Css(injectInto) {
-	    var config = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	
-	    _classCallCheck(this, Css);
-	
-	    var _config$enableLogging2 = config.enableLogging;
-	    var enableLogging = _config$enableLogging2 === undefined ? false : _config$enableLogging2;
+          function Css(injectInto) {
+            var config = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+            _classCallCheck(this, Css);
+
+            var _config$enableLogging2 = config.enableLogging;
+            var enableLogging = _config$enableLogging2 === undefined ? false : _config$enableLogging2;
             var _config$verification2 = config.verification;
             var verification = _config$verification2 === undefined ? false : _config$verification2;
 
-	
-	    enableLogging = (0, _url2.default)('dactylographsy-enableLogging', enableLogging);
-	
-	    this.injectInto = injectInto;
-	
-	    this.cache = new _cache2.default({
-	      appPrefix: config.appPrefix
-	    });
-	
-	    this.cacheDelay = config.cacheDelay || 5000;
-            this.verification = verification;
-	
-	    this.log = new _log2.default(enableLogging);
-	  }
-	
-	  _createClass(Css, [{
-	    key: 'ensureCache',
-	    value: function ensureCache(url) {
-	      var _this5 = this;
-	
-	      var singularBy = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-	      var delay = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-	
-	      return new Promise(function (resolve) {
-	        if (_this5.cache.has(url)) {
-	          resolve();
-	        }
-	
-	        _this5.log.info('Loading CSS from ' + url + ' for cache in ' + delay + '.');
-	
-	        window.setTimeout(function () {
-	          return new _ajax2.default().get(url).then(function (response) {
-	            var responseText = response.text;
-	
 
-	            _this5.cache.set(responseText, 'css', url, singularBy);
-	
-	            _this5.log.info('Loaded CSS from ' + url + ' now cached.');
-	
-	            resolve();
-	          }).catch(function () {
-	            _this5.log.info('Failed attempting to cache CSS from ' + url + '.');
-	          });
-	        }, delay);
-	      });
-	    }
-	  }, {
-	    key: 'injectWithUrl',
-	    value: function injectWithUrl(urls) {
-	      var _this6 = this;
-	
-	      var whichUrl = arguments.length <= 1 || arguments[1] === undefined ? 'printed' : arguments[1];
-	
-	      return new Promise(function (resolve) {
-	        var link = document.createElement('link'),
-	            url = urls[whichUrl];
-	
-	        _this6.log.info('Creating <link />-tag with url: ' + url + '.');
-	
-	        link = document.createElement('link');
-	
-	        link.type = 'text/css';
-	        link.rel = 'stylesheet';
-	
-	        link.setAttribute('data-dactylographsy-url', url);
-	        link.setAttribute('data-dactylographsy-uncached-css', true);
-	
-	        link.href = url;
-	
-	        // Fallback to unprinted assets after cache attempt
-	        // no callbacks for stylesheet injections (timeouts are worse...)
-	        if (whichUrl === 'printed') {
-	          _this6.ensureCache(url, urls.singularBy, _this6.cacheDelay).catch(function () {
-	            _this6.log.info('Could not fetch CSS from ' + url + ' - falling back to unprinted version.');
-	
-	            _this6.injectWithUrl(urls, 'raw');
-	          });
-	        }
-	
-	        if (_this6.injectInto) {
-	          _this6.log.info('Injecting <link />-tag with url: ' + url + '.');
-	
-	          resolve(_this6.injectInto.appendChild(link));
-	        } else {
-	          resolve(link);
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'injectWithText',
-	    value: function injectWithText(text, url) {
-	      var _this7 = this;
-	
-	      return new Promise(function (resolve) {
-	        var link = document.createElement('link');
-	
-	        _this7.log.info('Creating <link />-tag with text for url: ' + url + '.');
-	
-	        link = document.createElement('style');
-	
-	        link.setAttribute('data-dactylographsy-url', url);
-	
-	        link.textContent = text;
-	
-	        if (_this7.injectInto) {
-	          _this7.log.info('Injecting <link />-tag with url: ' + url + '.');
-	
-	          resolve(_this7.injectInto.appendChild(link));
-	        } else {
-	          resolve(link);
-	        }
-	      });
-	    }
-	  }, {
+            enableLogging = (0, _url2.default)('dactylographsy-enableLogging', enableLogging);
+
+            this.injectInto = injectInto;
+
+            this.cache = new _cache2.default({
+              appPrefix: config.appPrefix
+            });
+
+            this.cacheDelay = config.cacheDelay || 5000;
+            this.verification = verification;
+
+            this.log = new _log2.default(enableLogging);
+          }
+
+          _createClass(Css, [{
+            key: 'ensureCache',
+            value: function ensureCache(url) {
+              var _this5 = this;
+
+              var singularBy = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+              var delay = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+              return new Promise(function (resolve) {
+                if (_this5.cache.has(url)) {
+                  resolve();
+                }
+
+                _this5.log.info('Loading CSS from ' + url + ' for cache in ' + delay + '.');
+
+                window.setTimeout(function () {
+                  return new _ajax2.default().get(url).then(function (response) {
+                    var responseText = response.text;
+
+
+                    _this5.cache.set(responseText, 'css', url, singularBy);
+
+                    _this5.log.info('Loaded CSS from ' + url + ' now cached.');
+
+                    resolve();
+                  }).catch(function () {
+                    _this5.log.info('Failed attempting to cache CSS from ' + url + '.');
+                  });
+                }, delay);
+              });
+            }
+          }, {
+            key: 'injectWithUrl',
+            value: function injectWithUrl(urls) {
+              var _this6 = this;
+
+              var whichUrl = arguments.length <= 1 || arguments[1] === undefined ? 'printed' : arguments[1];
+
+              return new Promise(function (resolve) {
+                var link = document.createElement('link'),
+                    url = urls[whichUrl];
+
+                _this6.log.info('Creating <link />-tag with url: ' + url + '.');
+
+                link = document.createElement('link');
+
+                link.type = 'text/css';
+                link.rel = 'stylesheet';
+
+                link.setAttribute('data-dactylographsy-url', url);
+                link.setAttribute('data-dactylographsy-uncached-css', true);
+
+                link.href = url;
+
+                // Fallback to unprinted assets after cache attempt
+                // no callbacks for stylesheet injections (timeouts are worse...)
+                if (whichUrl === 'printed') {
+                  _this6.ensureCache(url, urls.singularBy, _this6.cacheDelay).catch(function () {
+                    _this6.log.info('Could not fetch CSS from ' + url + ' - falling back to unprinted version.');
+
+                    _this6.injectWithUrl(urls, 'raw');
+                  });
+                }
+
+                if (_this6.injectInto) {
+                  _this6.log.info('Injecting <link />-tag with url: ' + url + '.');
+
+                  resolve(_this6.injectInto.appendChild(link));
+                } else {
+                  resolve(link);
+                }
+              });
+            }
+          }, {
+            key: 'injectWithText',
+            value: function injectWithText(text, url) {
+              var _this7 = this;
+
+              return new Promise(function (resolve) {
+                var link = document.createElement('link');
+
+                _this7.log.info('Creating <link />-tag with text for url: ' + url + '.');
+
+                link = document.createElement('style');
+
+                link.setAttribute('data-dactylographsy-url', url);
+
+                link.textContent = text;
+
+                if (_this7.injectInto) {
+                  _this7.log.info('Injecting <link />-tag with url: ' + url + '.');
+
+                  resolve(_this7.injectInto.appendChild(link));
+                } else {
+                  resolve(link);
+                }
+              });
+            }
+          }, {
             key: 'hash',
             value: function hash(_hash2) {
               return this.verification === true ? _hash2 : false;
             }
           }, {
-	    key: 'inject',
-	    value: function inject(urls) {
-	      var _this8 = this;
-	
+            key: 'inject',
+            value: function inject(urls) {
+              var _this8 = this;
+
               return this.cache.get(urls.printed, undefined, this.hash(urls.hash)).then(function (text) {
-	        return _this8.injectWithText(text, urls.printed);
-	      }, function () {
-	        return _this8.injectWithUrl(urls);
-	      });
-	    }
-	  }]);
-	
-	  return Css;
-	}();
+                return _this8.injectWithText(text, urls.printed);
+              }, function () {
+                return _this8.injectWithUrl(urls);
+              });
+            }
+          }]);
+
+          return Css;
+        }();
 
         exports.Css = Css;
 
@@ -1557,227 +1557,227 @@
 /* 9 */
 /***/ function(module, exports) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
+        'use strict';
+
+        Object.defineProperty(exports, "__esModule", {
+          value: true
+        });
+
         var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Ajax = function () {
-	  function Ajax() {
-	    _classCallCheck(this, Ajax);
-	  }
-	
-	  _createClass(Ajax, [{
-	    key: 'get',
-	    value: function get(url) {
-	      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	
-	      return new Promise(function (resolve, reject) {
-	        var xhr = new XMLHttpRequest();
-	
-	        if ('withCredentials' in xhr) {
-	          // XHR for Chrome/Firefox/Opera/Safari.
-	          xhr.open('GET', url, true);
-	        } else if (typeof XDomainRequest !== 'undefined') {
-	          // XDomainRequest for IE.
-	          xhr = new XDomainRequest();
-	          xhr.open('GET', url);
-	        } else {
-	          // CORS not supported.
-	          xhr = null;
-	        }
-	
-	        if (options.withCredentials) {
-	          xhr.withCredentials = true;
-	        }
-	
-	        // Response handlers.
-	        xhr.onload = function () {
-	          if (xhr.status >= 400) {
-	            reject(xhr);
-	          } else {
-	            resolve({
-	              xhr: xhr,
-	              text: xhr.responseText,
-	              url: xhr.responseURL
-	            });
-	          }
-	        };
-	
-	        xhr.onerror = function () {
-	          reject(xhr);
-	        };
-	
-	        xhr.send();
-	      });
-	    }
-	  }]);
-	
-	  return Ajax;
-	}();
+        function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	exports.default = Ajax;
+        var Ajax = function () {
+          function Ajax() {
+            _classCallCheck(this, Ajax);
+          }
+
+          _createClass(Ajax, [{
+            key: 'get',
+            value: function get(url) {
+              var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+              return new Promise(function (resolve, reject) {
+                var xhr = new XMLHttpRequest();
+
+                if ('withCredentials' in xhr) {
+                  // XHR for Chrome/Firefox/Opera/Safari.
+                  xhr.open('GET', url, true);
+                } else if (typeof XDomainRequest !== 'undefined') {
+                  // XDomainRequest for IE.
+                  xhr = new XDomainRequest();
+                  xhr.open('GET', url);
+                } else {
+                  // CORS not supported.
+                  xhr = null;
+                }
+
+                if (options.withCredentials) {
+                  xhr.withCredentials = true;
+                }
+
+                // Response handlers.
+                xhr.onload = function () {
+                  if (xhr.status >= 400) {
+                    reject(xhr);
+                  } else {
+                    resolve({
+                      xhr: xhr,
+                      text: xhr.responseText,
+                      url: xhr.responseURL
+                    });
+                  }
+                };
+
+                xhr.onerror = function () {
+                  reject(xhr);
+                };
+
+                xhr.send();
+              });
+            }
+          }]);
+
+          return Ajax;
+        }();
+
+        exports.default = Ajax;
 
 /***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
-	 * @overview es6-promise - a tiny implementation of Promises/A+.
-	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
-	 * @license   Licensed under MIT license
-	 *            See https://raw.githubusercontent.com/jakearchibald/es6-promise/master/LICENSE
+        var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, global, module) {/*!
+         * @overview es6-promise - a tiny implementation of Promises/A+.
+         * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
+         * @license   Licensed under MIT license
+         *            See https://raw.githubusercontent.com/jakearchibald/es6-promise/master/LICENSE
          * @version   3.1.2
-	 */
-	
-	(function() {
-	    "use strict";
-	    function lib$es6$promise$utils$$objectOrFunction(x) {
-	      return typeof x === 'function' || (typeof x === 'object' && x !== null);
-	    }
-	
-	    function lib$es6$promise$utils$$isFunction(x) {
-	      return typeof x === 'function';
-	    }
-	
-	    function lib$es6$promise$utils$$isMaybeThenable(x) {
-	      return typeof x === 'object' && x !== null;
-	    }
-	
-	    var lib$es6$promise$utils$$_isArray;
-	    if (!Array.isArray) {
-	      lib$es6$promise$utils$$_isArray = function (x) {
-	        return Object.prototype.toString.call(x) === '[object Array]';
-	      };
-	    } else {
-	      lib$es6$promise$utils$$_isArray = Array.isArray;
-	    }
-	
-	    var lib$es6$promise$utils$$isArray = lib$es6$promise$utils$$_isArray;
-	    var lib$es6$promise$asap$$len = 0;
-	    var lib$es6$promise$asap$$vertxNext;
-	    var lib$es6$promise$asap$$customSchedulerFn;
-	
-	    var lib$es6$promise$asap$$asap = function asap(callback, arg) {
-	      lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len] = callback;
-	      lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len + 1] = arg;
-	      lib$es6$promise$asap$$len += 2;
-	      if (lib$es6$promise$asap$$len === 2) {
-	        // If len is 2, that means that we need to schedule an async flush.
-	        // If additional callbacks are queued before the queue is flushed, they
-	        // will be processed by this flush that we are scheduling.
-	        if (lib$es6$promise$asap$$customSchedulerFn) {
-	          lib$es6$promise$asap$$customSchedulerFn(lib$es6$promise$asap$$flush);
-	        } else {
-	          lib$es6$promise$asap$$scheduleFlush();
-	        }
-	      }
-	    }
-	
-	    function lib$es6$promise$asap$$setScheduler(scheduleFn) {
-	      lib$es6$promise$asap$$customSchedulerFn = scheduleFn;
-	    }
-	
-	    function lib$es6$promise$asap$$setAsap(asapFn) {
-	      lib$es6$promise$asap$$asap = asapFn;
-	    }
-	
-	    var lib$es6$promise$asap$$browserWindow = (typeof window !== 'undefined') ? window : undefined;
-	    var lib$es6$promise$asap$$browserGlobal = lib$es6$promise$asap$$browserWindow || {};
-	    var lib$es6$promise$asap$$BrowserMutationObserver = lib$es6$promise$asap$$browserGlobal.MutationObserver || lib$es6$promise$asap$$browserGlobal.WebKitMutationObserver;
-	    var lib$es6$promise$asap$$isNode = typeof process !== 'undefined' && {}.toString.call(process) === '[object process]';
-	
-	    // test for web worker but not in IE10
-	    var lib$es6$promise$asap$$isWorker = typeof Uint8ClampedArray !== 'undefined' &&
-	      typeof importScripts !== 'undefined' &&
-	      typeof MessageChannel !== 'undefined';
-	
-	    // node
-	    function lib$es6$promise$asap$$useNextTick() {
-	      // node version 0.10.x displays a deprecation warning when nextTick is used recursively
-	      // see https://github.com/cujojs/when/issues/410 for details
-	      return function() {
-	        process.nextTick(lib$es6$promise$asap$$flush);
-	      };
-	    }
-	
-	    // vertx
-	    function lib$es6$promise$asap$$useVertxTimer() {
-	      return function() {
-	        lib$es6$promise$asap$$vertxNext(lib$es6$promise$asap$$flush);
-	      };
-	    }
-	
-	    function lib$es6$promise$asap$$useMutationObserver() {
-	      var iterations = 0;
-	      var observer = new lib$es6$promise$asap$$BrowserMutationObserver(lib$es6$promise$asap$$flush);
-	      var node = document.createTextNode('');
-	      observer.observe(node, { characterData: true });
-	
-	      return function() {
-	        node.data = (iterations = ++iterations % 2);
-	      };
-	    }
-	
-	    // web worker
-	    function lib$es6$promise$asap$$useMessageChannel() {
-	      var channel = new MessageChannel();
-	      channel.port1.onmessage = lib$es6$promise$asap$$flush;
-	      return function () {
-	        channel.port2.postMessage(0);
-	      };
-	    }
-	
-	    function lib$es6$promise$asap$$useSetTimeout() {
-	      return function() {
-	        setTimeout(lib$es6$promise$asap$$flush, 1);
-	      };
-	    }
-	
-	    var lib$es6$promise$asap$$queue = new Array(1000);
-	    function lib$es6$promise$asap$$flush() {
-	      for (var i = 0; i < lib$es6$promise$asap$$len; i+=2) {
-	        var callback = lib$es6$promise$asap$$queue[i];
-	        var arg = lib$es6$promise$asap$$queue[i+1];
-	
-	        callback(arg);
-	
-	        lib$es6$promise$asap$$queue[i] = undefined;
-	        lib$es6$promise$asap$$queue[i+1] = undefined;
-	      }
-	
-	      lib$es6$promise$asap$$len = 0;
-	    }
-	
-	    function lib$es6$promise$asap$$attemptVertx() {
-	      try {
-	        var r = require;
+         */
+
+        (function() {
+            "use strict";
+            function lib$es6$promise$utils$$objectOrFunction(x) {
+              return typeof x === 'function' || (typeof x === 'object' && x !== null);
+            }
+
+            function lib$es6$promise$utils$$isFunction(x) {
+              return typeof x === 'function';
+            }
+
+            function lib$es6$promise$utils$$isMaybeThenable(x) {
+              return typeof x === 'object' && x !== null;
+            }
+
+            var lib$es6$promise$utils$$_isArray;
+            if (!Array.isArray) {
+              lib$es6$promise$utils$$_isArray = function (x) {
+                return Object.prototype.toString.call(x) === '[object Array]';
+              };
+            } else {
+              lib$es6$promise$utils$$_isArray = Array.isArray;
+            }
+
+            var lib$es6$promise$utils$$isArray = lib$es6$promise$utils$$_isArray;
+            var lib$es6$promise$asap$$len = 0;
+            var lib$es6$promise$asap$$vertxNext;
+            var lib$es6$promise$asap$$customSchedulerFn;
+
+            var lib$es6$promise$asap$$asap = function asap(callback, arg) {
+              lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len] = callback;
+              lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len + 1] = arg;
+              lib$es6$promise$asap$$len += 2;
+              if (lib$es6$promise$asap$$len === 2) {
+                // If len is 2, that means that we need to schedule an async flush.
+                // If additional callbacks are queued before the queue is flushed, they
+                // will be processed by this flush that we are scheduling.
+                if (lib$es6$promise$asap$$customSchedulerFn) {
+                  lib$es6$promise$asap$$customSchedulerFn(lib$es6$promise$asap$$flush);
+                } else {
+                  lib$es6$promise$asap$$scheduleFlush();
+                }
+              }
+            }
+
+            function lib$es6$promise$asap$$setScheduler(scheduleFn) {
+              lib$es6$promise$asap$$customSchedulerFn = scheduleFn;
+            }
+
+            function lib$es6$promise$asap$$setAsap(asapFn) {
+              lib$es6$promise$asap$$asap = asapFn;
+            }
+
+            var lib$es6$promise$asap$$browserWindow = (typeof window !== 'undefined') ? window : undefined;
+            var lib$es6$promise$asap$$browserGlobal = lib$es6$promise$asap$$browserWindow || {};
+            var lib$es6$promise$asap$$BrowserMutationObserver = lib$es6$promise$asap$$browserGlobal.MutationObserver || lib$es6$promise$asap$$browserGlobal.WebKitMutationObserver;
+            var lib$es6$promise$asap$$isNode = typeof process !== 'undefined' && {}.toString.call(process) === '[object process]';
+
+            // test for web worker but not in IE10
+            var lib$es6$promise$asap$$isWorker = typeof Uint8ClampedArray !== 'undefined' &&
+              typeof importScripts !== 'undefined' &&
+              typeof MessageChannel !== 'undefined';
+
+            // node
+            function lib$es6$promise$asap$$useNextTick() {
+              // node version 0.10.x displays a deprecation warning when nextTick is used recursively
+              // see https://github.com/cujojs/when/issues/410 for details
+              return function() {
+                process.nextTick(lib$es6$promise$asap$$flush);
+              };
+            }
+
+            // vertx
+            function lib$es6$promise$asap$$useVertxTimer() {
+              return function() {
+                lib$es6$promise$asap$$vertxNext(lib$es6$promise$asap$$flush);
+              };
+            }
+
+            function lib$es6$promise$asap$$useMutationObserver() {
+              var iterations = 0;
+              var observer = new lib$es6$promise$asap$$BrowserMutationObserver(lib$es6$promise$asap$$flush);
+              var node = document.createTextNode('');
+              observer.observe(node, { characterData: true });
+
+              return function() {
+                node.data = (iterations = ++iterations % 2);
+              };
+            }
+
+            // web worker
+            function lib$es6$promise$asap$$useMessageChannel() {
+              var channel = new MessageChannel();
+              channel.port1.onmessage = lib$es6$promise$asap$$flush;
+              return function () {
+                channel.port2.postMessage(0);
+              };
+            }
+
+            function lib$es6$promise$asap$$useSetTimeout() {
+              return function() {
+                setTimeout(lib$es6$promise$asap$$flush, 1);
+              };
+            }
+
+            var lib$es6$promise$asap$$queue = new Array(1000);
+            function lib$es6$promise$asap$$flush() {
+              for (var i = 0; i < lib$es6$promise$asap$$len; i+=2) {
+                var callback = lib$es6$promise$asap$$queue[i];
+                var arg = lib$es6$promise$asap$$queue[i+1];
+
+                callback(arg);
+
+                lib$es6$promise$asap$$queue[i] = undefined;
+                lib$es6$promise$asap$$queue[i+1] = undefined;
+              }
+
+              lib$es6$promise$asap$$len = 0;
+            }
+
+            function lib$es6$promise$asap$$attemptVertx() {
+              try {
+                var r = require;
                 var vertx = __webpack_require__(13);
-	        lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
-	        return lib$es6$promise$asap$$useVertxTimer();
-	      } catch(e) {
-	        return lib$es6$promise$asap$$useSetTimeout();
-	      }
-	    }
-	
-	    var lib$es6$promise$asap$$scheduleFlush;
-	    // Decide what async method to use to triggering processing of queued callbacks:
-	    if (lib$es6$promise$asap$$isNode) {
-	      lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$useNextTick();
-	    } else if (lib$es6$promise$asap$$BrowserMutationObserver) {
-	      lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$useMutationObserver();
-	    } else if (lib$es6$promise$asap$$isWorker) {
-	      lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$useMessageChannel();
-	    } else if (lib$es6$promise$asap$$browserWindow === undefined && "function" === 'function') {
-	      lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$attemptVertx();
-	    } else {
-	      lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$useSetTimeout();
-	    }
+                lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
+                return lib$es6$promise$asap$$useVertxTimer();
+              } catch(e) {
+                return lib$es6$promise$asap$$useSetTimeout();
+              }
+            }
+
+            var lib$es6$promise$asap$$scheduleFlush;
+            // Decide what async method to use to triggering processing of queued callbacks:
+            if (lib$es6$promise$asap$$isNode) {
+              lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$useNextTick();
+            } else if (lib$es6$promise$asap$$BrowserMutationObserver) {
+              lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$useMutationObserver();
+            } else if (lib$es6$promise$asap$$isWorker) {
+              lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$useMessageChannel();
+            } else if (lib$es6$promise$asap$$browserWindow === undefined && "function" === 'function') {
+              lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$attemptVertx();
+            } else {
+              lib$es6$promise$asap$$scheduleFlush = lib$es6$promise$asap$$useSetTimeout();
+            }
             function lib$es6$promise$then$$then(onFulfillment, onRejection) {
               var parent = this;
               var state = parent._state;
@@ -1814,640 +1814,640 @@
               return promise;
             }
             var lib$es6$promise$promise$resolve$$default = lib$es6$promise$promise$resolve$$resolve;
-	
-	    function lib$es6$promise$$internal$$noop() {}
-	
-	    var lib$es6$promise$$internal$$PENDING   = void 0;
-	    var lib$es6$promise$$internal$$FULFILLED = 1;
-	    var lib$es6$promise$$internal$$REJECTED  = 2;
-	
-	    var lib$es6$promise$$internal$$GET_THEN_ERROR = new lib$es6$promise$$internal$$ErrorObject();
-	
-	    function lib$es6$promise$$internal$$selfFulfillment() {
-	      return new TypeError("You cannot resolve a promise with itself");
-	    }
-	
-	    function lib$es6$promise$$internal$$cannotReturnOwn() {
-	      return new TypeError('A promises callback cannot return that same promise.');
-	    }
-	
-	    function lib$es6$promise$$internal$$getThen(promise) {
-	      try {
-	        return promise.then;
-	      } catch(error) {
-	        lib$es6$promise$$internal$$GET_THEN_ERROR.error = error;
-	        return lib$es6$promise$$internal$$GET_THEN_ERROR;
-	      }
-	    }
-	
-	    function lib$es6$promise$$internal$$tryThen(then, value, fulfillmentHandler, rejectionHandler) {
-	      try {
-	        then.call(value, fulfillmentHandler, rejectionHandler);
-	      } catch(e) {
-	        return e;
-	      }
-	    }
-	
-	    function lib$es6$promise$$internal$$handleForeignThenable(promise, thenable, then) {
-	       lib$es6$promise$asap$$asap(function(promise) {
-	        var sealed = false;
-	        var error = lib$es6$promise$$internal$$tryThen(then, thenable, function(value) {
-	          if (sealed) { return; }
-	          sealed = true;
-	          if (thenable !== value) {
-	            lib$es6$promise$$internal$$resolve(promise, value);
-	          } else {
-	            lib$es6$promise$$internal$$fulfill(promise, value);
-	          }
-	        }, function(reason) {
-	          if (sealed) { return; }
-	          sealed = true;
-	
-	          lib$es6$promise$$internal$$reject(promise, reason);
-	        }, 'Settle: ' + (promise._label || ' unknown promise'));
-	
-	        if (!sealed && error) {
-	          sealed = true;
-	          lib$es6$promise$$internal$$reject(promise, error);
-	        }
-	      }, promise);
-	    }
-	
-	    function lib$es6$promise$$internal$$handleOwnThenable(promise, thenable) {
-	      if (thenable._state === lib$es6$promise$$internal$$FULFILLED) {
-	        lib$es6$promise$$internal$$fulfill(promise, thenable._result);
-	      } else if (thenable._state === lib$es6$promise$$internal$$REJECTED) {
-	        lib$es6$promise$$internal$$reject(promise, thenable._result);
-	      } else {
-	        lib$es6$promise$$internal$$subscribe(thenable, undefined, function(value) {
-	          lib$es6$promise$$internal$$resolve(promise, value);
-	        }, function(reason) {
-	          lib$es6$promise$$internal$$reject(promise, reason);
-	        });
-	      }
-	    }
-	
+
+            function lib$es6$promise$$internal$$noop() {}
+
+            var lib$es6$promise$$internal$$PENDING   = void 0;
+            var lib$es6$promise$$internal$$FULFILLED = 1;
+            var lib$es6$promise$$internal$$REJECTED  = 2;
+
+            var lib$es6$promise$$internal$$GET_THEN_ERROR = new lib$es6$promise$$internal$$ErrorObject();
+
+            function lib$es6$promise$$internal$$selfFulfillment() {
+              return new TypeError("You cannot resolve a promise with itself");
+            }
+
+            function lib$es6$promise$$internal$$cannotReturnOwn() {
+              return new TypeError('A promises callback cannot return that same promise.');
+            }
+
+            function lib$es6$promise$$internal$$getThen(promise) {
+              try {
+                return promise.then;
+              } catch(error) {
+                lib$es6$promise$$internal$$GET_THEN_ERROR.error = error;
+                return lib$es6$promise$$internal$$GET_THEN_ERROR;
+              }
+            }
+
+            function lib$es6$promise$$internal$$tryThen(then, value, fulfillmentHandler, rejectionHandler) {
+              try {
+                then.call(value, fulfillmentHandler, rejectionHandler);
+              } catch(e) {
+                return e;
+              }
+            }
+
+            function lib$es6$promise$$internal$$handleForeignThenable(promise, thenable, then) {
+               lib$es6$promise$asap$$asap(function(promise) {
+                var sealed = false;
+                var error = lib$es6$promise$$internal$$tryThen(then, thenable, function(value) {
+                  if (sealed) { return; }
+                  sealed = true;
+                  if (thenable !== value) {
+                    lib$es6$promise$$internal$$resolve(promise, value);
+                  } else {
+                    lib$es6$promise$$internal$$fulfill(promise, value);
+                  }
+                }, function(reason) {
+                  if (sealed) { return; }
+                  sealed = true;
+
+                  lib$es6$promise$$internal$$reject(promise, reason);
+                }, 'Settle: ' + (promise._label || ' unknown promise'));
+
+                if (!sealed && error) {
+                  sealed = true;
+                  lib$es6$promise$$internal$$reject(promise, error);
+                }
+              }, promise);
+            }
+
+            function lib$es6$promise$$internal$$handleOwnThenable(promise, thenable) {
+              if (thenable._state === lib$es6$promise$$internal$$FULFILLED) {
+                lib$es6$promise$$internal$$fulfill(promise, thenable._result);
+              } else if (thenable._state === lib$es6$promise$$internal$$REJECTED) {
+                lib$es6$promise$$internal$$reject(promise, thenable._result);
+              } else {
+                lib$es6$promise$$internal$$subscribe(thenable, undefined, function(value) {
+                  lib$es6$promise$$internal$$resolve(promise, value);
+                }, function(reason) {
+                  lib$es6$promise$$internal$$reject(promise, reason);
+                });
+              }
+            }
+
             function lib$es6$promise$$internal$$handleMaybeThenable(promise, maybeThenable, then) {
               if (maybeThenable.constructor === promise.constructor &&
                   then === lib$es6$promise$then$$default &&
                   constructor.resolve === lib$es6$promise$promise$resolve$$default) {
-	        lib$es6$promise$$internal$$handleOwnThenable(promise, maybeThenable);
-	      } else {
-	        if (then === lib$es6$promise$$internal$$GET_THEN_ERROR) {
-	          lib$es6$promise$$internal$$reject(promise, lib$es6$promise$$internal$$GET_THEN_ERROR.error);
-	        } else if (then === undefined) {
-	          lib$es6$promise$$internal$$fulfill(promise, maybeThenable);
-	        } else if (lib$es6$promise$utils$$isFunction(then)) {
-	          lib$es6$promise$$internal$$handleForeignThenable(promise, maybeThenable, then);
-	        } else {
-	          lib$es6$promise$$internal$$fulfill(promise, maybeThenable);
-	        }
-	      }
-	    }
-	
-	    function lib$es6$promise$$internal$$resolve(promise, value) {
-	      if (promise === value) {
-	        lib$es6$promise$$internal$$reject(promise, lib$es6$promise$$internal$$selfFulfillment());
-	      } else if (lib$es6$promise$utils$$objectOrFunction(value)) {
+                lib$es6$promise$$internal$$handleOwnThenable(promise, maybeThenable);
+              } else {
+                if (then === lib$es6$promise$$internal$$GET_THEN_ERROR) {
+                  lib$es6$promise$$internal$$reject(promise, lib$es6$promise$$internal$$GET_THEN_ERROR.error);
+                } else if (then === undefined) {
+                  lib$es6$promise$$internal$$fulfill(promise, maybeThenable);
+                } else if (lib$es6$promise$utils$$isFunction(then)) {
+                  lib$es6$promise$$internal$$handleForeignThenable(promise, maybeThenable, then);
+                } else {
+                  lib$es6$promise$$internal$$fulfill(promise, maybeThenable);
+                }
+              }
+            }
+
+            function lib$es6$promise$$internal$$resolve(promise, value) {
+              if (promise === value) {
+                lib$es6$promise$$internal$$reject(promise, lib$es6$promise$$internal$$selfFulfillment());
+              } else if (lib$es6$promise$utils$$objectOrFunction(value)) {
                 lib$es6$promise$$internal$$handleMaybeThenable(promise, value, lib$es6$promise$$internal$$getThen(value));
-	      } else {
-	        lib$es6$promise$$internal$$fulfill(promise, value);
-	      }
-	    }
-	
-	    function lib$es6$promise$$internal$$publishRejection(promise) {
-	      if (promise._onerror) {
-	        promise._onerror(promise._result);
-	      }
-	
-	      lib$es6$promise$$internal$$publish(promise);
-	    }
-	
-	    function lib$es6$promise$$internal$$fulfill(promise, value) {
-	      if (promise._state !== lib$es6$promise$$internal$$PENDING) { return; }
-	
-	      promise._result = value;
-	      promise._state = lib$es6$promise$$internal$$FULFILLED;
-	
-	      if (promise._subscribers.length !== 0) {
-	        lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publish, promise);
-	      }
-	    }
-	
-	    function lib$es6$promise$$internal$$reject(promise, reason) {
-	      if (promise._state !== lib$es6$promise$$internal$$PENDING) { return; }
-	      promise._state = lib$es6$promise$$internal$$REJECTED;
-	      promise._result = reason;
-	
-	      lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publishRejection, promise);
-	    }
-	
-	    function lib$es6$promise$$internal$$subscribe(parent, child, onFulfillment, onRejection) {
-	      var subscribers = parent._subscribers;
-	      var length = subscribers.length;
-	
-	      parent._onerror = null;
-	
-	      subscribers[length] = child;
-	      subscribers[length + lib$es6$promise$$internal$$FULFILLED] = onFulfillment;
-	      subscribers[length + lib$es6$promise$$internal$$REJECTED]  = onRejection;
-	
-	      if (length === 0 && parent._state) {
-	        lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publish, parent);
-	      }
-	    }
-	
-	    function lib$es6$promise$$internal$$publish(promise) {
-	      var subscribers = promise._subscribers;
-	      var settled = promise._state;
-	
-	      if (subscribers.length === 0) { return; }
-	
-	      var child, callback, detail = promise._result;
-	
-	      for (var i = 0; i < subscribers.length; i += 3) {
-	        child = subscribers[i];
-	        callback = subscribers[i + settled];
-	
-	        if (child) {
-	          lib$es6$promise$$internal$$invokeCallback(settled, child, callback, detail);
-	        } else {
-	          callback(detail);
-	        }
-	      }
-	
-	      promise._subscribers.length = 0;
-	    }
-	
-	    function lib$es6$promise$$internal$$ErrorObject() {
-	      this.error = null;
-	    }
-	
-	    var lib$es6$promise$$internal$$TRY_CATCH_ERROR = new lib$es6$promise$$internal$$ErrorObject();
-	
-	    function lib$es6$promise$$internal$$tryCatch(callback, detail) {
-	      try {
-	        return callback(detail);
-	      } catch(e) {
-	        lib$es6$promise$$internal$$TRY_CATCH_ERROR.error = e;
-	        return lib$es6$promise$$internal$$TRY_CATCH_ERROR;
-	      }
-	    }
-	
-	    function lib$es6$promise$$internal$$invokeCallback(settled, promise, callback, detail) {
-	      var hasCallback = lib$es6$promise$utils$$isFunction(callback),
-	          value, error, succeeded, failed;
-	
-	      if (hasCallback) {
-	        value = lib$es6$promise$$internal$$tryCatch(callback, detail);
-	
-	        if (value === lib$es6$promise$$internal$$TRY_CATCH_ERROR) {
-	          failed = true;
-	          error = value.error;
-	          value = null;
-	        } else {
-	          succeeded = true;
-	        }
-	
-	        if (promise === value) {
-	          lib$es6$promise$$internal$$reject(promise, lib$es6$promise$$internal$$cannotReturnOwn());
-	          return;
-	        }
-	
-	      } else {
-	        value = detail;
-	        succeeded = true;
-	      }
-	
-	      if (promise._state !== lib$es6$promise$$internal$$PENDING) {
-	        // noop
-	      } else if (hasCallback && succeeded) {
-	        lib$es6$promise$$internal$$resolve(promise, value);
-	      } else if (failed) {
-	        lib$es6$promise$$internal$$reject(promise, error);
-	      } else if (settled === lib$es6$promise$$internal$$FULFILLED) {
-	        lib$es6$promise$$internal$$fulfill(promise, value);
-	      } else if (settled === lib$es6$promise$$internal$$REJECTED) {
-	        lib$es6$promise$$internal$$reject(promise, value);
-	      }
-	    }
-	
-	    function lib$es6$promise$$internal$$initializePromise(promise, resolver) {
-	      try {
-	        resolver(function resolvePromise(value){
-	          lib$es6$promise$$internal$$resolve(promise, value);
-	        }, function rejectPromise(reason) {
-	          lib$es6$promise$$internal$$reject(promise, reason);
-	        });
-	      } catch(e) {
-	        lib$es6$promise$$internal$$reject(promise, e);
-	      }
-	    }
-	
-	    function lib$es6$promise$promise$all$$all(entries) {
-	      return new lib$es6$promise$enumerator$$default(this, entries).promise;
-	    }
-	    var lib$es6$promise$promise$all$$default = lib$es6$promise$promise$all$$all;
-	    function lib$es6$promise$promise$race$$race(entries) {
-	      /*jshint validthis:true */
-	      var Constructor = this;
-	
-	      var promise = new Constructor(lib$es6$promise$$internal$$noop);
-	
-	      if (!lib$es6$promise$utils$$isArray(entries)) {
-	        lib$es6$promise$$internal$$reject(promise, new TypeError('You must pass an array to race.'));
-	        return promise;
-	      }
-	
-	      var length = entries.length;
-	
-	      function onFulfillment(value) {
-	        lib$es6$promise$$internal$$resolve(promise, value);
-	      }
-	
-	      function onRejection(reason) {
-	        lib$es6$promise$$internal$$reject(promise, reason);
-	      }
-	
-	      for (var i = 0; promise._state === lib$es6$promise$$internal$$PENDING && i < length; i++) {
-	        lib$es6$promise$$internal$$subscribe(Constructor.resolve(entries[i]), undefined, onFulfillment, onRejection);
-	      }
-	
-	      return promise;
-	    }
-	    var lib$es6$promise$promise$race$$default = lib$es6$promise$promise$race$$race;
-	    function lib$es6$promise$promise$reject$$reject(reason) {
-	      /*jshint validthis:true */
-	      var Constructor = this;
-	      var promise = new Constructor(lib$es6$promise$$internal$$noop);
-	      lib$es6$promise$$internal$$reject(promise, reason);
-	      return promise;
-	    }
-	    var lib$es6$promise$promise$reject$$default = lib$es6$promise$promise$reject$$reject;
-	
-	    var lib$es6$promise$promise$$counter = 0;
-	
-	    function lib$es6$promise$promise$$needsResolver() {
-	      throw new TypeError('You must pass a resolver function as the first argument to the promise constructor');
-	    }
-	
-	    function lib$es6$promise$promise$$needsNew() {
-	      throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
-	    }
-	
-	    var lib$es6$promise$promise$$default = lib$es6$promise$promise$$Promise;
-	    /**
-	      Promise objects represent the eventual result of an asynchronous operation. The
-	      primary way of interacting with a promise is through its `then` method, which
-	      registers callbacks to receive either a promise's eventual value or the reason
-	      why the promise cannot be fulfilled.
-	
-	      Terminology
-	      -----------
-	
-	      - `promise` is an object or function with a `then` method whose behavior conforms to this specification.
-	      - `thenable` is an object or function that defines a `then` method.
-	      - `value` is any legal JavaScript value (including undefined, a thenable, or a promise).
-	      - `exception` is a value that is thrown using the throw statement.
-	      - `reason` is a value that indicates why a promise was rejected.
-	      - `settled` the final resting state of a promise, fulfilled or rejected.
-	
-	      A promise can be in one of three states: pending, fulfilled, or rejected.
-	
-	      Promises that are fulfilled have a fulfillment value and are in the fulfilled
-	      state.  Promises that are rejected have a rejection reason and are in the
-	      rejected state.  A fulfillment value is never a thenable.
-	
-	      Promises can also be said to *resolve* a value.  If this value is also a
-	      promise, then the original promise's settled state will match the value's
-	      settled state.  So a promise that *resolves* a promise that rejects will
-	      itself reject, and a promise that *resolves* a promise that fulfills will
-	      itself fulfill.
-	
-	
-	      Basic Usage:
-	      ------------
-	
-	      ```js
-	      var promise = new Promise(function(resolve, reject) {
-	        // on success
-	        resolve(value);
-	
-	        // on failure
-	        reject(reason);
-	      });
-	
-	      promise.then(function(value) {
-	        // on fulfillment
-	      }, function(reason) {
-	        // on rejection
-	      });
-	      ```
-	
-	      Advanced Usage:
-	      ---------------
-	
-	      Promises shine when abstracting away asynchronous interactions such as
-	      `XMLHttpRequest`s.
-	
-	      ```js
-	      function getJSON(url) {
-	        return new Promise(function(resolve, reject){
-	          var xhr = new XMLHttpRequest();
-	
-	          xhr.open('GET', url);
-	          xhr.onreadystatechange = handler;
-	          xhr.responseType = 'json';
-	          xhr.setRequestHeader('Accept', 'application/json');
-	          xhr.send();
-	
-	          function handler() {
-	            if (this.readyState === this.DONE) {
-	              if (this.status === 200) {
-	                resolve(this.response);
-	              } else {
-	                reject(new Error('getJSON: `' + url + '` failed with status: [' + this.status + ']'));
-	              }
-	            }
-	          };
-	        });
-	      }
-	
-	      getJSON('/posts.json').then(function(json) {
-	        // on fulfillment
-	      }, function(reason) {
-	        // on rejection
-	      });
-	      ```
-	
-	      Unlike callbacks, promises are great composable primitives.
-	
-	      ```js
-	      Promise.all([
-	        getJSON('/posts'),
-	        getJSON('/comments')
-	      ]).then(function(values){
-	        values[0] // => postsJSON
-	        values[1] // => commentsJSON
-	
-	        return values;
-	      });
-	      ```
-	
-	      @class Promise
-	      @param {function} resolver
-	      Useful for tooling.
-	      @constructor
-	    */
-	    function lib$es6$promise$promise$$Promise(resolver) {
-	      this._id = lib$es6$promise$promise$$counter++;
-	      this._state = undefined;
-	      this._result = undefined;
-	      this._subscribers = [];
-	
-	      if (lib$es6$promise$$internal$$noop !== resolver) {
+              } else {
+                lib$es6$promise$$internal$$fulfill(promise, value);
+              }
+            }
+
+            function lib$es6$promise$$internal$$publishRejection(promise) {
+              if (promise._onerror) {
+                promise._onerror(promise._result);
+              }
+
+              lib$es6$promise$$internal$$publish(promise);
+            }
+
+            function lib$es6$promise$$internal$$fulfill(promise, value) {
+              if (promise._state !== lib$es6$promise$$internal$$PENDING) { return; }
+
+              promise._result = value;
+              promise._state = lib$es6$promise$$internal$$FULFILLED;
+
+              if (promise._subscribers.length !== 0) {
+                lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publish, promise);
+              }
+            }
+
+            function lib$es6$promise$$internal$$reject(promise, reason) {
+              if (promise._state !== lib$es6$promise$$internal$$PENDING) { return; }
+              promise._state = lib$es6$promise$$internal$$REJECTED;
+              promise._result = reason;
+
+              lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publishRejection, promise);
+            }
+
+            function lib$es6$promise$$internal$$subscribe(parent, child, onFulfillment, onRejection) {
+              var subscribers = parent._subscribers;
+              var length = subscribers.length;
+
+              parent._onerror = null;
+
+              subscribers[length] = child;
+              subscribers[length + lib$es6$promise$$internal$$FULFILLED] = onFulfillment;
+              subscribers[length + lib$es6$promise$$internal$$REJECTED]  = onRejection;
+
+              if (length === 0 && parent._state) {
+                lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publish, parent);
+              }
+            }
+
+            function lib$es6$promise$$internal$$publish(promise) {
+              var subscribers = promise._subscribers;
+              var settled = promise._state;
+
+              if (subscribers.length === 0) { return; }
+
+              var child, callback, detail = promise._result;
+
+              for (var i = 0; i < subscribers.length; i += 3) {
+                child = subscribers[i];
+                callback = subscribers[i + settled];
+
+                if (child) {
+                  lib$es6$promise$$internal$$invokeCallback(settled, child, callback, detail);
+                } else {
+                  callback(detail);
+                }
+              }
+
+              promise._subscribers.length = 0;
+            }
+
+            function lib$es6$promise$$internal$$ErrorObject() {
+              this.error = null;
+            }
+
+            var lib$es6$promise$$internal$$TRY_CATCH_ERROR = new lib$es6$promise$$internal$$ErrorObject();
+
+            function lib$es6$promise$$internal$$tryCatch(callback, detail) {
+              try {
+                return callback(detail);
+              } catch(e) {
+                lib$es6$promise$$internal$$TRY_CATCH_ERROR.error = e;
+                return lib$es6$promise$$internal$$TRY_CATCH_ERROR;
+              }
+            }
+
+            function lib$es6$promise$$internal$$invokeCallback(settled, promise, callback, detail) {
+              var hasCallback = lib$es6$promise$utils$$isFunction(callback),
+                  value, error, succeeded, failed;
+
+              if (hasCallback) {
+                value = lib$es6$promise$$internal$$tryCatch(callback, detail);
+
+                if (value === lib$es6$promise$$internal$$TRY_CATCH_ERROR) {
+                  failed = true;
+                  error = value.error;
+                  value = null;
+                } else {
+                  succeeded = true;
+                }
+
+                if (promise === value) {
+                  lib$es6$promise$$internal$$reject(promise, lib$es6$promise$$internal$$cannotReturnOwn());
+                  return;
+                }
+
+              } else {
+                value = detail;
+                succeeded = true;
+              }
+
+              if (promise._state !== lib$es6$promise$$internal$$PENDING) {
+                // noop
+              } else if (hasCallback && succeeded) {
+                lib$es6$promise$$internal$$resolve(promise, value);
+              } else if (failed) {
+                lib$es6$promise$$internal$$reject(promise, error);
+              } else if (settled === lib$es6$promise$$internal$$FULFILLED) {
+                lib$es6$promise$$internal$$fulfill(promise, value);
+              } else if (settled === lib$es6$promise$$internal$$REJECTED) {
+                lib$es6$promise$$internal$$reject(promise, value);
+              }
+            }
+
+            function lib$es6$promise$$internal$$initializePromise(promise, resolver) {
+              try {
+                resolver(function resolvePromise(value){
+                  lib$es6$promise$$internal$$resolve(promise, value);
+                }, function rejectPromise(reason) {
+                  lib$es6$promise$$internal$$reject(promise, reason);
+                });
+              } catch(e) {
+                lib$es6$promise$$internal$$reject(promise, e);
+              }
+            }
+
+            function lib$es6$promise$promise$all$$all(entries) {
+              return new lib$es6$promise$enumerator$$default(this, entries).promise;
+            }
+            var lib$es6$promise$promise$all$$default = lib$es6$promise$promise$all$$all;
+            function lib$es6$promise$promise$race$$race(entries) {
+              /*jshint validthis:true */
+              var Constructor = this;
+
+              var promise = new Constructor(lib$es6$promise$$internal$$noop);
+
+              if (!lib$es6$promise$utils$$isArray(entries)) {
+                lib$es6$promise$$internal$$reject(promise, new TypeError('You must pass an array to race.'));
+                return promise;
+              }
+
+              var length = entries.length;
+
+              function onFulfillment(value) {
+                lib$es6$promise$$internal$$resolve(promise, value);
+              }
+
+              function onRejection(reason) {
+                lib$es6$promise$$internal$$reject(promise, reason);
+              }
+
+              for (var i = 0; promise._state === lib$es6$promise$$internal$$PENDING && i < length; i++) {
+                lib$es6$promise$$internal$$subscribe(Constructor.resolve(entries[i]), undefined, onFulfillment, onRejection);
+              }
+
+              return promise;
+            }
+            var lib$es6$promise$promise$race$$default = lib$es6$promise$promise$race$$race;
+            function lib$es6$promise$promise$reject$$reject(reason) {
+              /*jshint validthis:true */
+              var Constructor = this;
+              var promise = new Constructor(lib$es6$promise$$internal$$noop);
+              lib$es6$promise$$internal$$reject(promise, reason);
+              return promise;
+            }
+            var lib$es6$promise$promise$reject$$default = lib$es6$promise$promise$reject$$reject;
+
+            var lib$es6$promise$promise$$counter = 0;
+
+            function lib$es6$promise$promise$$needsResolver() {
+              throw new TypeError('You must pass a resolver function as the first argument to the promise constructor');
+            }
+
+            function lib$es6$promise$promise$$needsNew() {
+              throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.");
+            }
+
+            var lib$es6$promise$promise$$default = lib$es6$promise$promise$$Promise;
+            /**
+              Promise objects represent the eventual result of an asynchronous operation. The
+              primary way of interacting with a promise is through its `then` method, which
+              registers callbacks to receive either a promise's eventual value or the reason
+              why the promise cannot be fulfilled.
+
+              Terminology
+              -----------
+
+              - `promise` is an object or function with a `then` method whose behavior conforms to this specification.
+              - `thenable` is an object or function that defines a `then` method.
+              - `value` is any legal JavaScript value (including undefined, a thenable, or a promise).
+              - `exception` is a value that is thrown using the throw statement.
+              - `reason` is a value that indicates why a promise was rejected.
+              - `settled` the final resting state of a promise, fulfilled or rejected.
+
+              A promise can be in one of three states: pending, fulfilled, or rejected.
+
+              Promises that are fulfilled have a fulfillment value and are in the fulfilled
+              state.  Promises that are rejected have a rejection reason and are in the
+              rejected state.  A fulfillment value is never a thenable.
+
+              Promises can also be said to *resolve* a value.  If this value is also a
+              promise, then the original promise's settled state will match the value's
+              settled state.  So a promise that *resolves* a promise that rejects will
+              itself reject, and a promise that *resolves* a promise that fulfills will
+              itself fulfill.
+
+
+              Basic Usage:
+              ------------
+
+              ```js
+              var promise = new Promise(function(resolve, reject) {
+                // on success
+                resolve(value);
+
+                // on failure
+                reject(reason);
+              });
+
+              promise.then(function(value) {
+                // on fulfillment
+              }, function(reason) {
+                // on rejection
+              });
+              ```
+
+              Advanced Usage:
+              ---------------
+
+              Promises shine when abstracting away asynchronous interactions such as
+              `XMLHttpRequest`s.
+
+              ```js
+              function getJSON(url) {
+                return new Promise(function(resolve, reject){
+                  var xhr = new XMLHttpRequest();
+
+                  xhr.open('GET', url);
+                  xhr.onreadystatechange = handler;
+                  xhr.responseType = 'json';
+                  xhr.setRequestHeader('Accept', 'application/json');
+                  xhr.send();
+
+                  function handler() {
+                    if (this.readyState === this.DONE) {
+                      if (this.status === 200) {
+                        resolve(this.response);
+                      } else {
+                        reject(new Error('getJSON: `' + url + '` failed with status: [' + this.status + ']'));
+                      }
+                    }
+                  };
+                });
+              }
+
+              getJSON('/posts.json').then(function(json) {
+                // on fulfillment
+              }, function(reason) {
+                // on rejection
+              });
+              ```
+
+              Unlike callbacks, promises are great composable primitives.
+
+              ```js
+              Promise.all([
+                getJSON('/posts'),
+                getJSON('/comments')
+              ]).then(function(values){
+                values[0] // => postsJSON
+                values[1] // => commentsJSON
+
+                return values;
+              });
+              ```
+
+              @class Promise
+              @param {function} resolver
+              Useful for tooling.
+              @constructor
+            */
+            function lib$es6$promise$promise$$Promise(resolver) {
+              this._id = lib$es6$promise$promise$$counter++;
+              this._state = undefined;
+              this._result = undefined;
+              this._subscribers = [];
+
+              if (lib$es6$promise$$internal$$noop !== resolver) {
                 typeof resolver !== 'function' && lib$es6$promise$promise$$needsResolver();
                 this instanceof lib$es6$promise$promise$$Promise ? lib$es6$promise$$internal$$initializePromise(this, resolver) : lib$es6$promise$promise$$needsNew();
-	      }
-	    }
-	
-	    lib$es6$promise$promise$$Promise.all = lib$es6$promise$promise$all$$default;
-	    lib$es6$promise$promise$$Promise.race = lib$es6$promise$promise$race$$default;
-	    lib$es6$promise$promise$$Promise.resolve = lib$es6$promise$promise$resolve$$default;
-	    lib$es6$promise$promise$$Promise.reject = lib$es6$promise$promise$reject$$default;
-	    lib$es6$promise$promise$$Promise._setScheduler = lib$es6$promise$asap$$setScheduler;
-	    lib$es6$promise$promise$$Promise._setAsap = lib$es6$promise$asap$$setAsap;
-	    lib$es6$promise$promise$$Promise._asap = lib$es6$promise$asap$$asap;
-	
-	    lib$es6$promise$promise$$Promise.prototype = {
-	      constructor: lib$es6$promise$promise$$Promise,
-	
-	    /**
-	      The primary way of interacting with a promise is through its `then` method,
-	      which registers callbacks to receive either a promise's eventual value or the
-	      reason why the promise cannot be fulfilled.
-	
-	      ```js
-	      findUser().then(function(user){
-	        // user is available
-	      }, function(reason){
-	        // user is unavailable, and you are given the reason why
-	      });
-	      ```
-	
-	      Chaining
-	      --------
-	
-	      The return value of `then` is itself a promise.  This second, 'downstream'
-	      promise is resolved with the return value of the first promise's fulfillment
-	      or rejection handler, or rejected if the handler throws an exception.
-	
-	      ```js
-	      findUser().then(function (user) {
-	        return user.name;
-	      }, function (reason) {
-	        return 'default name';
-	      }).then(function (userName) {
-	        // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
-	        // will be `'default name'`
-	      });
-	
-	      findUser().then(function (user) {
-	        throw new Error('Found user, but still unhappy');
-	      }, function (reason) {
-	        throw new Error('`findUser` rejected and we're unhappy');
-	      }).then(function (value) {
-	        // never reached
-	      }, function (reason) {
-	        // if `findUser` fulfilled, `reason` will be 'Found user, but still unhappy'.
-	        // If `findUser` rejected, `reason` will be '`findUser` rejected and we're unhappy'.
-	      });
-	      ```
-	      If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
-	
-	      ```js
-	      findUser().then(function (user) {
-	        throw new PedagogicalException('Upstream error');
-	      }).then(function (value) {
-	        // never reached
-	      }).then(function (value) {
-	        // never reached
-	      }, function (reason) {
-	        // The `PedgagocialException` is propagated all the way down to here
-	      });
-	      ```
-	
-	      Assimilation
-	      ------------
-	
-	      Sometimes the value you want to propagate to a downstream promise can only be
-	      retrieved asynchronously. This can be achieved by returning a promise in the
-	      fulfillment or rejection handler. The downstream promise will then be pending
-	      until the returned promise is settled. This is called *assimilation*.
-	
-	      ```js
-	      findUser().then(function (user) {
-	        return findCommentsByAuthor(user);
-	      }).then(function (comments) {
-	        // The user's comments are now available
-	      });
-	      ```
-	
-	      If the assimliated promise rejects, then the downstream promise will also reject.
-	
-	      ```js
-	      findUser().then(function (user) {
-	        return findCommentsByAuthor(user);
-	      }).then(function (comments) {
-	        // If `findCommentsByAuthor` fulfills, we'll have the value here
-	      }, function (reason) {
-	        // If `findCommentsByAuthor` rejects, we'll have the reason here
-	      });
-	      ```
-	
-	      Simple Example
-	      --------------
-	
-	      Synchronous Example
-	
-	      ```javascript
-	      var result;
-	
-	      try {
-	        result = findResult();
-	        // success
-	      } catch(reason) {
-	        // failure
-	      }
-	      ```
-	
-	      Errback Example
-	
-	      ```js
-	      findResult(function(result, err){
-	        if (err) {
-	          // failure
-	        } else {
-	          // success
-	        }
-	      });
-	      ```
-	
-	      Promise Example;
-	
-	      ```javascript
-	      findResult().then(function(result){
-	        // success
-	      }, function(reason){
-	        // failure
-	      });
-	      ```
-	
-	      Advanced Example
-	      --------------
-	
-	      Synchronous Example
-	
-	      ```javascript
-	      var author, books;
-	
-	      try {
-	        author = findAuthor();
-	        books  = findBooksByAuthor(author);
-	        // success
-	      } catch(reason) {
-	        // failure
-	      }
-	      ```
-	
-	      Errback Example
-	
-	      ```js
-	
-	      function foundBooks(books) {
-	
-	      }
-	
-	      function failure(reason) {
-	
-	      }
-	
-	      findAuthor(function(author, err){
-	        if (err) {
-	          failure(err);
-	          // failure
-	        } else {
-	          try {
-	            findBoooksByAuthor(author, function(books, err) {
-	              if (err) {
-	                failure(err);
-	              } else {
-	                try {
-	                  foundBooks(books);
-	                } catch(reason) {
-	                  failure(reason);
-	                }
-	              }
-	            });
-	          } catch(error) {
-	            failure(err);
-	          }
-	          // success
-	        }
-	      });
-	      ```
-	
-	      Promise Example;
-	
-	      ```javascript
-	      findAuthor().
-	        then(findBooksByAuthor).
-	        then(function(books){
-	          // found books
-	      }).catch(function(reason){
-	        // something went wrong
-	      });
-	      ```
-	
-	      @method then
-	      @param {Function} onFulfilled
-	      @param {Function} onRejected
-	      Useful for tooling.
-	      @return {Promise}
-	    */
+              }
+            }
+
+            lib$es6$promise$promise$$Promise.all = lib$es6$promise$promise$all$$default;
+            lib$es6$promise$promise$$Promise.race = lib$es6$promise$promise$race$$default;
+            lib$es6$promise$promise$$Promise.resolve = lib$es6$promise$promise$resolve$$default;
+            lib$es6$promise$promise$$Promise.reject = lib$es6$promise$promise$reject$$default;
+            lib$es6$promise$promise$$Promise._setScheduler = lib$es6$promise$asap$$setScheduler;
+            lib$es6$promise$promise$$Promise._setAsap = lib$es6$promise$asap$$setAsap;
+            lib$es6$promise$promise$$Promise._asap = lib$es6$promise$asap$$asap;
+
+            lib$es6$promise$promise$$Promise.prototype = {
+              constructor: lib$es6$promise$promise$$Promise,
+
+            /**
+              The primary way of interacting with a promise is through its `then` method,
+              which registers callbacks to receive either a promise's eventual value or the
+              reason why the promise cannot be fulfilled.
+
+              ```js
+              findUser().then(function(user){
+                // user is available
+              }, function(reason){
+                // user is unavailable, and you are given the reason why
+              });
+              ```
+
+              Chaining
+              --------
+
+              The return value of `then` is itself a promise.  This second, 'downstream'
+              promise is resolved with the return value of the first promise's fulfillment
+              or rejection handler, or rejected if the handler throws an exception.
+
+              ```js
+              findUser().then(function (user) {
+                return user.name;
+              }, function (reason) {
+                return 'default name';
+              }).then(function (userName) {
+                // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
+                // will be `'default name'`
+              });
+
+              findUser().then(function (user) {
+                throw new Error('Found user, but still unhappy');
+              }, function (reason) {
+                throw new Error('`findUser` rejected and we're unhappy');
+              }).then(function (value) {
+                // never reached
+              }, function (reason) {
+                // if `findUser` fulfilled, `reason` will be 'Found user, but still unhappy'.
+                // If `findUser` rejected, `reason` will be '`findUser` rejected and we're unhappy'.
+              });
+              ```
+              If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
+
+              ```js
+              findUser().then(function (user) {
+                throw new PedagogicalException('Upstream error');
+              }).then(function (value) {
+                // never reached
+              }).then(function (value) {
+                // never reached
+              }, function (reason) {
+                // The `PedgagocialException` is propagated all the way down to here
+              });
+              ```
+
+              Assimilation
+              ------------
+
+              Sometimes the value you want to propagate to a downstream promise can only be
+              retrieved asynchronously. This can be achieved by returning a promise in the
+              fulfillment or rejection handler. The downstream promise will then be pending
+              until the returned promise is settled. This is called *assimilation*.
+
+              ```js
+              findUser().then(function (user) {
+                return findCommentsByAuthor(user);
+              }).then(function (comments) {
+                // The user's comments are now available
+              });
+              ```
+
+              If the assimliated promise rejects, then the downstream promise will also reject.
+
+              ```js
+              findUser().then(function (user) {
+                return findCommentsByAuthor(user);
+              }).then(function (comments) {
+                // If `findCommentsByAuthor` fulfills, we'll have the value here
+              }, function (reason) {
+                // If `findCommentsByAuthor` rejects, we'll have the reason here
+              });
+              ```
+
+              Simple Example
+              --------------
+
+              Synchronous Example
+
+              ```javascript
+              var result;
+
+              try {
+                result = findResult();
+                // success
+              } catch(reason) {
+                // failure
+              }
+              ```
+
+              Errback Example
+
+              ```js
+              findResult(function(result, err){
+                if (err) {
+                  // failure
+                } else {
+                  // success
+                }
+              });
+              ```
+
+              Promise Example;
+
+              ```javascript
+              findResult().then(function(result){
+                // success
+              }, function(reason){
+                // failure
+              });
+              ```
+
+              Advanced Example
+              --------------
+
+              Synchronous Example
+
+              ```javascript
+              var author, books;
+
+              try {
+                author = findAuthor();
+                books  = findBooksByAuthor(author);
+                // success
+              } catch(reason) {
+                // failure
+              }
+              ```
+
+              Errback Example
+
+              ```js
+
+              function foundBooks(books) {
+
+              }
+
+              function failure(reason) {
+
+              }
+
+              findAuthor(function(author, err){
+                if (err) {
+                  failure(err);
+                  // failure
+                } else {
+                  try {
+                    findBoooksByAuthor(author, function(books, err) {
+                      if (err) {
+                        failure(err);
+                      } else {
+                        try {
+                          foundBooks(books);
+                        } catch(reason) {
+                          failure(reason);
+                        }
+                      }
+                    });
+                  } catch(error) {
+                    failure(err);
+                  }
+                  // success
+                }
+              });
+              ```
+
+              Promise Example;
+
+              ```javascript
+              findAuthor().
+                then(findBooksByAuthor).
+                then(function(books){
+                  // found books
+              }).catch(function(reason){
+                // something went wrong
+              });
+              ```
+
+              @method then
+              @param {Function} onFulfilled
+              @param {Function} onRejected
+              Useful for tooling.
+              @return {Promise}
+            */
               then: lib$es6$promise$then$$default,
-	
-	    /**
-	      `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
-	      as the catch block of a try/catch statement.
-	
-	      ```js
-	      function findAuthor(){
-	        throw new Error('couldn't find that author');
-	      }
-	
-	      // synchronous
-	      try {
-	        findAuthor();
-	      } catch(reason) {
-	        // something went wrong
-	      }
-	
-	      // async with promises
-	      findAuthor().catch(function(reason){
-	        // something went wrong
-	      });
-	      ```
-	
-	      @method catch
-	      @param {Function} onRejection
-	      Useful for tooling.
-	      @return {Promise}
-	    */
-	      'catch': function(onRejection) {
-	        return this.then(null, onRejection);
-	      }
-	    };
+
+            /**
+              `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
+              as the catch block of a try/catch statement.
+
+              ```js
+              function findAuthor(){
+                throw new Error('couldn't find that author');
+              }
+
+              // synchronous
+              try {
+                findAuthor();
+              } catch(reason) {
+                // something went wrong
+              }
+
+              // async with promises
+              findAuthor().catch(function(reason){
+                // something went wrong
+              });
+              ```
+
+              @method catch
+              @param {Function} onRejection
+              Useful for tooling.
+              @return {Promise}
+            */
+              'catch': function(onRejection) {
+                return this.then(null, onRejection);
+              }
+            };
             var lib$es6$promise$enumerator$$default = lib$es6$promise$enumerator$$Enumerator;
             function lib$es6$promise$enumerator$$Enumerator(Constructor, input) {
               this._instanceConstructor = Constructor;
@@ -2539,175 +2539,175 @@
                 enumerator._settledAt(lib$es6$promise$$internal$$REJECTED, i, reason);
               });
             };
-	    function lib$es6$promise$polyfill$$polyfill() {
-	      var local;
-	
-	      if (typeof global !== 'undefined') {
-	          local = global;
-	      } else if (typeof self !== 'undefined') {
-	          local = self;
-	      } else {
-	          try {
-	              local = Function('return this')();
-	          } catch (e) {
-	              throw new Error('polyfill failed because global object is unavailable in this environment');
-	          }
-	      }
-	
-	      var P = local.Promise;
-	
-	      if (P && Object.prototype.toString.call(P.resolve()) === '[object Promise]' && !P.cast) {
-	        return;
-	      }
-	
-	      local.Promise = lib$es6$promise$promise$$default;
-	    }
-	    var lib$es6$promise$polyfill$$default = lib$es6$promise$polyfill$$polyfill;
-	
-	    var lib$es6$promise$umd$$ES6Promise = {
-	      'Promise': lib$es6$promise$promise$$default,
-	      'polyfill': lib$es6$promise$polyfill$$default
-	    };
-	
-	    /* global define:true module:true window: true */
+            function lib$es6$promise$polyfill$$polyfill() {
+              var local;
+
+              if (typeof global !== 'undefined') {
+                  local = global;
+              } else if (typeof self !== 'undefined') {
+                  local = self;
+              } else {
+                  try {
+                      local = Function('return this')();
+                  } catch (e) {
+                      throw new Error('polyfill failed because global object is unavailable in this environment');
+                  }
+              }
+
+              var P = local.Promise;
+
+              if (P && Object.prototype.toString.call(P.resolve()) === '[object Promise]' && !P.cast) {
+                return;
+              }
+
+              local.Promise = lib$es6$promise$promise$$default;
+            }
+            var lib$es6$promise$polyfill$$default = lib$es6$promise$polyfill$$polyfill;
+
+            var lib$es6$promise$umd$$ES6Promise = {
+              'Promise': lib$es6$promise$promise$$default,
+              'polyfill': lib$es6$promise$polyfill$$default
+            };
+
+            /* global define:true module:true window: true */
             if ("function" === 'function' && __webpack_require__(14)['amd']) {
-	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return lib$es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	    } else if (typeof module !== 'undefined' && module['exports']) {
-	      module['exports'] = lib$es6$promise$umd$$ES6Promise;
-	    } else if (typeof this !== 'undefined') {
-	      this['ES6Promise'] = lib$es6$promise$umd$$ES6Promise;
-	    }
-	
-	    lib$es6$promise$polyfill$$default();
-	}).call(this);
-	
-	
+              !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return lib$es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+            } else if (typeof module !== 'undefined' && module['exports']) {
+              module['exports'] = lib$es6$promise$umd$$ES6Promise;
+            } else if (typeof this !== 'undefined') {
+              this['ES6Promise'] = lib$es6$promise$umd$$ES6Promise;
+            }
+
+            lib$es6$promise$polyfill$$default();
+        }).call(this);
+
+
         /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11), (function() { return this; }()), __webpack_require__(12)(module)))
 
 /***/ },
 /* 11 */
 /***/ function(module, exports) {
 
-	// shim for using process in browser
-	
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
-	
-	function cleanUpNextTick() {
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
-	    } else {
-	        queueIndex = -1;
-	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-	
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = setTimeout(cleanUpNextTick);
-	    draining = true;
-	
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            if (currentQueue) {
-	                currentQueue[queueIndex].run();
-	            }
-	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    clearTimeout(timeout);
-	}
-	
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
-	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
-	
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-	
-	function noop() {}
-	
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-	
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-	
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
+        // shim for using process in browser
+
+        var process = module.exports = {};
+        var queue = [];
+        var draining = false;
+        var currentQueue;
+        var queueIndex = -1;
+
+        function cleanUpNextTick() {
+            draining = false;
+            if (currentQueue.length) {
+                queue = currentQueue.concat(queue);
+            } else {
+                queueIndex = -1;
+            }
+            if (queue.length) {
+                drainQueue();
+            }
+        }
+
+        function drainQueue() {
+            if (draining) {
+                return;
+            }
+            var timeout = setTimeout(cleanUpNextTick);
+            draining = true;
+
+            var len = queue.length;
+            while(len) {
+                currentQueue = queue;
+                queue = [];
+                while (++queueIndex < len) {
+                    if (currentQueue) {
+                        currentQueue[queueIndex].run();
+                    }
+                }
+                queueIndex = -1;
+                len = queue.length;
+            }
+            currentQueue = null;
+            draining = false;
+            clearTimeout(timeout);
+        }
+
+        process.nextTick = function (fun) {
+            var args = new Array(arguments.length - 1);
+            if (arguments.length > 1) {
+                for (var i = 1; i < arguments.length; i++) {
+                    args[i - 1] = arguments[i];
+                }
+            }
+            queue.push(new Item(fun, args));
+            if (queue.length === 1 && !draining) {
+                setTimeout(drainQueue, 0);
+            }
+        };
+
+        // v8 likes predictible objects
+        function Item(fun, array) {
+            this.fun = fun;
+            this.array = array;
+        }
+        Item.prototype.run = function () {
+            this.fun.apply(null, this.array);
+        };
+        process.title = 'browser';
+        process.browser = true;
+        process.env = {};
+        process.argv = [];
+        process.version = ''; // empty string to avoid regexp issues
+        process.versions = {};
+
+        function noop() {}
+
+        process.on = noop;
+        process.addListener = noop;
+        process.once = noop;
+        process.off = noop;
+        process.removeListener = noop;
+        process.removeAllListeners = noop;
+        process.emit = noop;
+
+        process.binding = function (name) {
+            throw new Error('process.binding is not supported');
+        };
+
+        process.cwd = function () { return '/' };
+        process.chdir = function (dir) {
+            throw new Error('process.chdir is not supported');
+        };
+        process.umask = function() { return 0; };
 
 
 /***/ },
 /* 12 */
 /***/ function(module, exports) {
 
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
+        module.exports = function(module) {
+                if(!module.webpackPolyfill) {
+                        module.deprecate = function() {};
+                        module.paths = [];
+                        // module.parent = undefined by default
+                        module.children = [];
+                        module.webpackPolyfill = 1;
+                }
+                return module;
+        }
 
 
 /***/ },
 /* 13 */
 /***/ function(module, exports) {
 
-	/* (ignored) */
+        /* (ignored) */
 
 /***/ },
 /* 14 */
 /***/ function(module, exports) {
 
-	module.exports = function() { throw new Error("define cannot be used indirect"); };
+        module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ }

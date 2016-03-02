@@ -5,7 +5,10 @@ import getUrlParam from './url';
 
 export class Js {
   constructor(injectInto, config = {}) {
-    let { enableLogging = false } = config;
+    let {
+      enableLogging = false,
+      verification = false
+    } = config;
 
     enableLogging = getUrlParam(
       'dactylographsy-enableLogging',
@@ -20,6 +23,7 @@ export class Js {
     });
 
     this.cacheDelay = config.cacheDelay || 5000;
+    this.verification = verification;
 
     this.log = new Log(enableLogging);
   }
@@ -127,19 +131,31 @@ export class Js {
     });
   }
 
+  hash(hash) {
+    return (
+      this.verification === true
+    ) ? hash : false
+  }
+
   inject(urls) {
-    return this.cache.get(urls.printed)
-      .then(text => {
+    return this.cache.get(
+      urls.printed,
+      undefined,
+      this.hash(urls.hash)
+    ).then(text => {
         return this.injectWithText(text, urls.printed);
-      }, () => {
-        return this.injectWithUrl(urls);
-      });
+    }, () => {
+      return this.injectWithUrl(urls);
+    });
   }
 }
 
 export class Css {
   constructor(injectInto, config = {}) {
-    let { enableLogging = false } = config;
+    let {
+      enableLogging = false,
+      verification = false
+    } = config;
 
     enableLogging = getUrlParam(
       'dactylographsy-enableLogging',
@@ -153,6 +169,7 @@ export class Css {
     });
 
     this.cacheDelay = config.cacheDelay || 5000;
+    this.verification = verification;
 
     this.log = new Log(enableLogging);
   }
@@ -239,12 +256,21 @@ export class Css {
     });
   }
 
+  hash(hash) {
+    return (
+      this.verification === true
+    ) ? hash : false
+  }
+
   inject(urls) {
-    return this.cache.get(urls.printed)
-      .then(text => {
-        return this.injectWithText(text, urls.printed);
-      }, () => {
-        return this.injectWithUrl(urls);
-      });
+    return this.cache.get(
+      urls.printed,
+      undefined,
+      this.hash(urls.hash)
+    ).then(text => {
+      return this.injectWithText(text, urls.printed);
+    }, () => {
+      return this.injectWithUrl(urls);
+    });
   }
 }
