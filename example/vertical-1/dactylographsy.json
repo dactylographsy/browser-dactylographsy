@@ -4,17 +4,17 @@
   "rootUrl": "example",
   "hashes": {
     "hash1": {
-      "hash": "hash1",
+      "hash": "1f5cdefccb86c2be9ef5a077e449ec1c6dd6c9de",
       "file": "1.js",
       "extension": ".js"
     },
     "hash2": {
-      "hash": "hash2",
+      "hash": "6bc7a5d56784f0b3b215632ce084782f8e151b5c",
       "file": "2.js",
       "extension": ".js"
     },
     "hash3": {
-      "hash": "hash3",
+      "hash": "4cbb70b233b9747930d20c415bc4f80b85553b07",
       "file": "1.css",
       "extension": ".css"
     }
