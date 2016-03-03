@@ -79,30 +79,6 @@ describe('Injector', () => {
         });
       });
     });
-
-    it('should ', () => {
-      let
-        injections;
-      const
-        injector = new Injector(document.querySelector('body'), fixtureManifests, {
-          enableLogging: false,
-          order: ['vertical-1', 'vertical-2']
-        });
-
-      injections = injector.inject().then(packages => {
-        let
-          manifestDependencies = {};
-
-        Object.assign(manifestDependencies, fixtureManifests[0].hashes);
-        Object.assign(manifestDependencies, fixtureManifests[1].hashes);
-
-        packages.should.have.length(5);
-
-        Object.keys(manifestDependencies).map((prop, idx) => {
-          packages[idx].getAttribute('data-dactylographsy-url').should.contain(manifestDependencies[prop].hash);
-        });
-      });
-    });
   });
 
   describe('injectManifest', () => {
