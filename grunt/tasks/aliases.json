@@ -11,7 +11,6 @@
   ],
   "ci-test": [
     "eslint",
-    "karma:travis_ci",
     "karma:bs_desktop_ci"
   ],
   "dev": [
