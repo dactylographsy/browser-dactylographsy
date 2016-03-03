@@ -32,11 +32,6 @@ module.exports = function(grunt) {
       browsers: ['bs_ipad_mini'],
       reporters: ['mocha'],
       singleRun: true
-    },
-    travis_ci: {
-      browsers: ['Firefox'],
-      reporters: ['mocha'],
-      singleRun: true
     }
   };
 };
