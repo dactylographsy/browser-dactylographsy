@@ -11,7 +11,8 @@ export default class Cache {
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
     );
-    this.rusha = new Rusha();
+
+    this.hasher = new Rusha();
 
     this.options = options;
     this.cachePrefix = this.options.cachePrefix || defaultPrefix;
@@ -29,8 +30,10 @@ export default class Cache {
   }
 
   isItemValid(code, sha1) {
+    if (typeof code !== 'string') { return false; }
+
     return (
-      this.rusha.digestFromString(
+      this.hasher.digestFromString(
         code
       ) === sha1
     );
@@ -90,7 +93,7 @@ export default class Cache {
     return localStorage.getItem(`${this.cachePrefix}-${key}`) !== null;
   }
 
-  remove(url) {
+  remove(key) {
     if (!this.isSupported) { return false; }
 
     return localStorage.removeItem(`${this.cachePrefix}-${key}`);;

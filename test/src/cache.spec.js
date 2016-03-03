@@ -258,5 +258,99 @@ describe('Cache', () => {
 
       cache.has('karma-spec-defaulted.com').should.be.true;
     });
+
+    it('should resolve the promise when validation is requested and passes', () => {
+      let
+        item;
+
+      cache.set('foo', 'string', 'karma-spec.com');
+
+      item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb13');
+
+      item.should.be.resolved;
+    });
+
+    it('should reject the promise when validation is requested and fails', () => {
+      let
+        item;
+
+      cache.set('foo', 'string', 'karma-spec.com');
+
+      item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb14');
+
+      item.should.be.rejected;
+    });
+
+    it('should remove invalid items from cache when found', () => {
+      cache.set('foo', 'string', 'karma-spec.com');
+
+      cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb14');
+
+      cache.has('karma-spec.com').should.be.false;
+    });
+  });
+
+  describe('remove', () => {
+    var
+      cache;
+
+    beforeEach(() => {
+      cache = new Cache({
+        cachePrefix: 'karma-spec'
+      });
+
+      cache.flush();
+    });
+
+    afterEach(() => {
+      cache.flush();
+    });
+
+    it('should remove an previously existing key', () => {
+      cache.set('foo', 'string', 'karma-spec.com');
+
+      cache.has('karma-spec.com').should.be.true;
+
+      cache.remove('karma-spec.com');
+
+      cache.has('karma-spec.com').should.be.false;
+    });
+
+    it('should not fail on removing a non-existing key', () => {
+      cache.remove('karma-spec.com');
+
+      cache.has('karma-spec.com').should.be.false;
+    });
+  });
+
+  describe('isItemValid', () => {
+    var
+      cache;
+
+    beforeEach(() => {
+      cache = new Cache({
+        cachePrefix: 'karma-spec'
+      });
+
+      cache.flush();
+    });
+
+    afterEach(() => {
+      cache.flush();
+    });
+
+    it('should indicate an item with correct sha1 being valid', () => {
+      cache.isItemValid('karma-spec.com', 'cdc735c00a1028854ab9e7d568156a293a92fb13').should.be.true;
+    });
+
+    it('should indicate an item being incorrect with non matching sha1', () => {
+      cache.isItemValid('karma-spec.com', 'cdc735c00a1028854ab9e7d568156a293a92fb12').should.be.false;
+    });
+
+    it('should not attempt validating non-string values', () => {
+      cache.isItemValid(false, 'non-string').should.be.false;
+      cache.isItemValid(1, 'non-string').should.be.false;
+      cache.isItemValid(1.1, 'non-string').should.be.false;
+    });
   });
 });
