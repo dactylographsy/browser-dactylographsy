@@ -66,7 +66,7 @@ cachedManifests: true
 enableLogging: false
 // Only fetches all manifests and dependencies and cache
 cacheOnly: false
-// Verifies bundles with `sha1` hashes
+// Verifies bundles with `sha256` hashes
 verification: false
 ```
 
@@ -94,7 +94,7 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
 - 1.3.0 Add support for enabling logging per url-param (overwrites enableLogging) ?dactylographsy-enableLogging=true
 - 1.3.1 Fix build issue (some mangling issue)
 - 1.4.0 Add `cacheOnly`-option to only prefetch app and rename `cacheManifests` to `cachedManifests`
-- 1.5.0 Add `verification`-option to use `sha1` verification of cached bundles
+- 1.5.0 Add `verification`-option to use `sha256` verification of cached bundles
   - Bundles in `localStorage` can be tampered with hence this forces `manifests` to never be cached and bundles with invalid contents are refetched
 
 ## Acknowledgements
