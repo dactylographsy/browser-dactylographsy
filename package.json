@@ -1,6 +1,6 @@
 {
   "name": "browser-dactylographsy",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": " Front end components for consuming manifests produced by grunt-dactylographsy.",
   "scripts": {
     "test": "grunt ci-test"
@@ -49,6 +49,7 @@
     "grunt-mocha-test": "0.12.7",
     "grunt-shell": "1.2.1",
     "grunt-webpack": "1.0.11",
+    "jssha": "^2.0.2",
     "karma": "0.13.21",
     "karma-browserstack-launcher": "0.1.10",
     "karma-chrome-launcher": "0.2.2",

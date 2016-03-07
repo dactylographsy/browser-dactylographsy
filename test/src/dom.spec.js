@@ -101,6 +101,23 @@ describe('DOM', () => {
             expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
           });
         });
+
+        it('should not inject an invalid item from cache', () => {
+          cache.set(code, 'css', urls.printed);
+
+          let
+            injection = css.inject({
+              printed: urls.printed,
+              raw: urls.raw,
+              hash: '123-abc'
+            });
+
+          injection.should.be.fulfilled;
+
+          injection.then(() => {
+            expect(domUtils.findJsByDataUrl(url.printed)[0].textContent).to.not.contain(code);
+          });
+        });
       });
     });
 
@@ -277,6 +294,23 @@ describe('DOM', () => {
 
           injection.then(() => {
             expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
+          });
+        });
+
+        it('should not inject an invalid item from cache', () => {
+          cache.set(code, 'js', urls.printed);
+
+          let
+            injection = js.inject({
+              printed: urls.printed,
+              raw: urls.raw,
+              hash: '123-abc'
+            });
+
+          injection.should.be.fulfilled;
+
+          injection.then(() => {
+            expect(domUtils.findJsByDataUrl(url.printed)[0].textContent).to.not.contain(code);
           });
         });
       });

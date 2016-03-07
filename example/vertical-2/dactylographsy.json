@@ -4,17 +4,29 @@
   "rootUrl": "example",
   "hashes": {
     "hash4": {
-      "hash": "hash4",
+<<<<<<< HEAD
+      "hash": "6117617ce7a09fd73b2db54541620a09d0fafbf7bd319db7e71ad03bff76c7ab",
+=======
+      "hash": "f0f9ea04c28dd147025a4892593a7cf4e17cbf0d",
+>>>>>>> 6307d228a266d3dd13dfd107b9e6b640fe4592de
       "file": "1.js",
       "extension": ".js"
     },
     "hash5": {
-      "hash": "hash5",
+<<<<<<< HEAD
+      "hash": "d406c78865b1c9072e41cb74607ebb6cc6e860b134e7baa3d44fd3c016a5f239",
+=======
+      "hash": "2e5677f18067f385048d5a9c04d6a231f988a2c7",
+>>>>>>> 6307d228a266d3dd13dfd107b9e6b640fe4592de
       "file": "2.js",
       "extension": ".js"
     },
     "hash6": {
-      "hash": "hash6",
+<<<<<<< HEAD
+      "hash": "a1ec8262de8560f2f6ff66cad9791d85c2c8976c39af629156a307e3c8d6d93c",
+=======
+      "hash": "1404c19e2a3623da4ca1f98af7e45a28ce536a44",
+>>>>>>> 6307d228a266d3dd13dfd107b9e6b640fe4592de
       "file": "1.css",
       "extension": ".css"
     }

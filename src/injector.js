@@ -154,6 +154,8 @@ export default class Injector {
       basename = this.basename(dependency.file),
       url;
 
+    // Filter out potential null values
+    // passed in as various parts of an url.
     url = [this.prefix, rootUrl, dependency.path].filter(_url => {
       return (
         _url !== undefined &&
@@ -162,6 +164,7 @@ export default class Injector {
     }).join('/');
 
     return {
+      hash: dependency.hash,
       printed: `/${url}/${basename}-${dependency.hash}${dependency.extension}`,
       raw: `/${url}/${basename}${dependency.extension}`,
       singularBy: `/${url}/${basename}${dependency.extension}`

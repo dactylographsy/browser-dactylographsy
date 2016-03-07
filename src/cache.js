@@ -1,5 +1,6 @@
 import Log from './log';
 import getUrlParam from './url';
+import jsSHA from 'jssha';
 
 export default class Cache {
   constructor(options = {}) {
@@ -10,6 +11,8 @@ export default class Cache {
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
     );
+
+    this.hasher = new jsSHA('SHA-256', 'TEXT');
 
     this.options = options;
     this.cachePrefix = this.options.cachePrefix || defaultPrefix;
@@ -26,13 +29,24 @@ export default class Cache {
     return this.cachePrefix;
   }
 
-  get(key, defaultValue) {
+  isItemValid(code, sha256) {
+    if (typeof code !== 'string') { return false; }
+    this.hasher.update(code)
+    return (
+      this.hasher.getHash('HEX') === sha256
+    );
+  }
+
+  parse(item) {
+    return JSON.parse(item);
+  }
+
+  get(key, defaultValue, sha256 = false) {
     return new Promise((resolve, reject) => {
       if (!this.isSupported) { reject(); }
 
-      let _item = JSON.parse(
-        localStorage.getItem(`${this.cachePrefix}-${key}`)
-      );
+      let
+        _item = localStorage.getItem(`${this.cachePrefix}-${key}`);
 
       if (_item === null && defaultValue !== undefined) {
         this.set(defaultValue, 'plain', key);
@@ -42,10 +56,27 @@ export default class Cache {
         return;
       }
 
-      if (_item) {
+      if (_item !== null && sha256 !== false) {
+        const
+          _parsed = this.parse(_item);
+
+        this.log.info(`Found item with key: ${key} in cache which needs validation...`);
+
+        if (this.isItemValid(_parsed.code, sha256)) {
+          this.log.info(`...matches expected sha256 ${sha256}.`);
+
+          resolve(_parsed.code);
+        } else {
+          this.log.info(`...does not match expected sha256 ${sha256} - pruning.`);
+
+          this.remove(key);
+
+          reject();
+        }
+      } else if (_item) {
         this.log.info(`Found item with key: ${key} in cache.`);
 
-        resolve(_item.code);
+        resolve(this.parse(_item).code);
       } else {
         this.log.info(`Couldn\'t find item with key: ${key} in cache.`);
 
@@ -60,20 +91,26 @@ export default class Cache {
     return localStorage.getItem(`${this.cachePrefix}-${key}`) !== null;
   }
 
-  set(code, type, url, singularBy = false) {
+  remove(key) {
+    if (!this.isSupported) { return false; }
+
+    return localStorage.removeItem(`${this.cachePrefix}-${key}`);;
+  }
+
+  set(code, type, key, singularBy = false) {
     if (!this.isSupported) { return false; }
     if (singularBy) { this.dedupe(singularBy); }
 
     let cached = {
       now: +new Date(),
-      url: url,
+      url: key,
       code: code,
       type: type,
       singularBy: ( typeof singularBy === 'string' ) ? singularBy : undefined
     };
 
     localStorage.setItem(
-      `${this.cachePrefix}-${url}`,
+      `${this.cachePrefix}-${key}`,
       JSON.stringify(cached)
     );
 
