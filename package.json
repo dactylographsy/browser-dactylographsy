@@ -42,7 +42,7 @@
     "grunt-contrib-nodeunit": "1.0.0",
     "grunt-contrib-uglify": "1.0.0",
     "grunt-contrib-watch": "0.6.1",
-    "grunt-dactylographsy": "1.12.0",
+    "grunt-dactylographsy": "1.15.0",
     "grunt-eslint": "18.0.0",
     "grunt-karma": "0.12.1",
     "grunt-mocha-cov": "0.4.0",
