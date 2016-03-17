@@ -44,7 +44,7 @@
     "grunt-contrib-watch": "0.6.1",
     "grunt-dactylographsy": "1.12.0",
     "grunt-eslint": "18.0.0",
-    "grunt-karma": "0.12.1",
+    "grunt-karma": "0.12.2",
     "grunt-mocha-cov": "0.4.0",
     "grunt-mocha-test": "0.12.7",
     "grunt-shell": "1.2.1",
