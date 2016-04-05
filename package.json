@@ -68,7 +68,7 @@
     "webpack-dev-server": "1.14.1"
   },
   "peerDependencies": {
-    "grunt": "~0.4.5",
+    "grunt": "~1.0.0",
     "grunt-cli": "~1.2.0"
   },
   "config": {
