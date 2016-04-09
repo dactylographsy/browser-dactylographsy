@@ -22,5 +22,13 @@ export default function getUrlParam(param, ifUnset = null, url = window.location
   const
     params = getParams(url);
 
-  return params.hasOwnProperty(param) ? params[param] : ifUnset;
+  if (params.hasOwnProperty(param)) {
+    try {
+      return JSON.parse(params[param]);
+    } catch (e) {
+      return encodeURIComponent(params[param]);
+    }
+  } else {
+    return ifUnset
+  }
 };

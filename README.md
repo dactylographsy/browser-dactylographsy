@@ -96,6 +96,8 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
 - 1.4.0 Add `cacheOnly`-option to only prefetch app and rename `cacheManifests` to `cachedManifests`
 - 1.5.0 Add `verification`-option to use `sha256` verification of cached bundles
   - Bundles in `localStorage` can be tampered with hence this forces `manifests` to never be cached and bundles with invalid contents are refetched
+- 1.5.1 Update peer dependencies to work with current grunt-o-mania
+- 1.5.2 Add escaping of URL parameters (debug etc) to shield from XSS
 
 ## Acknowledgements
 
