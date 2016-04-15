@@ -43,7 +43,7 @@
     "grunt-contrib-uglify": "1.0.1",
     "grunt-contrib-watch": "1.0.0",
     "grunt-dactylographsy": "1.15.3",
-    "grunt-eslint": "18.0.0",
+    "grunt-eslint": "18.1.0",
     "grunt-karma": "0.12.2",
     "grunt-mocha-cov": "0.4.0",
     "grunt-mocha-test": "0.12.7",
