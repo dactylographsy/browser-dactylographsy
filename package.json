@@ -55,7 +55,7 @@
     "karma-chrome-launcher": "0.2.3",
     "karma-firefox-launcher": "0.1.7",
     "karma-mocha": "0.2.2",
-    "karma-mocha-reporter": "2.0.1",
+    "karma-mocha-reporter": "2.0.2",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "1.7.0",
     "load-grunt-config": "git+https://github.com/firstandthird/load-grunt-config#bc1f14e",
