@@ -4,16 +4,19 @@
   "rootUrl": "example",
   "hashes": {
     "hash4": {
+      "id": 2559938179,
       "hash": "6117617ce7a09fd73b2db54541620a09d0fafbf7bd319db7e71ad03bff76c7ab",
       "file": "1.js",
       "extension": ".js"
     },
     "hash5": {
+      "id": 2051496256,
       "hash": "d406c78865b1c9072e41cb74607ebb6cc6e860b134e7baa3d44fd3c016a5f239",
       "file": "2.js",
       "extension": ".js"
     },
     "hash6": {
+      "id": 4202260985,
       "hash": "a1ec8262de8560f2f6ff66cad9791d85c2c8976c39af629156a307e3c8d6d93c",
       "file": "1.css",
       "extension": ".css"

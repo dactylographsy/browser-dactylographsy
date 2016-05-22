@@ -1,6 +1,6 @@
 import Log from './log';
 import getUrlParam from './url';
-import jsSHA from 'jssha';
+import stringHash from 'string-hash';
 
 export default class Cache {
   constructor(options = {}) {
@@ -11,8 +11,6 @@ export default class Cache {
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
     );
-
-    this.hasher = new jsSHA('SHA-256', 'TEXT');
 
     this.options = options;
     this.cachePrefix = this.options.cachePrefix || defaultPrefix;
@@ -29,11 +27,11 @@ export default class Cache {
     return this.cachePrefix;
   }
 
-  isItemValid(code, sha256) {
+  isItemValid(code, hash) {
     if (typeof code !== 'string') { return false; }
-    this.hasher.update(code)
+
     return (
-      this.hasher.getHash('HEX') === sha256
+      stringHash(code) === hash
     );
   }
 
@@ -41,7 +39,7 @@ export default class Cache {
     return JSON.parse(item);
   }
 
-  get(key, defaultValue, sha256 = false) {
+  get(key, defaultValue, hash = false) {
     return new Promise((resolve, reject) => {
       if (!this.isSupported) { reject(); }
 
@@ -56,18 +54,18 @@ export default class Cache {
         return;
       }
 
-      if (_item !== null && sha256 !== false) {
+      if (_item !== null && hash !== false) {
         const
           _parsed = this.parse(_item);
 
         this.log.info(`Found item with key: ${key} in cache which needs validation...`);
 
-        if (this.isItemValid(_parsed.code, sha256)) {
-          this.log.info(`...matches expected sha256 ${sha256}.`);
+        if (this.isItemValid(_parsed.code, hash)) {
+          this.log.info(`...matches expected hash ${hash}.`);
 
           resolve(_parsed.code);
         } else {
-          this.log.info(`...does not match expected sha256 ${sha256} - pruning.`);
+          this.log.info(`...does not match expected hash ${hash} - pruning.`);
 
           this.remove(key);
 

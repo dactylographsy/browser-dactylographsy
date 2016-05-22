@@ -164,7 +164,7 @@ export default class Injector {
     }).join('/');
 
     return {
-      hash: dependency.hash,
+      id: dependency.id,
       printed: `/${url}/${basename}-${dependency.hash}${dependency.extension}`,
       raw: `/${url}/${basename}${dependency.extension}`,
       singularBy: `/${url}/${basename}${dependency.extension}`

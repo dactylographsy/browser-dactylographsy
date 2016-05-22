@@ -141,7 +141,7 @@ export class Js {
     return this.cache.get(
       urls.printed,
       undefined,
-      this.hash(urls.hash)
+      this.hash(urls.id)
     ).then(text => {
         return this.injectWithText(text, urls.printed);
     }, () => {
@@ -266,7 +266,7 @@ export class Css {
     return this.cache.get(
       urls.printed,
       undefined,
-      this.hash(urls.hash)
+      this.hash(urls.id)
     ).then(text => {
       return this.injectWithText(text, urls.printed);
     }, () => {

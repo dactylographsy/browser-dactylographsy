@@ -339,13 +339,13 @@ describe('Cache', () => {
       cache.flush();
     });
 
-    it('should indicate an item with correct sha256 being valid', () => {
-      cache.isItemValid('karma-spec.com', '202f55f3761219f5126133fa1a38a84f2abc7bd8d41edc5e5fe4b939ad64671e')
+    it('should indicate an item with correct hash being valid', () => {
+      cache.isItemValid('karma-spec.com', 55011414)
         .should.be.true;
     });
 
     it('should indicate an item being incorrect with non matching sha256', () => {
-      cache.isItemValid('karma-spec.com', 'cdc735c00a1028854ab9e7d568156a293a92fb12').should.be.false;
+      cache.isItemValid('karma-spec.com', 55011415).should.be.false;
     });
 
     it('should not attempt validating non-string values', () => {

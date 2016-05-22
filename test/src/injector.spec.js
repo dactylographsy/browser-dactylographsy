@@ -16,16 +16,19 @@ var
     rootUrl: 'example',
     hashes: {
       hash1: {
+        id: 1,
         hash: 'hash1',
         file: '1.js',
         extension: '.js'
       },
       hash2: {
+        id: 2,
         hash: 'hash2',
         file: '2.js',
         extension: '.js'
       },
       hash3: {
+        id: 3,
         hash: 'hash3',
         file: '1.css',
         extension: '.css'
@@ -37,11 +40,13 @@ var
     rootUrl: 'example',
     hashes: {
       hash4: {
+        id: 4,
         hash: 'hash4',
         file: '4.js',
         extension: '.js'
       },
       hash5: {
+        id: 5,
         hash: 'hash5',
         file: '5.css',
         extension: '.css'

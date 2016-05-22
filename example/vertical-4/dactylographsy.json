@@ -4,11 +4,13 @@
   "rootUrl": "example",
   "hashes": {
     "hash7": {
+      "id": 3861265409,
       "hash": "hash9",
       "file": "1.js",
       "extension": ".js"
     },
     "hash8": {
+      "id": 406255726,
       "hash": "hash10",
       "file": "1.css",
       "extension": ".css"

@@ -66,7 +66,7 @@ cachedManifests: true
 enableLogging: false
 // Only fetches all manifests and dependencies and cache
 cacheOnly: false
-// Verifies bundles with `sha256` hashes
+// Verifies bundles with `stringHash` hashes
 verification: false
 ```
 
@@ -98,8 +98,9 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
   - Bundles in `localStorage` can be tampered with hence this forces `manifests` to never be cached and bundles with invalid contents are refetched
 - 1.5.1 Update peer dependencies to work with current grunt-o-mania
 - 1.5.2 Add escaping of URL parameters (debug etc) to shield from XSS
-- 1.5.3, 1.5.4, 1.5.5 
+- 1.5.3, 1.5.4, 1.5.5
   - Update dependencies triggering different build output
+- 1.6.0 Replace sha256 hashing with faster and simpler string hashing (slow browsers)
 
 ## Acknowledgements
 
