@@ -66,7 +66,7 @@ cachedManifests: true
 enableLogging: false
 // Only fetches all manifests and dependencies and cache
 cacheOnly: false
-// Verifies bundles with `stringHash` hashes
+// Verifies bundles with `djb2` hashes
 verification: false
 ```
 
