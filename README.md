@@ -68,6 +68,8 @@ enableLogging: false
 cacheOnly: false
 // Verifies bundles with `djb2` hashes
 verification: false
+// Enable caching of all assets in localStorage (default: true)
+cacheInLocalStorage: false
 ```
 
 ## Developing & Contributing
@@ -101,6 +103,7 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
 - 1.5.3, 1.5.4, 1.5.5
   - Update dependencies triggering different build output
 - 1.6.0 Replace sha256 hashing with faster and simpler string hashing (slow browsers)
+- 1.7.0 Add option to disable caching in localStorage (uses dactylographsy only for cache busting but relies on browser cache and correctly set headers to get the benefits of caching)
 
 ## Acknowledgements
 

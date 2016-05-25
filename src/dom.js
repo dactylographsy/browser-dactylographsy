@@ -7,12 +7,18 @@ export class Js {
   constructor(injectInto, config = {}) {
     let {
       enableLogging = false,
-      verification = false
+      verification = false,
+      cacheInLocalStorage = true
     } = config;
 
     enableLogging = getUrlParam(
       'dactylographsy-enableLogging',
       enableLogging
+    );
+
+    cacheInLocalStorage = getUrlParam(
+      'dactylographsy-cacheInLocalStorage',
+      cacheInLocalStorage
     );
 
     this.injectInto = injectInto;
@@ -24,6 +30,7 @@ export class Js {
 
     this.cacheDelay = config.cacheDelay || 5000;
     this.verification = verification;
+    this.cacheInLocalStorage = cacheInLocalStorage;
 
     this.log = new Log(enableLogging);
   }
@@ -108,7 +115,8 @@ export class Js {
 
   ensureCache(url, singularBy = false, delay = 0) {
     return new Promise((resolve, reject) => {
-        if (this.cache.has(url)) { resolve(); }
+        if (this.cache.has(url)) { return resolve(); }
+        if (!this.cacheInLocalStorage) { return resolve('Caching in localStorage is disabled'); }
 
         this.log.info(`Loading JavaScript from ${url} for cache in ${delay}.`);
 
@@ -154,12 +162,18 @@ export class Css {
   constructor(injectInto, config = {}) {
     let {
       enableLogging = false,
-      verification = false
+      verification = false,
+      cacheInLocalStorage = true
     } = config;
 
     enableLogging = getUrlParam(
       'dactylographsy-enableLogging',
       enableLogging
+    );
+
+    cacheInLocalStorage = getUrlParam(
+      'dactylographsy-cacheInLocalStorage',
+      cacheInLocalStorage
     );
 
     this.injectInto = injectInto;
@@ -175,8 +189,9 @@ export class Css {
   }
 
   ensureCache(url, singularBy = false, delay = 0) {
-    return new Promise((resolve) => {
-      if (this.cache.has(url)) { resolve(); }
+    return new Promise((resolve, reject) => {
+      if (this.cache.has(url)) { return resolve(); }
+      if (!this.cacheInLocalStorage) { return resolve('Caching in localStorage is disabled'); }
 
       this.log.info(`Loading CSS from ${url} for cache in ${delay}.`);
 

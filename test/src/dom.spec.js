@@ -1,9 +1,9 @@
-import {Css, Js} from '../../src/dom';
+import { Css, Js } from '../../src/dom';
 import Cache from '../../src/cache';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
-import {DOMUtil} from '../utils';
+import { DOMUtil } from '../utils';
 
 chai.should();
 chai.use(sinonChai);
@@ -76,7 +76,26 @@ describe('DOM', () => {
         });
       });
 
-      describe('an cached file', () => {
+      describe('with cacheInLocalStorage disabled', () => {
+        var cache = new Cache();
+
+        it('should not cache the file in localStorage', () => {
+          domUtils.removeAll();
+
+          css = new Css(document.querySelector('body'), {
+            enableLogging: false,
+            cacheInLocalStorage: false
+          });
+
+          let cachePromise = css.ensureCache(urls.printed);
+
+          return cachePromise.then(res => {
+            expect(res).to.equal('Caching in localStorage is disabled');
+          });
+        });
+      });
+
+      describe('a cached file', () => {
         var
           cache = new Cache();
 
@@ -85,7 +104,8 @@ describe('DOM', () => {
           cache.flush();
 
           css = new Css(document.querySelector('body'), {
-            enableLogging: false
+            enableLogging: false,
+            verification: true
           });
         });
 
@@ -97,7 +117,7 @@ describe('DOM', () => {
 
           injection.should.be.fulfilled;
 
-          injection.then(() => {
+          return injection.then(() => {
             expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
           });
         });
@@ -109,13 +129,13 @@ describe('DOM', () => {
             injection = css.inject({
               printed: urls.printed,
               raw: urls.raw,
-              hash: '123-abc'
+              id: '123-abc'
             });
 
           injection.should.be.fulfilled;
 
-          injection.then(() => {
-            expect(domUtils.findJsByDataUrl(url.printed)[0].textContent).to.not.contain(code);
+          return injection.then(() => {
+            expect(domUtils.findCssByDataUrl(urls.printed)[0].textContent).to.not.contain(code);
           });
         });
       });
@@ -179,7 +199,9 @@ describe('DOM', () => {
 
       it('should resolve the promise when injecting straight away', () => {
         let
-          urls = {raw: 'promise-check.css'},
+          urls = {
+            raw: 'promise-check.css'
+          },
           injection = css.injectWithUrl(urls, 'raw');
 
         injection.should.be.fulfilled;
@@ -187,7 +209,9 @@ describe('DOM', () => {
 
       it('should create a style-tag when injecting', () => {
         let
-          urls = {raw: 'css-tag-check.css'},
+          urls = {
+            raw: 'css-tag-check.css'
+          },
           injection = css.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
@@ -195,7 +219,9 @@ describe('DOM', () => {
 
       it('should should flag the injection with a data-url', () => {
         let
-          urls = {raw: 'css-data-url-check.css'},
+          urls = {
+            raw: 'css-data-url-check.css'
+          },
           injection = css.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
@@ -203,7 +229,9 @@ describe('DOM', () => {
 
       it('should should set the href on the script-tag', () => {
         let
-          urls = {raw: 'js-src-check.css'},
+          urls = {
+            raw: 'js-src-check.css'
+          },
           injection = css.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findCssByDataUrl(urls.raw)[0]).to.have.property('href');
@@ -265,13 +293,32 @@ describe('DOM', () => {
 
           injection.should.be.fulfilled;
 
-          injection.then(() => {
+          return injection.then(() => {
             expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
           });
         });
       });
 
-      describe('an cached file', () => {
+      describe('with cacheInLocalStorage disabled', () => {
+        var cache = new Cache();
+
+        it('should not cache the file in localStorage', () => {
+          domUtils.removeAll();
+
+          js = new Js(document.querySelector('body'), {
+            enableLogging: false,
+            cacheInLocalStorage: false
+          });
+
+          let cachePromise = js.ensureCache(urls.printed);
+
+          return cachePromise.then(res => {
+            expect(res).to.equal('Caching in localStorage is disabled');
+          });
+        });
+      });
+
+      describe('a cached file', () => {
         var
           cache = new Cache();
 
@@ -280,7 +327,8 @@ describe('DOM', () => {
           cache.flush();
 
           js = new Js(document.querySelector('body'), {
-            enableLogging: false
+            enableLogging: false,
+            verification: true
           });
         });
 
@@ -292,7 +340,7 @@ describe('DOM', () => {
 
           injection.should.be.fulfilled;
 
-          injection.then(() => {
+          return injection.then(() => {
             expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
           });
         });
@@ -304,13 +352,13 @@ describe('DOM', () => {
             injection = js.inject({
               printed: urls.printed,
               raw: urls.raw,
-              hash: '123-abc'
+              id: '123-abc'
             });
 
           injection.should.be.fulfilled;
 
-          injection.then(() => {
-            expect(domUtils.findJsByDataUrl(url.printed)[0].textContent).to.not.contain(code);
+          return injection.then(() => {
+            expect(domUtils.findJsByDataUrl(urls.printed)[0].textContent).to.not.contain(code);
           });
         });
       });
@@ -384,7 +432,9 @@ describe('DOM', () => {
 
       it('should resolve the promise when injecting straight away', () => {
         let
-          urls = {raw: 'promise-check.js'},
+          urls = {
+            raw: 'promise-check.js'
+          },
           injection = js.injectWithUrl(urls, 'raw');
 
         injection.should.be.fulfilled;
@@ -392,7 +442,9 @@ describe('DOM', () => {
 
       it('should create a script-tag when injecting', () => {
         let
-          urls = {raw: 'js-tag-check.js'},
+          urls = {
+            raw: 'js-tag-check.js'
+          },
           injection = js.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
@@ -400,7 +452,9 @@ describe('DOM', () => {
 
       it('should should flag the injection with a data-url', () => {
         let
-          urls = {raw: 'js-data-url-check.js'},
+          urls = {
+            raw: 'js-data-url-check.js'
+          },
           injection = js.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
@@ -408,7 +462,9 @@ describe('DOM', () => {
 
       it('should should set the src on the script-tag', () => {
         let
-          urls = {raw: 'js-src-check.js'},
+          urls = {
+            raw: 'js-src-check.js'
+          },
           injection = js.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findJsByDataUrl(urls.raw)[0]).to.have.property('src');
@@ -416,7 +472,9 @@ describe('DOM', () => {
 
       it('should should flag the script not being async', () => {
         let
-          urls = {raw: 'js-async-check.js'},
+          urls = {
+            raw: 'js-async-check.js'
+          },
           injection = js.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findJsByDataUrl(urls.raw)[0].async).to.be.false;

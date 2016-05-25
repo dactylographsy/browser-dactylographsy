@@ -40,7 +40,9 @@ export default class Dactylographsy {
     })).then(manifests => {
       this.log.info(`Fetched all manifests, ${manifests.length} in total.`);
 
-      this.cache.set(manifests, 'manifests', 'manifests');
+      if (this.config.cacheInLocalStorage) {
+        this.cache.set(manifests, 'manifests', 'manifests');
+      }
 
       return new Injector(
         inject ? this.injectInto : undefined,
@@ -53,7 +55,7 @@ export default class Dactylographsy {
   restore(inject = true) {
     return this.cache.get('manifests')
       .then(manifests => {
-        this.log.info('Resotring with manifests in cache later refreshing via network (delayed).');
+        this.log.info('Restoring with manifests in cache later refreshing via network (delayed).');
 
         return new Injector(
           inject ? this.injectInto : undefined,
@@ -75,7 +77,13 @@ export default class Dactylographsy {
     const
       ttl = getUrlParam('dactylographsy-ttl', this.config.ttl);
 
-    if (ttl) {
+    if (!this.config.cacheInLocalStorage) {
+      // Remove all cache-keys we might have set in the past and then switched config
+      this.log.info('Flushing local-storage due to config-option "cacheInLocalStorage=false"')
+      this.cache.flush();
+    }
+
+    if (this.config.cacheInLocalStorage && ttl) {
       this.cache.get('clt', 0)
         .then(clt => {
           if (clt >= ttl) {
@@ -94,10 +102,11 @@ export default class Dactylographsy {
     else {
       // Either the configuration of non cached
       // manifests or requested bundle verification
-      // forces a refresh or all manifests.
+      // forces a refresh of all manifests.
       return (
         this.config.cachedManifests === false ||
-        this.config.verification === true
+        this.config.verification === true ||
+        this.config.cacheInLocalStorage === false
       ) ? this.refresh() : this.restore()
         .then(injectedFromCache => {
           let {
