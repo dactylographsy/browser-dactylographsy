@@ -89,8 +89,8 @@ describe('DOM', () => {
 
           let cachePromise = css.ensureCache(urls.printed);
 
-          return cachePromise.catch(err => {
-            expect(err).to.equal('Caching in localStorage is disabled');
+          return cachePromise.then(res => {
+            expect(res).to.equal('Caching in localStorage is disabled');
           });
         });
       });
@@ -312,8 +312,8 @@ describe('DOM', () => {
 
           let cachePromise = js.ensureCache(urls.printed);
 
-          return cachePromise.catch(err => {
-            expect(err).to.equal('Caching in localStorage is disabled');
+          return cachePromise.then(res => {
+            expect(res).to.equal('Caching in localStorage is disabled');
           });
         });
       });

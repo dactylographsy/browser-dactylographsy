@@ -116,7 +116,7 @@ export class Js {
   ensureCache(url, singularBy = false, delay = 0) {
     return new Promise((resolve, reject) => {
         if (this.cache.has(url)) { return resolve(); }
-        if (!this.cacheInLocalStorage) { return reject('Caching in localStorage is disabled'); }
+        if (!this.cacheInLocalStorage) { return resolve('Caching in localStorage is disabled'); }
 
         this.log.info(`Loading JavaScript from ${url} for cache in ${delay}.`);
 
@@ -191,7 +191,7 @@ export class Css {
   ensureCache(url, singularBy = false, delay = 0) {
     return new Promise((resolve, reject) => {
       if (this.cache.has(url)) { return resolve(); }
-      if (!this.cacheInLocalStorage) { return reject('Caching in localStorage is disabled'); }
+      if (!this.cacheInLocalStorage) { return resolve('Caching in localStorage is disabled'); }
 
       this.log.info(`Loading CSS from ${url} for cache in ${delay}.`);
 
