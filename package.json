@@ -69,7 +69,7 @@
   },
   "peerDependencies": {
     "grunt": ">=0.4.0",
-    "grunt-cli": ">=0.1.13"
+    "grunt-cli": ">=1.0.0"
   },
   "config": {
     "blanket": {
