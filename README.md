@@ -104,6 +104,7 @@ Developing on the task alone is fairly easy just `git clone https://github.com/d
   - Update dependencies triggering different build output
 - 1.6.0 Replace sha256 hashing with faster and simpler string hashing (slow browsers)
 - 1.7.0 Add option to disable caching in localStorage (uses dactylographsy only for cache busting but relies on browser cache and correctly set headers to get the benefits of caching)
+- 2.0.0 Drop support for node <= 0.12
 
 ## Acknowledgements
 

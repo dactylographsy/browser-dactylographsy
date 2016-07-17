@@ -1,6 +1,6 @@
 {
   "name": "browser-dactylographsy",
-  "version": "1.7.0",
+  "version": "2.0.0",
   "description": " Front end components for consuming manifests produced by grunt-dactylographsy.",
   "scripts": {
     "test": "grunt ci-test"
@@ -8,6 +8,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/dactylographsy/browser-dactylographsy.git"
+  },
+  "engineStrict": true,
+  "engines": {
+      "node": ">= 4"
   },
   "keywords": [
     "grunt",
