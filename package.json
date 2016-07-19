@@ -11,7 +11,7 @@
   },
   "engineStrict": true,
   "engines": {
-      "node": ">= 4"
+    "node": ">= 4"
   },
   "keywords": [
     "grunt",
@@ -44,7 +44,7 @@
     "grunt-contrib-clean": "1.0.0",
     "grunt-contrib-copy": "1.0.0",
     "grunt-contrib-nodeunit": "1.0.0",
-    "grunt-contrib-uglify": "1.0.1",
+    "grunt-contrib-uglify": "2.0.0",
     "grunt-contrib-watch": "1.0.0",
     "grunt-dactylographsy": "2.0.0",
     "grunt-eslint": "19.0.0",
