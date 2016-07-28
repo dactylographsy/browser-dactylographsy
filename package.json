@@ -11,7 +11,7 @@
   },
   "engineStrict": true,
   "engines": {
-      "node": ">= 4"
+    "node": ">= 4"
   },
   "keywords": [
     "grunt",
@@ -58,7 +58,7 @@
     "karma-chrome-launcher": "1.0.1",
     "karma-firefox-launcher": "1.0.0",
     "karma-mocha": "1.1.1",
-    "karma-mocha-reporter": "2.0.4",
+    "karma-mocha-reporter": "2.0.5",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "1.7.0",
     "load-grunt-config": "0.19.2",
