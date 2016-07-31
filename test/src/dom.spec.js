@@ -9,15 +9,19 @@ chai.should();
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 
-var
+let
   fixtureUrl = 'base/test/src/fixtures/code.js',
   domUtils,
   expect;
 
 describe('DOM', () => {
+  let rootElem;
+
   before(() => {
     expect = chai.expect;
     domUtils = new DOMUtil();
+
+    rootElem = document.querySelector('body');
   });
 
   describe('Css', () => {
@@ -28,7 +32,7 @@ describe('DOM', () => {
       beforeEach(() => {
         domUtils.removeAll();
 
-        css = new Css(null, {
+        css = new Css({
           enableLogging: false
         });
       })
@@ -63,7 +67,7 @@ describe('DOM', () => {
         beforeEach(() => {
           domUtils.removeAll();
 
-          css = new Css(document.querySelector('body'), {
+          css = new Css({
             enableLogging: false
           });
         });
@@ -82,7 +86,7 @@ describe('DOM', () => {
         it('should not cache the file in localStorage', () => {
           domUtils.removeAll();
 
-          css = new Css(document.querySelector('body'), {
+          css = new Css({
             enableLogging: false,
             cacheInLocalStorage: false
           });
@@ -103,7 +107,7 @@ describe('DOM', () => {
           domUtils.removeAll();
           cache.flush();
 
-          css = new Css(document.querySelector('body'), {
+          css = new Css({
             enableLogging: false,
             verification: true
           });
@@ -117,7 +121,9 @@ describe('DOM', () => {
 
           injection.should.be.fulfilled;
 
-          return injection.then(() => {
+          return injection.then((tag) => {
+            domUtils.injectTag(tag, document.querySelector('body'));
+
             expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
           });
         });
@@ -134,7 +140,9 @@ describe('DOM', () => {
 
           injection.should.be.fulfilled;
 
-          return injection.then(() => {
+          return injection.then((tag) => {
+            domUtils.injectTag(tag, document.querySelector('body'));
+
             expect(domUtils.findCssByDataUrl(urls.printed)[0].textContent).to.not.contain(code);
           });
         });
@@ -149,7 +157,7 @@ describe('DOM', () => {
       beforeEach(() => {
         domUtils.removeAll();
 
-        css = new Css(document.querySelector('body'), {
+        css = new Css({
           enableLogging: false
         });
       });
@@ -165,7 +173,11 @@ describe('DOM', () => {
           url = 'css-tag-check.css',
           injection = css.injectWithText(code, url);
 
-        expect(domUtils.findCssByDataUrl(url)).to.have.length.above(0);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findCssByDataUrl(url)).to.have.length.above(0);
+        });
       });
 
       it('should should flag the injection with a data-url', () => {
@@ -173,7 +185,11 @@ describe('DOM', () => {
           url = 'css-data-url-check.css',
           injection = css.injectWithText(code, url);
 
-        expect(domUtils.findCssByDataUrl(url)).to.have.length.above(0);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findCssByDataUrl(url)).to.have.length.above(0);
+        });
       });
 
       it('should should inject the code into the script-tag', () => {
@@ -181,7 +197,11 @@ describe('DOM', () => {
           url = 'css-code-check.css',
           injection = css.injectWithText(code, url);
 
-        expect(domUtils.findCssByDataUrl(url)[0].textContent).to.equal(code);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findCssByDataUrl(url)[0].textContent).to.equal(code);
+        });
       });
     });
 
@@ -192,7 +212,7 @@ describe('DOM', () => {
       beforeEach(() => {
         domUtils.removeAll();
 
-        css = new Css(document.querySelector('body'), {
+        css = new Css({
           enableLogging: false
         });
       });
@@ -214,7 +234,11 @@ describe('DOM', () => {
           },
           injection = css.injectWithUrl(urls, 'raw');
 
-        expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
+        });
       });
 
       it('should should flag the injection with a data-url', () => {
@@ -224,7 +248,11 @@ describe('DOM', () => {
           },
           injection = css.injectWithUrl(urls, 'raw');
 
-        expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
+        });
       });
 
       it('should should set the href on the script-tag', () => {
@@ -234,7 +262,11 @@ describe('DOM', () => {
           },
           injection = css.injectWithUrl(urls, 'raw');
 
-        expect(domUtils.findCssByDataUrl(urls.raw)[0]).to.have.property('href');
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findCssByDataUrl(urls.raw)[0]).to.have.property('href');
+        });
       });
     });
   });
@@ -247,7 +279,7 @@ describe('DOM', () => {
       beforeEach(() => {
         domUtils.removeAll();
 
-        js = new Js(null, {
+        js = new Js({
           enableLogging: false
         });
       })
@@ -282,7 +314,7 @@ describe('DOM', () => {
         beforeEach(() => {
           domUtils.removeAll();
 
-          js = new Js(document.querySelector('body'), {
+          js = new Js({
             enableLogging: false
           });
         });
@@ -293,7 +325,9 @@ describe('DOM', () => {
 
           injection.should.be.fulfilled;
 
-          return injection.then(() => {
+          return injection.then((tag) => {
+            domUtils.injectTag(tag, document.querySelector('body'));
+
             expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
           });
         });
@@ -305,7 +339,7 @@ describe('DOM', () => {
         it('should not cache the file in localStorage', () => {
           domUtils.removeAll();
 
-          js = new Js(document.querySelector('body'), {
+          js = new Js({
             enableLogging: false,
             cacheInLocalStorage: false
           });
@@ -326,7 +360,7 @@ describe('DOM', () => {
           domUtils.removeAll();
           cache.flush();
 
-          js = new Js(document.querySelector('body'), {
+          js = new Js({
             enableLogging: false,
             verification: true
           });
@@ -340,7 +374,9 @@ describe('DOM', () => {
 
           injection.should.be.fulfilled;
 
-          return injection.then(() => {
+          return injection.then((tag) => {
+            domUtils.injectTag(tag, document.querySelector('body'));
+
             expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
           });
         });
@@ -357,7 +393,9 @@ describe('DOM', () => {
 
           injection.should.be.fulfilled;
 
-          return injection.then(() => {
+          return injection.then((tag) => {
+            domUtils.injectTag(tag, document.querySelector('body'));
+
             expect(domUtils.findJsByDataUrl(urls.printed)[0].textContent).to.not.contain(code);
           });
         });
@@ -372,7 +410,7 @@ describe('DOM', () => {
       beforeEach(() => {
         domUtils.removeAll();
 
-        js = new Js(document.querySelector('body'), {
+        js = new Js({
           enableLogging: false
         });
       });
@@ -390,7 +428,11 @@ describe('DOM', () => {
           url = 'js-tag-check.js',
           injection = js.injectWithText(code, url);
 
-        expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
+        });
       });
 
       it('should flag the injection with a data-url', () => {
@@ -398,7 +440,11 @@ describe('DOM', () => {
           url = 'js-data-url-check.js',
           injection = js.injectWithText(code, url);
 
-        expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
+        });
       });
 
       it('should inject the code into the script-tag', () => {
@@ -406,7 +452,11 @@ describe('DOM', () => {
           url = 'js-code-check.js',
           injection = js.injectWithText(code, url);
 
-        expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain(code);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain(code);
+        });
       });
 
       it('should amend an "sourceURL" to injected code', () => {
@@ -414,7 +464,11 @@ describe('DOM', () => {
           url = 'js-sourceurl-check.js',
           injection = js.injectWithText(code, url);
 
-        expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain('//# sourceURL=');
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain('//# sourceURL=');
+        });
       });
     });
 
@@ -425,7 +479,7 @@ describe('DOM', () => {
       beforeEach(() => {
         domUtils.removeAll();
 
-        js = new Js(document.querySelector('body'), {
+        js = new Js({
           enableLogging: false
         });
       });
@@ -447,7 +501,11 @@ describe('DOM', () => {
           },
           injection = js.injectWithUrl(urls, 'raw');
 
-        expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
+        });
       });
 
       it('should should flag the injection with a data-url', () => {
@@ -457,7 +515,11 @@ describe('DOM', () => {
           },
           injection = js.injectWithUrl(urls, 'raw');
 
-        expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
+        });
       });
 
       it('should should set the src on the script-tag', () => {
@@ -467,7 +529,11 @@ describe('DOM', () => {
           },
           injection = js.injectWithUrl(urls, 'raw');
 
-        expect(domUtils.findJsByDataUrl(urls.raw)[0]).to.have.property('src');
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findJsByDataUrl(urls.raw)[0]).to.have.property('src');
+        });
       });
 
       it('should should flag the script not being async', () => {
@@ -477,7 +543,11 @@ describe('DOM', () => {
           },
           injection = js.injectWithUrl(urls, 'raw');
 
-        expect(domUtils.findJsByDataUrl(urls.raw)[0].async).to.be.false;
+        return injection.then((tag) => {
+          domUtils.injectTag(tag, document.querySelector('body'));
+
+          expect(domUtils.findJsByDataUrl(urls.raw)[0].async).to.be.false;
+        });
       });
     });
   });

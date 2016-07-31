@@ -23,6 +23,14 @@ export class DOMUtil {
     return nodes;
   }
 
+  injectTag(tag, intoNode) {
+    if (!intoNode) { return; }
+
+    intoNode.appendChild(tag);
+
+    return tag;
+  }
+
   findAllCss() {
     let
       nodes = [],

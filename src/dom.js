@@ -4,7 +4,7 @@ import Log from './log';
 import getUrlParam from './url';
 
 export class Js {
-  constructor(injectInto, config = {}) {
+  constructor(config = {}) {
     let {
       enableLogging = false,
       verification = false,
@@ -21,8 +21,6 @@ export class Js {
       cacheInLocalStorage
     );
 
-    this.injectInto = injectInto;
-
     this.cache = new Cache({
       appPrefix: config.appPrefix,
       enableLogging: enableLogging
@@ -36,81 +34,65 @@ export class Js {
   }
 
   injectWithText(text, url) {
-    return new Promise(resolve => {
-      let script = document.createElement('script');
+    let script = document.createElement('script');
 
-      this.log.info(`Creating <script />-tag with text for ${url}.`);
+    this.log.info(`Creating <script />-tag with text for ${url}.`);
 
-      script.defer = false;
-      script.async = false;
+    script.defer = false;
+    script.async = false;
 
-      script.setAttribute('data-dactylographsy-url', url);
+    script.setAttribute('data-dactylographsy-url', url);
 
-      script.text = `
-        ${text}
-        //# sourceURL=${url}
-      `;
+    script.text = `
+      ${text}
+      //# sourceURL=${url}
+    `;
 
-      if (this.injectInto) {
-        this.log.info(`Injecting <script />-tag with url: ${url}.`);
-
-        resolve(this.injectInto.appendChild(script));
-      } else { resolve(script); }
-    });
+    return Promise.resolve(script);
   }
 
   injectWithUrl(urls, whichUrl = 'printed') {
-    return new Promise(resolve => {
-      // Create script element and set its type
-      let
-        script = document.createElement('script'),
-        url = urls[whichUrl];
+    let
+      script = document.createElement('script'),
+      url = urls[whichUrl];
 
-      this.log.info(`Creating <script />-tag with url: ${url}.`);
+    this.log.info(`Creating <script />-tag with url: ${url}.`);
 
-      script.async = false;
-      script.defer = false;
+    script.async = false;
+    script.defer = false;
 
-      script.setAttribute('data-dactylographsy-url', url);
-      script.setAttribute('data-dactylographsy-uncached-js', true);
+    script.setAttribute('data-dactylographsy-url', url);
+    script.setAttribute('data-dactylographsy-uncached-js', true);
 
-      // Bind to readyState or register ´onload´ callback
-      if (script.readyState) {
-        // Callback for IE's `onreadystatechange` (I feel seesick)
-        script.onreadystatechange = () => {
-          if (script.readyState === 'loaded' || script.readyState === 'complete') {
-            script.onreadystatechange = null;
+    // Bind to readyState or register ´onload´ callback
+    if (script.readyState) {
+      // Callback for IE's `onreadystatechange` (I feel seesick)
+      script.onreadystatechange = () => {
+        if (script.readyState === 'loaded' || script.readyState === 'complete') {
+          script.onreadystatechange = null;
 
-            this.ensureCache(url, urls.singularBy, this.cacheDelay);
-          }
-        };
-      } else {
-        // Bind `onload` callback on script element
-        script.onload = () => {
-          if (whichUrl === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
-        };
-
-        // Inject unprinted without caching in case of error
-        script.onerror = () => {
-          this.log.info(`Could not fetch JavaScript from ${url} - falling back to unprinted version.`);
-
-          if (whichUrl === 'printed') { this.injectWithUrl(urls, 'raw'); }
-        };
-      }
-
-      script.src = url;
-
-      if (this.injectInto) {
-        this.log.info(`Injecting <script />-tag with url: ${url}.`);
-
-        resolve(this.injectInto.appendChild(script));
-      } else {
-        // ...needs caching manually cause never injected
+          this.ensureCache(url, urls.singularBy, this.cacheDelay);
+        }
+      };
+    } else {
+      // Bind `onload` callback on script element
+      script.onload = () => {
         if (whichUrl === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
+      };
 
-        resolve(script);
-      }
-    });
+      // Inject unprinted without caching in case of error
+      script.onerror = () => {
+        this.log.info(`Could not fetch JavaScript from ${url} - falling back to unprinted version.`);
+
+        if (whichUrl === 'printed') { this.injectWithUrl(urls, 'raw'); }
+      };
+    }
+
+    script.src = url;
+
+    if (whichUrl === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
+
+    return Promise.resolve(script);
   }
 
   ensureCache(url, singularBy = false, delay = 0) {
@@ -159,7 +141,7 @@ export class Js {
 }
 
 export class Css {
-  constructor(injectInto, config = {}) {
+  constructor(config = {}) {
     let {
       enableLogging = false,
       verification = false,
@@ -175,8 +157,6 @@ export class Css {
       'dactylographsy-cacheInLocalStorage',
       cacheInLocalStorage
     );
-
-    this.injectInto = injectInto;
 
     this.cache = new Cache({
       appPrefix: config.appPrefix
@@ -214,61 +194,49 @@ export class Css {
   }
 
   injectWithUrl(urls, whichUrl = 'printed') {
-    return new Promise(resolve => {
-      let
-        link = document.createElement('link'),
-        url = urls[whichUrl];
+    let
+      link = document.createElement('link'),
+      url = urls[whichUrl];
 
-      this.log.info(`Creating <link />-tag with url: ${url}.`);
+    this.log.info(`Creating <link />-tag with url: ${url}.`);
 
-      link = document.createElement('link');
+    link = document.createElement('link');
 
-      link.type = 'text/css';
-      link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
 
-      link.setAttribute('data-dactylographsy-url', url);
-      link.setAttribute('data-dactylographsy-uncached-css', true);
+    link.setAttribute('data-dactylographsy-url', url);
+    link.setAttribute('data-dactylographsy-uncached-css', true);
 
-      link.href = url;
+    link.href = url;
 
-      // Fallback to unprinted assets after cache attempt
-      // no callbacks for stylesheet injections (timeouts are worse...)
-      if (whichUrl === 'printed') {
-        this.ensureCache(url, urls.singularBy, this.cacheDelay)
-          .catch(() => {
-            this.log.info(`Could not fetch CSS from ${url} - falling back to unprinted version.`);
+    // Fallback to unprinted assets after cache attempt
+    // no callbacks for stylesheet injections (timeouts are worse...)
+    if (whichUrl === 'printed') {
+      this.ensureCache(url, urls.singularBy, this.cacheDelay)
+        .catch(() => {
+          this.log.info(`Could not fetch CSS from ${url} - falling back to unprinted version.`);
 
-            this.injectWithUrl(urls, 'raw');
-          });
-      }
+          this.injectWithUrl(urls, 'raw');
+        });
+    }
 
-      if (this.injectInto) {
-        this.log.info(`Injecting <link />-tag with url: ${url}.`);
-
-        resolve(this.injectInto.appendChild(link));
-      } else { resolve(link); }
-    });
+    return Promise.resolve(link);
   }
 
   injectWithText(text, url) {
-    return new Promise(resolve => {
-      let
-        link = document.createElement('link');
+    let
+      link = document.createElement('link');
 
-      this.log.info(`Creating <link />-tag with text for url: ${url}.`);
+    this.log.info(`Creating <link />-tag with text for url: ${url}.`);
 
-      link = document.createElement('style');
+    link = document.createElement('style');
 
-      link.setAttribute('data-dactylographsy-url', url);
+    link.setAttribute('data-dactylographsy-url', url);
 
-      link.textContent = text;
+    link.textContent = text;
 
-      if (this.injectInto) {
-        this.log.info(`Injecting <link />-tag with url: ${url}.`);
-
-        resolve(this.injectInto.appendChild(link));
-      } else { resolve(link); }
-    });
+    return Promise.resolve(link);
   }
 
   hash(hash) {

@@ -128,14 +128,12 @@ export default class Injector {
     switch (dependency.extension) {
       case '.css':
         return new Css(
-          undefined,
           this.options
         ).inject(
           this.urls(dependency, rootUrl)
         );
       case '.js':
         return new Js(
-          undefined,
           this.options
         ).inject(
           this.urls(dependency, rootUrl)
