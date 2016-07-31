@@ -127,7 +127,7 @@ export class Js {
     ) ? hash : false
   }
 
-  inject(urls) {
+  tags(urls) {
     return this.cache.get(
       urls.printed,
       undefined,
@@ -245,7 +245,7 @@ export class Css {
     ) ? hash : false
   }
 
-  inject(urls) {
+  tags(urls) {
     return this.cache.get(
       urls.printed,
       undefined,

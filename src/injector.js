@@ -129,13 +129,13 @@ export default class Injector {
       case '.css':
         return new Css(
           this.options
-        ).inject(
+        ).tags(
           this.urls(dependency, rootUrl)
         );
       case '.js':
         return new Js(
           this.options
-        ).inject(
+        ).tags(
           this.urls(dependency, rootUrl)
         );
       default:
