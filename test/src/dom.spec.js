@@ -42,11 +42,11 @@ describe('DOM', () => {
       });
 
       it('should have a function to inject with src (by url)', () => {
-        css.injectWithUrl.should.be.a('function');
+        css.prepareWithUrl.should.be.a('function');
       });
 
       it('should have a function to inject with text', () => {
-        css.injectWithText.should.be.a('function');
+        css.prepareWithText.should.be.a('function');
       });
 
       it('should have a function to cache an url', () => {
@@ -149,7 +149,7 @@ describe('DOM', () => {
       });
     });
 
-    describe('injectWithText', () => {
+    describe('prepareWithText', () => {
       var
         css,
         code = '.foo {color: red}';
@@ -163,7 +163,7 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when injecting', () => {
-        let injection = css.injectWithText(code, 'css-promise-check.js');
+        let injection = css.prepareWithText(code, 'css-promise-check.js');
 
         injection.should.be.fulfilled;
       });
@@ -171,7 +171,7 @@ describe('DOM', () => {
       it('should create a style-tag when injecting', () => {
         let
           url = 'css-tag-check.css',
-          injection = css.injectWithText(code, url);
+          injection = css.prepareWithText(code, url);
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -183,7 +183,7 @@ describe('DOM', () => {
       it('should should flag the injection with a data-url', () => {
         let
           url = 'css-data-url-check.css',
-          injection = css.injectWithText(code, url);
+          injection = css.prepareWithText(code, url);
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -195,7 +195,7 @@ describe('DOM', () => {
       it('should should inject the code into the script-tag', () => {
         let
           url = 'css-code-check.css',
-          injection = css.injectWithText(code, url);
+          injection = css.prepareWithText(code, url);
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -205,7 +205,7 @@ describe('DOM', () => {
       });
     });
 
-    describe('injectWithUrl', () => {
+    describe('prepareWithUrl', () => {
       var
         css;
 
@@ -222,7 +222,7 @@ describe('DOM', () => {
           urls = {
             raw: 'promise-check.css'
           },
-          injection = css.injectWithUrl(urls, 'raw');
+          injection = css.prepareWithUrl(urls, 'raw');
 
         injection.should.be.fulfilled;
       });
@@ -232,7 +232,7 @@ describe('DOM', () => {
           urls = {
             raw: 'css-tag-check.css'
           },
-          injection = css.injectWithUrl(urls, 'raw');
+          injection = css.prepareWithUrl(urls, 'raw');
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -246,7 +246,7 @@ describe('DOM', () => {
           urls = {
             raw: 'css-data-url-check.css'
           },
-          injection = css.injectWithUrl(urls, 'raw');
+          injection = css.prepareWithUrl(urls, 'raw');
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -260,7 +260,7 @@ describe('DOM', () => {
           urls = {
             raw: 'js-src-check.css'
           },
-          injection = css.injectWithUrl(urls, 'raw');
+          injection = css.prepareWithUrl(urls, 'raw');
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -289,11 +289,11 @@ describe('DOM', () => {
       });
 
       it('should have a function to inject with src (by url)', () => {
-        js.injectWithUrl.should.be.a('function');
+        js.prepareWithUrl.should.be.a('function');
       });
 
       it('should have a function to inject with text', () => {
-        js.injectWithText.should.be.a('function');
+        js.prepareWithText.should.be.a('function');
       });
 
       it('should have a function to cache an url', () => {
@@ -402,7 +402,7 @@ describe('DOM', () => {
       });
     });
 
-    describe('injectWithText', () => {
+    describe('prepareWithText', () => {
       var
         js,
         code = 'var a="b";';
@@ -418,7 +418,7 @@ describe('DOM', () => {
       it('should resolve the promise when injecting', () => {
         let
           url = 'promise-check.js',
-          injection = js.injectWithText(code, url);
+          injection = js.prepareWithText(code, url);
 
         injection.should.be.fulfilled;
       });
@@ -426,7 +426,7 @@ describe('DOM', () => {
       it('should create a script-tag when injecting', () => {
         let
           url = 'js-tag-check.js',
-          injection = js.injectWithText(code, url);
+          injection = js.prepareWithText(code, url);
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -438,7 +438,7 @@ describe('DOM', () => {
       it('should flag the injection with a data-url', () => {
         let
           url = 'js-data-url-check.js',
-          injection = js.injectWithText(code, url);
+          injection = js.prepareWithText(code, url);
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -450,7 +450,7 @@ describe('DOM', () => {
       it('should inject the code into the script-tag', () => {
         let
           url = 'js-code-check.js',
-          injection = js.injectWithText(code, url);
+          injection = js.prepareWithText(code, url);
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -462,7 +462,7 @@ describe('DOM', () => {
       it('should amend an "sourceURL" to injected code', () => {
         let
           url = 'js-sourceurl-check.js',
-          injection = js.injectWithText(code, url);
+          injection = js.prepareWithText(code, url);
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -472,7 +472,7 @@ describe('DOM', () => {
       });
     });
 
-    describe('injectWithUrl', () => {
+    describe('prepareWithUrl', () => {
       var
         js;
 
@@ -489,7 +489,7 @@ describe('DOM', () => {
           urls = {
             raw: 'promise-check.js'
           },
-          injection = js.injectWithUrl(urls, 'raw');
+          injection = js.prepareWithUrl(urls, 'raw');
 
         injection.should.be.fulfilled;
       });
@@ -499,7 +499,7 @@ describe('DOM', () => {
           urls = {
             raw: 'js-tag-check.js'
           },
-          injection = js.injectWithUrl(urls, 'raw');
+          injection = js.prepareWithUrl(urls, 'raw');
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -513,7 +513,7 @@ describe('DOM', () => {
           urls = {
             raw: 'js-data-url-check.js'
           },
-          injection = js.injectWithUrl(urls, 'raw');
+          injection = js.prepareWithUrl(urls, 'raw');
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -527,7 +527,7 @@ describe('DOM', () => {
           urls = {
             raw: 'js-src-check.js'
           },
-          injection = js.injectWithUrl(urls, 'raw');
+          injection = js.prepareWithUrl(urls, 'raw');
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -541,7 +541,7 @@ describe('DOM', () => {
           urls = {
             raw: 'js-async-check.js'
           },
-          injection = js.injectWithUrl(urls, 'raw');
+          injection = js.prepareWithUrl(urls, 'raw');
 
         return injection.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));

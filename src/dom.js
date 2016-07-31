@@ -33,7 +33,7 @@ export class Js {
     this.log = new Log(enableLogging);
   }
 
-  injectWithText(text, url) {
+  prepareWithText(text, url) {
     let script = document.createElement('script');
 
     this.log.info(`Creating <script />-tag with text for ${url}.`);
@@ -51,7 +51,7 @@ export class Js {
     return Promise.resolve(script);
   }
 
-  injectWithUrl(urls, whichUrl = 'printed') {
+  prepareWithUrl(urls, whichUrl = 'printed') {
     let
       script = document.createElement('script'),
       url = urls[whichUrl];
@@ -84,7 +84,7 @@ export class Js {
       script.onerror = () => {
         this.log.info(`Could not fetch JavaScript from ${url} - falling back to unprinted version.`);
 
-        if (whichUrl === 'printed') { this.injectWithUrl(urls, 'raw'); }
+        if (whichUrl === 'printed') { this.prepareWithUrl(urls, 'raw'); }
       };
     }
 
@@ -133,9 +133,9 @@ export class Js {
       undefined,
       this.hash(urls.id)
     ).then(text => {
-        return this.injectWithText(text, urls.printed);
+        return this.prepareWithText(text, urls.printed);
     }, () => {
-      return this.injectWithUrl(urls);
+      return this.prepareWithUrl(urls);
     });
   }
 }
@@ -193,7 +193,7 @@ export class Css {
     });
   }
 
-  injectWithUrl(urls, whichUrl = 'printed') {
+  prepareWithUrl(urls, whichUrl = 'printed') {
     let
       link = document.createElement('link'),
       url = urls[whichUrl];
@@ -217,14 +217,14 @@ export class Css {
         .catch(() => {
           this.log.info(`Could not fetch CSS from ${url} - falling back to unprinted version.`);
 
-          this.injectWithUrl(urls, 'raw');
+          this.prepareWithUrl(urls, 'raw');
         });
     }
 
     return Promise.resolve(link);
   }
 
-  injectWithText(text, url) {
+  prepareWithText(text, url) {
     let
       link = document.createElement('link');
 
@@ -251,9 +251,9 @@ export class Css {
       undefined,
       this.hash(urls.id)
     ).then(text => {
-      return this.injectWithText(text, urls.printed);
+      return this.prepareWithText(text, urls.printed);
     }, () => {
-      return this.injectWithUrl(urls);
+      return this.prepareWithUrl(urls);
     });
   }
 }
