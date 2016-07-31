@@ -52,47 +52,47 @@ export class Js {
   }
 
   prepareWithUrl(urls, whichUrl = 'printed') {
-    let
-      script = document.createElement('script'),
-      url = urls[whichUrl];
+    const
+      urlKeys = Object.keys(urls),
+      scriptTags = {};
 
-    this.log.info(`Creating <script />-tag with url: ${url}.`);
+    urlKeys.forEach((urlKey) => {
+      const script = document.createElement('script');
+      const url = urls[urlKey];
 
-    script.async = false;
-    script.defer = false;
+      this.log.info(`Creating <script />-tag with url: ${url}.`);
 
-    script.setAttribute('data-dactylographsy-url', url);
-    script.setAttribute('data-dactylographsy-uncached-js', true);
+      script.async = false;
+      script.defer = false;
 
-    // Bind to readyState or register ´onload´ callback
-    if (script.readyState) {
-      // Callback for IE's `onreadystatechange` (I feel seesick)
-      script.onreadystatechange = () => {
-        if (script.readyState === 'loaded' || script.readyState === 'complete') {
-          script.onreadystatechange = null;
+      script.setAttribute('data-dactylographsy-url', url);
+      script.setAttribute('data-dactylographsy-uncached-js', urlKey === 'printed');
 
-          this.ensureCache(url, urls.singularBy, this.cacheDelay);
-        }
-      };
-    } else {
-      // Bind `onload` callback on script element
-      script.onload = () => {
-        if (whichUrl === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
-      };
+      // Bind to readyState or register ´onload´ callback
+      if (script.readyState) {
+        // Callback for IE's `onreadystatechange` (I feel seesick)
+        script.onreadystatechange = () => {
+          if (script.readyState === 'loaded' || script.readyState === 'complete') {
+            script.onreadystatechange = null;
 
-      // Inject unprinted without caching in case of error
-      script.onerror = () => {
-        this.log.info(`Could not fetch JavaScript from ${url} - falling back to unprinted version.`);
+            this.ensureCache(url, urls.singularBy, this.cacheDelay);
+          }
+        };
+      } else {
+        // Bind `onload` callback on script element to cache asset
+        script.onload = () => {
+          if (urlKey === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
+        };
+      }
 
-        if (whichUrl === 'printed') { this.prepareWithUrl(urls, 'raw'); }
-      };
-    }
+      script.src = url;
 
-    script.src = url;
+      if (urlKey === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
 
-    if (whichUrl === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
+      scriptTags[urlKey] = script;
+    });
 
-    return Promise.resolve(script);
+    return Promise.resolve(scriptTags);
   }
 
   ensureCache(url, singularBy = false, delay = 0) {
@@ -133,7 +133,9 @@ export class Js {
       undefined,
       this.hash(urls.id)
     ).then(text => {
-        return this.prepareWithText(text, urls.printed);
+      return this.prepareWithText(
+        text, urls.printed
+      ).then((cached) => ({cached}));
     }, () => {
       return this.prepareWithUrl(urls);
     });
@@ -193,35 +195,29 @@ export class Css {
     });
   }
 
-  prepareWithUrl(urls, whichUrl = 'printed') {
-    let
-      link = document.createElement('link'),
-      url = urls[whichUrl];
+  prepareWithUrl(urls) {
+    const
+      urlKeys = Object.keys(urls),
+      linkTags = {};
 
-    this.log.info(`Creating <link />-tag with url: ${url}.`);
+    urlKeys.forEach((urlKey) => {
+      const link = document.createElement('link');
+      const url = urls[urlKey];
 
-    link = document.createElement('link');
+      this.log.info(`Creating <link />-tag with url: ${url}.`);
 
-    link.type = 'text/css';
-    link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.rel = 'stylesheet';
 
-    link.setAttribute('data-dactylographsy-url', url);
-    link.setAttribute('data-dactylographsy-uncached-css', true);
+      link.setAttribute('data-dactylographsy-url', url);
+      link.setAttribute('data-dactylographsy-uncached-css', urlKey === 'printed');
 
-    link.href = url;
+      link.href = url;
 
-    // Fallback to unprinted assets after cache attempt
-    // no callbacks for stylesheet injections (timeouts are worse...)
-    if (whichUrl === 'printed') {
-      this.ensureCache(url, urls.singularBy, this.cacheDelay)
-        .catch(() => {
-          this.log.info(`Could not fetch CSS from ${url} - falling back to unprinted version.`);
+      linkTags[urlKey] = link;
+    });
 
-          this.prepareWithUrl(urls, 'raw');
-        });
-    }
-
-    return Promise.resolve(link);
+    return Promise.resolve(linkTags);
   }
 
   prepareWithText(text, url) {
@@ -251,7 +247,9 @@ export class Css {
       undefined,
       this.hash(urls.id)
     ).then(text => {
-      return this.prepareWithText(text, urls.printed);
+      return this.prepareWithText(
+        text, urls.printed
+      ).then((cached) => ({cached}));
     }, () => {
       return this.prepareWithUrl(urls);
     });

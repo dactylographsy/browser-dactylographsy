@@ -113,7 +113,7 @@ describe('DOM', () => {
           });
         });
 
-        it('should tags it by with its code inline', () => {
+        it('should resolve with tag with code inline whenever cached', () => {
           cache.set(code, 'css', urls.printed);
 
           let
@@ -122,7 +122,9 @@ describe('DOM', () => {
           tags.should.be.fulfilled;
 
           return tags.then((tags) => {
-            domUtils.injectTag(tags, document.querySelector('body'));
+            expect(tags.cached).to.be.defined;
+
+            domUtils.injectTag(tags.cached, document.querySelector('body'));
 
             expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
           });
@@ -141,7 +143,7 @@ describe('DOM', () => {
           tags.should.be.fulfilled;
 
           return tags.then((tags) => {
-            domUtils.injectTag(tags, document.querySelector('body'));
+            domUtils.injectTag(tags.printed, document.querySelector('body'));
 
             expect(domUtils.findCssByDataUrl(urls.printed)[0].textContent).to.not.contain(code);
           });
@@ -222,9 +224,9 @@ describe('DOM', () => {
           urls = {
             raw: 'promise-check.css'
           },
-          preparation = css.prepareWithUrl(urls, 'raw');
+          preparations = css.prepareWithUrl(urls);
 
-        preparation.should.be.fulfilled;
+        preparations.should.be.fulfilled;
       });
 
       it('should create a style-tag', () => {
@@ -232,10 +234,13 @@ describe('DOM', () => {
           urls = {
             raw: 'css-tag-check.css'
           },
-          preparation = css.prepareWithUrl(urls, 'raw');
+          preparations = css.prepareWithUrl(urls);
 
-        return preparation.then((tag) => {
-          domUtils.injectTag(tag, document.querySelector('body'));
+        return preparations.then((tags) => {
+          expect(tags.printed).to.be.defined;
+          expect(tags.raw).to.be.defined;
+
+          domUtils.injectTag(tags.raw, document.querySelector('body'));
 
           expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
         });
@@ -246,10 +251,10 @@ describe('DOM', () => {
           urls = {
             raw: 'css-data-url-check.css'
           },
-          preparation = css.prepareWithUrl(urls, 'raw');
+          preparations = css.prepareWithUrl(urls);
 
-        return preparation.then((tag) => {
-          domUtils.injectTag(tag, document.querySelector('body'));
+        return preparations.then((tags) => {
+          domUtils.injectTag(tags.raw, document.querySelector('body'));
 
           expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
         });
@@ -260,10 +265,10 @@ describe('DOM', () => {
           urls = {
             raw: 'js-src-check.css'
           },
-          preparation = css.prepareWithUrl(urls, 'raw');
+          preparations = css.prepareWithUrl(urls);
 
-        return preparation.then((tag) => {
-          domUtils.injectTag(tag, document.querySelector('body'));
+        return preparations.then((tags) => {
+          domUtils.injectTag(tags.raw, document.querySelector('body'));
 
           expect(domUtils.findCssByDataUrl(urls.raw)[0]).to.have.property('href');
         });
@@ -326,7 +331,10 @@ describe('DOM', () => {
           tags.should.be.fulfilled;
 
           return tags.then((tags) => {
-            domUtils.injectTag(tags, document.querySelector('body'));
+            expect(tags.printed).to.be.defined;
+            expect(tags.raw).to.be.defined;
+
+            domUtils.injectTag(tags.printed, document.querySelector('body'));
 
             expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
           });
@@ -366,7 +374,7 @@ describe('DOM', () => {
           });
         });
 
-        it('should create tags with its code inline', () => {
+        it('should create tags with its code inline whenever cached', () => {
           cache.set(code, 'js', urls.printed);
 
           let
@@ -375,13 +383,13 @@ describe('DOM', () => {
           tags.should.be.fulfilled;
 
           return tags.then((tags) => {
-            domUtils.injectTag(tags, document.querySelector('body'));
+            domUtils.injectTag(tags.cached, document.querySelector('body'));
 
             expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
           });
         });
 
-        it('should create tags with an invalid item from cache', () => {
+        it('should not create tags with an invalid item from cache', () => {
           cache.set(code, 'js', urls.printed);
 
           let
@@ -394,7 +402,7 @@ describe('DOM', () => {
           tags.should.be.fulfilled;
 
           return tags.then((tags) => {
-            domUtils.injectTag(tags, document.querySelector('body'));
+            domUtils.injectTag(tags.printed, document.querySelector('body'));
 
             expect(domUtils.findJsByDataUrl(urls.printed)[0].textContent).to.not.contain(code);
           });
@@ -489,9 +497,9 @@ describe('DOM', () => {
           urls = {
             raw: 'promise-check.js'
           },
-          preparation = js.prepareWithUrl(urls, 'raw');
+          preparations = js.prepareWithUrl(urls);
 
-        preparation.should.be.fulfilled;
+        preparations.should.be.fulfilled;
       });
 
       it('should create a script-tag when preparing', () => {
@@ -499,10 +507,13 @@ describe('DOM', () => {
           urls = {
             raw: 'js-tag-check.js'
           },
-          preparation = js.prepareWithUrl(urls, 'raw');
+          preparations = js.prepareWithUrl(urls);
 
-        return preparation.then((tag) => {
-          domUtils.injectTag(tag, document.querySelector('body'));
+        return preparations.then((tags) => {
+          expect(tags.printed).to.be.defined;
+          expect(tags.raw).to.be.defined;
+
+          domUtils.injectTag(tags.raw, document.querySelector('body'));
 
           expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
         });
@@ -513,10 +524,10 @@ describe('DOM', () => {
           urls = {
             raw: 'js-data-url-check.js'
           },
-          preparation = js.prepareWithUrl(urls, 'raw');
+          preparations = js.prepareWithUrl(urls);
 
-        return preparation.then((tag) => {
-          domUtils.injectTag(tag, document.querySelector('body'));
+        return preparations.then((tags) => {
+          domUtils.injectTag(tags.raw, document.querySelector('body'));
 
           expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
         });
@@ -527,10 +538,10 @@ describe('DOM', () => {
           urls = {
             raw: 'js-src-check.js'
           },
-          preparation = js.prepareWithUrl(urls, 'raw');
+          preparations = js.prepareWithUrl(urls);
 
-        return preparation.then((tag) => {
-          domUtils.injectTag(tag, document.querySelector('body'));
+        return preparations.then((tags) => {
+          domUtils.injectTag(tags.raw, document.querySelector('body'));
 
           expect(domUtils.findJsByDataUrl(urls.raw)[0]).to.have.property('src');
         });
@@ -541,10 +552,10 @@ describe('DOM', () => {
           urls = {
             raw: 'js-async-check.js'
           },
-          preparation = js.prepareWithUrl(urls, 'raw');
+          preparations = js.prepareWithUrl(urls);
 
-        return preparation.then((tag) => {
-          domUtils.injectTag(tag, document.querySelector('body'));
+        return preparations.then((tags) => {
+          domUtils.injectTag(tags.raw, document.querySelector('body'));
 
           expect(domUtils.findJsByDataUrl(urls.raw)[0].async).to.be.false;
         });

@@ -80,7 +80,7 @@ describe('Injector', () => {
         packages.should.have.length(5);
 
         Object.keys(manifestDependencies).map((prop, idx) => {
-          packages[idx].getAttribute('data-dactylographsy-url').should.contain(manifestDependencies[prop].hash);
+          packages[idx].printed.getAttribute('data-dactylographsy-url').should.contain(manifestDependencies[prop].hash);
         });
       });
     });
@@ -90,10 +90,17 @@ describe('Injector', () => {
     var
       findInjectionBySrc = (injections, itemSrc) => {
         return injections.filter(injection => {
-          let
-            src = injection.src || injection.href;
+          let hasMatch = false;
 
-          return src.indexOf(itemSrc) > -1;
+          Object.keys(injection).filter((type) => {
+            const
+              tag = injection[type],
+              src = tag.src || tag.href;
+
+            hasMatch = hasMatch || src.indexOf(itemSrc) > -1;
+          });
+
+          return hasMatch;
         })
       };
 

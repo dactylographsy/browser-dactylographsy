@@ -57,8 +57,10 @@ export default class Injector {
       flatten = list => list.reduce(
         (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
       ),
-      injectIntoDOM = (dependencies, idx = 0) => {
-        const elem = dependencies[idx];
+      injectIntoDOM = (dependencies, idx = 0, type = 'printed') => {
+        if (idx >= dependencies.length) { return; }
+
+        const elem = dependencies[idx][type];
 
         if (elem === undefined) { return; }
         else if (elem.getAttribute('data-dactylographsy-uncached-js')) {
@@ -73,7 +75,13 @@ export default class Injector {
           });
 
           elem.addEventListener('error', () => {
-            injectIntoDOM(dependencies, ++idx);
+            if (type !== 'raw') {
+              injectIntoDOM(dependencies, idx, 'raw');
+            } else {
+              injectIntoDOM(dependencies, ++idx);
+
+              this.log.error('Failed loading dependency as raw', elem);
+            }
           });
         } else {
           if (this.injectInto) { this.injectInto.appendChild(elem); }
