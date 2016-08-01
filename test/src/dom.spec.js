@@ -72,11 +72,23 @@ describe('DOM', () => {
           });
         });
 
-        it('should resolve tags it by with its url', () => {
+        it('should resolve tags with only the printed and the unprinted version', () => {
           let
             tags = css.tags(urls);
 
           tags.should.be.fulfilled;
+
+          return tags.then(res => {
+            expect(res.printed).to.be.defined;
+            expect(res.raw).to.be.defined;
+            expect(res.hash).to.not.be.defined;
+            expect(res.singularBy).to.not.be.defined;
+            expect(res.printed.href).to.equal('http://localhost:9876/hashed-css-inject.css');
+            expect(res.raw.href).to.equal('http://localhost:9876/raw-css-inject.css');
+
+            domUtils.injectTag(res.printed, document.querySelector('body'));
+            expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
+          });
         });
       });
 
@@ -123,6 +135,8 @@ describe('DOM', () => {
 
           return tags.then((tags) => {
             expect(tags.cached).to.be.defined;
+            expect(tags.raw).to.not.be.defined;
+            expect(tags.printed).to.not.be.defined;
 
             domUtils.injectTag(tags.cached, document.querySelector('body'));
 
@@ -333,6 +347,10 @@ describe('DOM', () => {
           return tags.then((tags) => {
             expect(tags.printed).to.be.defined;
             expect(tags.raw).to.be.defined;
+            expect(tags.hash).to.not.be.defined;
+            expect(tags.singularBy).to.not.be.defined;
+            expect(tags.printed.src).to.equal('http://localhost:9876/hashed-js-inject.js')
+            expect(tags.raw.src).to.equal('http://localhost:9876/raw-js-inject.js')
 
             domUtils.injectTag(tags.printed, document.querySelector('body'));
 
@@ -383,6 +401,10 @@ describe('DOM', () => {
           tags.should.be.fulfilled;
 
           return tags.then((tags) => {
+            expect(tags.cached).to.be.defined;
+            expect(tags.raw).to.not.be.defined;
+            expect(tags.printed).to.not.be.defined;
+
             domUtils.injectTag(tags.cached, document.querySelector('body'));
 
             expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);

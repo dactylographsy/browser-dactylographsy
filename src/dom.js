@@ -53,7 +53,7 @@ export class Js {
 
   prepareWithUrl(urls, whichUrl = 'printed') {
     const
-      urlKeys = Object.keys(urls),
+      urlKeys = Object.keys(urls).filter((key) => (['printed', 'raw'].indexOf(key) > -1)),
       scriptTags = {};
 
     urlKeys.forEach((urlKey) => {
@@ -166,6 +166,7 @@ export class Css {
 
     this.cacheDelay = config.cacheDelay || 5000;
     this.verification = verification;
+    this.cacheInLocalStorage = cacheInLocalStorage;
 
     this.log = new Log(enableLogging);
   }
@@ -197,7 +198,7 @@ export class Css {
 
   prepareWithUrl(urls) {
     const
-      urlKeys = Object.keys(urls),
+      urlKeys = Object.keys(urls).filter((key) => (['printed', 'raw'].indexOf(key) > -1)),
       linkTags = {};
 
     urlKeys.forEach((urlKey) => {
@@ -213,6 +214,8 @@ export class Css {
       link.setAttribute('data-dactylographsy-uncached-css', urlKey === 'printed');
 
       link.href = url;
+
+      if (urlKey === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
 
       linkTags[urlKey] = link;
     });
