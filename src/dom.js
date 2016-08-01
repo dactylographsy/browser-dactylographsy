@@ -68,26 +68,12 @@ export class Js {
       script.setAttribute('data-dactylographsy-url', url);
       script.setAttribute('data-dactylographsy-uncached-js', urlKey === 'printed');
 
-      // Bind to readyState or register ´onload´ callback
-      if (script.readyState) {
-        // Callback for IE's `onreadystatechange` (I feel seesick)
-        script.onreadystatechange = () => {
-          if (script.readyState === 'loaded' || script.readyState === 'complete') {
-            script.onreadystatechange = null;
-
-            this.ensureCache(url, urls.singularBy, this.cacheDelay);
-          }
-        };
-      } else {
-        // Bind `onload` callback on script element to cache asset
-        script.onload = () => {
+      // Bind `load` listener on script element to cache asset
+      script.addEventListener('load', () => {
           if (urlKey === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
-        };
-      }
+      });
 
       script.src = url;
-
-      if (urlKey === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
 
       scriptTags[urlKey] = script;
     });
@@ -213,9 +199,12 @@ export class Css {
       link.setAttribute('data-dactylographsy-url', url);
       link.setAttribute('data-dactylographsy-uncached-css', urlKey === 'printed');
 
-      link.href = url;
+      // Bind `load` listener on link element to cache asset
+      link.addEventListener('load', () => {
+          if (urlKey === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
+      });
 
-      if (urlKey === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
+      link.href = url;
 
       linkTags[urlKey] = link;
     });
