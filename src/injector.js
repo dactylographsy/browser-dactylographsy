@@ -57,15 +57,18 @@ export default class Injector {
       flatten = list => list.reduce(
         (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
       ),
-      injectIntoDOM = (dependencies, idx = 0, type = 'printed') => {
+      injectIntoDOM = (dependencies, idx = 0, type = null) => {
         if (idx >= dependencies.length) { return; }
 
+        // inject order: explicitly provided < cached in local storage < printed
+        // raw only as fallback if printed fails
+        type = (dependencies[idx][type] && type) || (dependencies[idx]['cached'] && 'cached') || (dependencies[idx]['printed'] && 'printed');
         const elem = dependencies[idx][type];
 
         if (elem === undefined) { return; }
-        else if (elem.getAttribute('data-dactylographsy-uncached-js')) {
+        else if (type === 'printed') {
           if (this.injectInto) {
-            this.log.info('Injecting tag:', elem);
+            this.log.info(`Injecting ${type} tag:`, elem);
 
             this.injectInto.appendChild(elem);
           }
@@ -74,6 +77,7 @@ export default class Injector {
             injectIntoDOM(dependencies, ++idx);
           });
 
+          // fallback in case printed tag cannot be loaded
           elem.addEventListener('error', () => {
             if (type !== 'raw') {
               injectIntoDOM(dependencies, idx, 'raw');
@@ -84,7 +88,11 @@ export default class Injector {
             }
           });
         } else {
-          if (this.injectInto) { this.injectInto.appendChild(elem); }
+          if (this.injectInto) {
+            this.log.info(`Injecting ${type} tag`, elem);
+
+            this.injectInto.appendChild(elem);
+          }
 
           injectIntoDOM(dependencies, ++idx);
         }
