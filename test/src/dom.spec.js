@@ -55,7 +55,7 @@ describe('DOM', () => {
     });
 
     describe('tags', () => {
-      var
+      let
         urls = {
           printed: 'hashed-css-inject.css',
           raw: 'raw-css-inject.css'

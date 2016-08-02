@@ -56,47 +56,7 @@ export default class Injector {
     const
       flatten = list => list.reduce(
         (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
-      ),
-      injectIntoDOM = (dependencies, idx = 0, type = null) => {
-        if (idx >= dependencies.length) { return; }
-
-        // inject order: explicitly provided < cached in local storage < printed
-        // raw only as fallback if printed fails
-        type = (dependencies[idx][type] && type) || (dependencies[idx]['cached'] && 'cached') || (dependencies[idx]['printed'] && 'printed');
-        const elem = dependencies[idx][type];
-
-        if (elem === undefined) { return; }
-        else if (type === 'printed') {
-          if (this.injectInto) {
-            this.log.info(`Injecting ${type} tag:`, elem);
-
-            this.injectInto.appendChild(elem);
-          }
-
-          elem.addEventListener('load', () => {
-            injectIntoDOM(dependencies, ++idx);
-          });
-
-          // fallback in case printed tag cannot be loaded
-          elem.addEventListener('error', () => {
-            if (type !== 'raw') {
-              injectIntoDOM(dependencies, idx, 'raw');
-            } else {
-              injectIntoDOM(dependencies, ++idx);
-
-              this.log.error('Failed loading dependency as raw', elem);
-            }
-          });
-        } else {
-          if (this.injectInto) {
-            this.log.info(`Injecting ${type} tag`, elem);
-
-            this.injectInto.appendChild(elem);
-          }
-
-          injectIntoDOM(dependencies, ++idx);
-        }
-      };
+      );
 
     return Promise.all(
       this.order.map(_package => {
@@ -111,7 +71,7 @@ export default class Injector {
     ).then(manifests => {
       const dependencies = flatten(manifests);
 
-      injectIntoDOM(dependencies);
+      this.injectIntoDOM(dependencies);
 
       return Promise.resolve(dependencies);
     });
@@ -158,6 +118,47 @@ export default class Injector {
         Promise.resolve(false);
     }
   }
+
+  injectIntoDOM(dependencies, idx = 0, type = null) {
+    if (idx >= dependencies.length) { return; }
+
+    // inject order: explicitly provided < cached in local storage < printed
+    // raw only as fallback if printed fails
+    type = (dependencies[idx][type] && type) || (dependencies[idx]['cached'] && 'cached') || (dependencies[idx]['printed'] && 'printed');
+    const elem = dependencies[idx][type];
+
+    if (elem === undefined) { return; }
+    else if (type === 'printed') {
+      if (this.injectInto) {
+        this.log.info(`Injecting ${type} tag:`, elem);
+
+        this.injectInto.appendChild(elem);
+      }
+
+      elem.addEventListener('load', () => {
+        this.injectIntoDOM(dependencies, ++idx);
+      });
+
+      // fallback in case printed tag cannot be loaded
+      elem.addEventListener('error', () => {
+        if (type !== 'raw') {
+          this.injectIntoDOM(dependencies, idx, 'raw');
+        } else {
+          this.injectIntoDOM(dependencies, ++idx);
+
+          this.log.error('Failed loading dependency as raw', elem);
+        }
+      });
+    } else {
+      if (this.injectInto) {
+        this.log.info(`Injecting ${type} tag`, elem);
+
+        this.injectInto.appendChild(elem);
+      }
+
+      this.injectIntoDOM(dependencies, ++idx);
+    }
+  };
 
   basename(path) {
     return path.replace(/.*\/|\.[^.]*$/g, '');

@@ -1,8 +1,10 @@
 import Injector from '../../src/injector';
+import { Css, Js } from '../../src/dom';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
 import chaiString from 'chai-string';
+import { DOMUtil } from '../utils';
 
 chai.should();
 chai.use(sinonChai);
@@ -59,7 +61,16 @@ var
     hashes: {}
   }];
 
+  let
+    domUtils,
+    expect;
+
 describe('Injector', () => {
+  before(() => {
+    expect = chai.expect,
+    domUtils = new DOMUtil();
+  });
+
   describe('inject', () => {
     it('should inject all packages from the configured order', () => {
       let
@@ -142,6 +153,43 @@ describe('Injector', () => {
 
   describe('injectDependency', () => {
 
+  });
+
+  describe('injectIntoDOM', () => {
+    let css, js, injector;
+
+    beforeEach(() => {
+      domUtils.removeAll();
+
+      css = new Css({
+        enableLogging: false
+      });
+
+      js = new Js({
+        enableLogging: false
+      });
+
+      injector = new Injector(document.querySelector('body'), [], {
+        enableLogging: false,
+        order: []
+      });
+    });
+
+    describe('with uncached dependencies', () => {
+      it('should inject fingerprinted CSS into the DOM', () => {
+        let urls = {
+          printed: 'hashed-css-inject.css',
+          raw: 'raw-css-inject.css'
+        };
+
+        let tags = css.tags(urls);
+
+        return tags.then(tags => {
+          injector.injectIntoDOM([tags]);
+          expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
+        });
+      });
+    });
   });
 
   describe('urls', () => {
