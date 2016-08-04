@@ -1,5 +1,6 @@
 import Injector from '../../src/injector';
 import { Css, Js } from '../../src/dom';
+import Cache from '../../src/cache';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
@@ -156,10 +157,20 @@ describe('Injector', () => {
   });
 
   describe('injectIntoDOM', () => {
-    let css, js, injector;
+    let
+      css,
+      js,
+      injector,
+      cache,
+      code;
+
+    before(() => {
+      cache = new Cache();
+    });
 
     beforeEach(() => {
       domUtils.removeAll();
+      cache.flush();
 
       css = new Css({
         enableLogging: false
@@ -175,18 +186,126 @@ describe('Injector', () => {
       });
     });
 
-    describe('with uncached dependencies', () => {
-      it('should inject fingerprinted CSS into the DOM', () => {
-        let urls = {
-          printed: 'hashed-css-inject.css',
-          raw: 'raw-css-inject.css'
-        };
+    describe.only('with cached and uncached dependencies', () => {
+      describe('CSS', () => {
+        let urls;
 
-        let tags = css.tags(urls);
+        before(() => {
+          code = 'foo { color: blue}';
+          urls = {
+            printed: 'hashed-css-inject.css',
+            raw: 'raw-css-inject.css'
+          };
+        });
 
-        return tags.then(tags => {
-          injector.injectIntoDOM([tags]);
-          expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
+        it('should inject fingerprinted CSS into the DOM', () => {
+          let tags = css.tags(urls);
+
+          return tags.then(tags => {
+            injector.injectIntoDOM([tags]);
+            expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
+          });
+        });
+
+        it('should inject fallback to non-printed css on error', () => {
+          let tags = css.tags(urls);
+
+          return tags.then(tags => {
+            injector.injectIntoDOM([tags]);
+            let errorEvent = new Event('error');
+            domUtils.findCssByDataUrl(urls.printed)[0].dispatchEvent(errorEvent);
+
+            expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
+
+          });
+        });
+
+        it('should inject cached version of asset if provided', () => {
+          cache.set(code, 'css', urls.printed);
+
+          let tags = css.tags(urls);
+
+          return tags.then(tags => {
+            injector.injectIntoDOM([tags]);
+            expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
+            expect(domUtils.findCssByDataUrl(urls.printed)[0].innerHTML).to.equal(code);
+          });
+        });
+      });
+
+      describe('JS', () => {
+        let urls, code;
+
+        before(() => {
+          code = 'var a = "b"';
+          urls = {
+            printed: 'hashed-js-inject.js',
+            raw: 'raw-js-inject.js'
+          }
+        });
+
+        it('should inject fingerprinted JS into the DOM', () => {
+          let tags = js.tags(urls);
+
+          return tags.then(tags => {
+            injector.injectIntoDOM([tags]);
+            expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
+          });
+        });
+
+        it('should inject fallback to non-printed JS on error', () => {
+          let tags = js.tags(urls);
+
+          return tags.then(tags => {
+            injector.injectIntoDOM([tags]);
+            let errorEvent = new Event('error');
+            domUtils.findJsByDataUrl(urls.printed)[0].dispatchEvent(errorEvent);
+
+            expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
+
+          });
+        });
+
+        it('should inject cached version of asset if provided', () => {
+          cache.set(code, 'js', urls.printed);
+
+          let tags = js.tags(urls);
+
+          return tags.then(tags => {
+            injector.injectIntoDOM([tags]);
+            expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
+            expect(domUtils.findJsByDataUrl(urls.printed)[0].innerHTML).to.contain(code);
+          });
+        });
+      });
+
+      describe('multiple assets', () => {
+        let cssUrls, jsUrls;
+
+        before(() => {
+          cssUrls = {
+            printed: 'hashed-css-inject.css',
+            raw: 'raw-css-inject.css'
+          };
+          jsUrls = {
+            printed: 'hashed-js-inject.js',
+            raw: 'raw-js-inject.js'
+          };
+        });
+
+        xit('should inject multiple assets some existing some not as expected', () => {
+          return Promise.all([js.tags(jsUrls), css.tags(cssUrls)]).then(tags => {
+            injector.injectIntoDOM(tags);
+
+            expect(domUtils.findJsByDataUrl(jsUrls.printed)).to.have.length.above(0);
+            expect(domUtils.findCssByDataUrl(cssUrls.printed)).to.have.length.above(0);
+
+            let errorEvent = new Event('error');
+            domUtils.findJsByDataUrl(jsUrls.printed)[0].dispatchEvent(errorEvent);
+
+            expect(domUtils.findJsByDataUrl(jsUrls.raw)).to.have.length.above(0);
+            expect(domUtils.findCssByDataUrl(cssUrls.raw)).to.have.length.equal(0);
+          })
         });
       });
     });
