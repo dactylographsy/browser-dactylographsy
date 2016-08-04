@@ -11,7 +11,7 @@
   },
   "engineStrict": true,
   "engines": {
-      "node": ">= 4"
+    "node": ">= 4"
   },
   "keywords": [
     "grunt",
@@ -62,7 +62,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "1.7.0",
     "load-grunt-config": "0.19.2",
-    "mocha": "2.5.3",
+    "mocha": "3.0.1",
     "node-libs-browser": "1.0.0",
     "sinon": "git+https://github.com/uberVU/Sinon.JS",
     "sinon-chai": "2.8.0",
