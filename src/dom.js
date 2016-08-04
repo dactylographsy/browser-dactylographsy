@@ -62,9 +62,8 @@ export class Js {
   injectWithUrl(urls, whichUrl = 'printed') {
     return new Promise(resolve => {
       // Create script element and set its type
-      let
-        script = document.createElement('script'),
-        url = urls[whichUrl];
+      let script = document.createElement('script');
+      let url = urls[whichUrl];
 
       this.log.info(`Creating <script />-tag with url: ${url}.`);
 
@@ -215,9 +214,8 @@ export class Css {
 
   injectWithUrl(urls, whichUrl = 'printed') {
     return new Promise(resolve => {
-      let
-        link = document.createElement('link'),
-        url = urls[whichUrl];
+      let link = document.createElement('link');
+      let url = urls[whichUrl];
 
       this.log.info(`Creating <link />-tag with url: ${url}.`);
 
@@ -252,8 +250,7 @@ export class Css {
 
   injectWithText(text, url) {
     return new Promise(resolve => {
-      let
-        link = document.createElement('link');
+      let link = document.createElement('link');
 
       this.log.info(`Creating <link />-tag with text for url: ${url}.`);
 

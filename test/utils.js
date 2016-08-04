@@ -7,9 +7,8 @@ export class DOMUtil {
   }
 
   findCssByDataUrl(url) {
-    let
-      nodes = [],
-      styles = document.querySelectorAll(`style[data-dactylographsy-url="${url}"]`),
+    let nodes = [];
+    let styles = document.querySelectorAll(`style[data-dactylographsy-url="${url}"]`);
       links = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`)
 
     for (var i = 0; i < styles.length; i++) {
@@ -24,9 +23,8 @@ export class DOMUtil {
   }
 
   findAllCss() {
-    let
-      nodes = [],
-      styles = document.querySelectorAll(`style[data-dactylographsy-url]`),
+    let nodes = [];
+    let styles = document.querySelectorAll(`style[data-dactylographsy-url]`);
       links = document.querySelectorAll(`link[data-dactylographsy-url]`)
 
     for (var i = 0; i < styles.length; i++) {
@@ -45,21 +43,18 @@ export class DOMUtil {
   }
 
   removeAll() {
-    let
-      nodes = [],
-      scripts = this.findAllJs(),
-      styles = this.findAllCss();
+    let nodes = [];
+    let scripts = this.findAllJs();
+    let styles = this.findAllCss();
 
     for (var i = 0; i < styles.length; i++) {
-      let
-        style = styles[i];
+      let style = styles[i];
 
       style.parentNode.removeChild(style);
     }
 
     for (var i = 0; i < scripts.length; i++) {
-      let
-        script = scripts[i];
+      let script = scripts[i];
 
       script.parentNode.removeChild(script);
     }
