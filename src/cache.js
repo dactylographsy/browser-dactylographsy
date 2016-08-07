@@ -96,7 +96,7 @@ export default class Cache {
     if (!this.isSupported) { return false; }
     if (singularBy) { this.dedupe(singularBy); }
 
-    let cached = {
+    const cached = {
       now: +new Date(),
       url: key,
       code: code,
@@ -127,7 +127,7 @@ export default class Cache {
   }
 
   supported() {
-    let item = '__dactylographsy__feature-detection';
+    const item = '__dactylographsy__feature-detection';
 
     try {
       localStorage.setItem(item, item);

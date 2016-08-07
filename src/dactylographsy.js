@@ -5,9 +5,8 @@ import getUrlParam from './url';
 
 export default class Dactylographsy {
   constructor(options = {}) {
-    const
-      { autorun = false } = options,
-      { enableLogging = false } = options;
+    const { autorun = false } = options;
+    const { enableLogging = false } = options;
 
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
@@ -68,7 +67,7 @@ export default class Dactylographsy {
   readAttrOnScript(attr) {
     if (!this.executingScript) { return false; }
 
-    let _attr = this.executingScript.getAttribute('data-' + attr);
+    const _attr = this.executingScript.getAttribute('data-' + attr);
 
     return _attr ? JSON.parse(_attr) : undefined;
   }
@@ -108,7 +107,7 @@ export default class Dactylographsy {
         this.config.cacheInLocalStorage === false
       ) ? this.refresh() : this.restore()
         .then(injectedFromCache => {
-          let {
+          const {
             refreshDelay = 5000
           } = this.config;
 

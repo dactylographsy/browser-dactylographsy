@@ -37,7 +37,7 @@ export class Js {
 
   injectWithText(text, url) {
     return new Promise(resolve => {
-      let script = document.createElement('script');
+      const script = document.createElement('script');
 
       this.log.info(`Creating <script />-tag with text for ${url}.`);
 
@@ -62,8 +62,8 @@ export class Js {
   injectWithUrl(urls, whichUrl = 'printed') {
     return new Promise(resolve => {
       // Create script element and set its type
-      let script = document.createElement('script');
-      let url = urls[whichUrl];
+      const script = document.createElement('script');
+      const url = urls[whichUrl];
 
       this.log.info(`Creating <script />-tag with url: ${url}.`);
 
@@ -198,7 +198,7 @@ export class Css {
         return new Ajax()
           .get(url)
           .then(response => {
-            let { text: responseText } = response;
+            const { text: responseText } = response;
 
             this.cache.set(responseText, 'css', url, singularBy);
 
@@ -214,12 +214,10 @@ export class Css {
 
   injectWithUrl(urls, whichUrl = 'printed') {
     return new Promise(resolve => {
-      let link = document.createElement('link');
-      let url = urls[whichUrl];
+      const link = document.createElement('link');
+      const url = urls[whichUrl];
 
       this.log.info(`Creating <link />-tag with url: ${url}.`);
-
-      link = document.createElement('link');
 
       link.type = 'text/css';
       link.rel = 'stylesheet';
@@ -250,11 +248,9 @@ export class Css {
 
   injectWithText(text, url) {
     return new Promise(resolve => {
-      let link = document.createElement('link');
+      const link = document.createElement('style');
 
       this.log.info(`Creating <link />-tag with text for url: ${url}.`);
-
-      link = document.createElement('style');
 
       link.setAttribute('data-dactylographsy-url', url);
 

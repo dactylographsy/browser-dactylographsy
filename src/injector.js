@@ -1,4 +1,4 @@
-import {Css, Js} from './dom';
+import { Css, Js } from './dom';
 import Ajax from './ajax';
 import Log from './log';
 import getUrlParam from './url';
@@ -101,10 +101,10 @@ export default class Injector {
   }
 
   injectManifest(manifest) {
-    let hashes = Object.keys(manifest.hashes);
+    const hashes = Object.keys(manifest.hashes);
 
     return Promise.all(hashes.map(hash => {
-      let dependency = manifest.hashes[hash];
+      const dependency = manifest.hashes[hash];
       let rootUrl;
 
       rootUrl = [manifest.rootUrl, manifest.packageUrl].filter(_url => {
@@ -147,7 +147,7 @@ export default class Injector {
   }
 
   urls(dependency, rootUrl = '') {
-    let basename = this.basename(dependency.file);
+    const basename = this.basename(dependency.file);
     let url;
 
     // Filter out potential null values
