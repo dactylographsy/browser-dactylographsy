@@ -74,8 +74,7 @@ export default class Dactylographsy {
   }
 
   run() {
-    const
-      ttl = getUrlParam('dactylographsy-ttl', this.config.ttl);
+    const ttl = getUrlParam('dactylographsy-ttl', this.config.ttl);
 
     if (!this.config.cacheInLocalStorage) {
       // Remove all cache-keys we might have set in the past and then switched config

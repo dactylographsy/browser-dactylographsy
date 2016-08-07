@@ -7,8 +7,7 @@ import es6Promise from 'es6-promise';
 
 es6Promise.polyfill();
 
-let
-  should = chai.should();
+let should = chai.should();
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);

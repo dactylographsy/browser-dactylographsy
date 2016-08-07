@@ -22,8 +22,7 @@ describe('DOM', () => {
 
   describe('Css', () => {
     describe('API', () => {
-      let
-        css;
+      let css;
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -69,8 +68,7 @@ describe('DOM', () => {
         });
 
         it('should inject it by with its url', () => {
-          let
-            injection = css.inject(urls);
+          let injection = css.inject(urls);
 
           injection.should.be.fulfilled;
         });
@@ -112,8 +110,7 @@ describe('DOM', () => {
         it('should inject it by with its code inline', () => {
           cache.set(code, 'css', urls.printed);
 
-          let
-            injection = css.inject(urls);
+          let injection = css.inject(urls);
 
           injection.should.be.fulfilled;
 
@@ -125,8 +122,7 @@ describe('DOM', () => {
         it('should not inject an invalid item from cache', () => {
           cache.set(code, 'css', urls.printed);
 
-          let
-            injection = css.inject({
+          let injection = css.inject({
               printed: urls.printed,
               raw: urls.raw,
               id: '123-abc'
@@ -161,25 +157,22 @@ describe('DOM', () => {
       });
 
       it('should create a style-tag when injecting', () => {
-        let
-          url = 'css-tag-check.css',
-          injection = css.injectWithText(code, url);
+        let url = 'css-tag-check.css';
+        let injection = css.injectWithText(code, url);
 
         expect(domUtils.findCssByDataUrl(url)).to.have.length.above(0);
       });
 
       it('should should flag the injection with a data-url', () => {
-        let
-          url = 'css-data-url-check.css',
-          injection = css.injectWithText(code, url);
+        let url = 'css-data-url-check.css';
+        let injection = css.injectWithText(code, url);
 
         expect(domUtils.findCssByDataUrl(url)).to.have.length.above(0);
       });
 
       it('should should inject the code into the script-tag', () => {
-        let
-          url = 'css-code-check.css',
-          injection = css.injectWithText(code, url);
+        let url = 'css-code-check.css';
+        let injection = css.injectWithText(code, url);
 
         expect(domUtils.findCssByDataUrl(url)[0].textContent).to.equal(code);
       });
@@ -198,8 +191,7 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when injecting straight away', () => {
-        let
-          urls = {
+        let urls = {
             raw: 'promise-check.css'
           },
           injection = css.injectWithUrl(urls, 'raw');
@@ -208,8 +200,7 @@ describe('DOM', () => {
       });
 
       it('should create a style-tag when injecting', () => {
-        let
-          urls = {
+        let urls = {
             raw: 'css-tag-check.css'
           },
           injection = css.injectWithUrl(urls, 'raw');
@@ -218,8 +209,7 @@ describe('DOM', () => {
       });
 
       it('should should flag the injection with a data-url', () => {
-        let
-          urls = {
+        let urls = {
             raw: 'css-data-url-check.css'
           },
           injection = css.injectWithUrl(urls, 'raw');
@@ -228,8 +218,7 @@ describe('DOM', () => {
       });
 
       it('should should set the href on the script-tag', () => {
-        let
-          urls = {
+        let urls = {
             raw: 'js-src-check.css'
           },
           injection = css.injectWithUrl(urls, 'raw');
@@ -241,8 +230,7 @@ describe('DOM', () => {
 
   describe('Js', () => {
     describe('API', () => {
-      let
-        js;
+      let js;
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -288,8 +276,7 @@ describe('DOM', () => {
         });
 
         it('should inject it by with its url', () => {
-          let
-            injection = js.inject(urls);
+          let injection = js.inject(urls);
 
           injection.should.be.fulfilled;
 
@@ -335,8 +322,7 @@ describe('DOM', () => {
         it('should inject it by with its code inline', () => {
           cache.set(code, 'js', urls.printed);
 
-          let
-            injection = js.inject(urls);
+          let injection = js.inject(urls);
 
           injection.should.be.fulfilled;
 
@@ -348,8 +334,7 @@ describe('DOM', () => {
         it('should not inject an invalid item from cache', () => {
           cache.set(code, 'js', urls.printed);
 
-          let
-            injection = js.inject({
+          let injection = js.inject({
               printed: urls.printed,
               raw: urls.raw,
               id: '123-abc'
@@ -378,41 +363,36 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when injecting', () => {
-        let
-          url = 'promise-check.js',
-          injection = js.injectWithText(code, url);
+        let url = 'promise-check.js';
+        let injection = js.injectWithText(code, url);
 
         injection.should.be.fulfilled;
       });
 
       it('should create a script-tag when injecting', () => {
-        let
-          url = 'js-tag-check.js',
-          injection = js.injectWithText(code, url);
+        let url = 'js-tag-check.js';
+        let injection = js.injectWithText(code, url);
 
         expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
       });
 
       it('should flag the injection with a data-url', () => {
-        let
-          url = 'js-data-url-check.js',
-          injection = js.injectWithText(code, url);
+        let url = 'js-data-url-check.js';
+        let injection = js.injectWithText(code, url);
 
         expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
       });
 
       it('should inject the code into the script-tag', () => {
-        let
-          url = 'js-code-check.js',
-          injection = js.injectWithText(code, url);
+        let url = 'js-code-check.js';
+        let injection = js.injectWithText(code, url);
 
         expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain(code);
       });
 
       it('should amend an "sourceURL" to injected code', () => {
-        let
-          url = 'js-sourceurl-check.js',
-          injection = js.injectWithText(code, url);
+        let url = 'js-sourceurl-check.js';
+        let injection = js.injectWithText(code, url);
 
         expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain('//# sourceURL=');
       });
@@ -431,8 +411,7 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when injecting straight away', () => {
-        let
-          urls = {
+        let urls = {
             raw: 'promise-check.js'
           },
           injection = js.injectWithUrl(urls, 'raw');
@@ -441,8 +420,7 @@ describe('DOM', () => {
       });
 
       it('should create a script-tag when injecting', () => {
-        let
-          urls = {
+        let urls = {
             raw: 'js-tag-check.js'
           },
           injection = js.injectWithUrl(urls, 'raw');
@@ -451,8 +429,7 @@ describe('DOM', () => {
       });
 
       it('should should flag the injection with a data-url', () => {
-        let
-          urls = {
+        let urls = {
             raw: 'js-data-url-check.js'
           },
           injection = js.injectWithUrl(urls, 'raw');
@@ -461,8 +438,7 @@ describe('DOM', () => {
       });
 
       it('should should set the src on the script-tag', () => {
-        let
-          urls = {
+        let urls = {
             raw: 'js-src-check.js'
           },
           injection = js.injectWithUrl(urls, 'raw');
@@ -471,8 +447,7 @@ describe('DOM', () => {
       });
 
       it('should should flag the script not being async', () => {
-        let
-          urls = {
+        let urls = {
             raw: 'js-async-check.js'
           },
           injection = js.injectWithUrl(urls, 'raw');

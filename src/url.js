@@ -1,11 +1,8 @@
-const
-  getParams = function(url) {
-    const
-      query = url,
-      regex = /[?&;](.+?)=([^&;]+)/g;
-    let
-      params,
-      match;
+const getParams = function(url) {
+    const query = url;
+    const regex = /[?&;](.+?)=([^&;]+)/g;
+    let params;
+    let match;
 
     params = {};
 
@@ -19,8 +16,7 @@ const
   };
 
 export default function getUrlParam(param, ifUnset = null, url = window.location.search) {
-  const
-    params = getParams(url);
+  const params = getParams(url);
 
   if (params.hasOwnProperty(param)) {
     try {

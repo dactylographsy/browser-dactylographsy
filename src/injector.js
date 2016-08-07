@@ -53,8 +53,7 @@ export default class Injector {
   }
 
   inject() {
-    const
-      flatten = list => list.reduce(
+    const flatten = list => list.reduce(
         (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
       ),
       injectIntoDOM = (dependencies, idx = 0) => {
@@ -102,13 +101,11 @@ export default class Injector {
   }
 
   injectManifest(manifest) {
-    let
-      hashes = Object.keys(manifest.hashes);
+    let hashes = Object.keys(manifest.hashes);
 
     return Promise.all(hashes.map(hash => {
-      let
-        dependency = manifest.hashes[hash],
-        rootUrl;
+      let dependency = manifest.hashes[hash];
+      let rootUrl;
 
       rootUrl = [manifest.rootUrl, manifest.packageUrl].filter(_url => {
         return (
@@ -150,9 +147,8 @@ export default class Injector {
   }
 
   urls(dependency, rootUrl = '') {
-    let
-      basename = this.basename(dependency.file),
-      url;
+    let basename = this.basename(dependency.file);
+    let url;
 
     // Filter out potential null values
     // passed in as various parts of an url.
