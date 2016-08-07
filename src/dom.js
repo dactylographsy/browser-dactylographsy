@@ -5,9 +5,11 @@ import getUrlParam from './url';
 
 export class Js {
   constructor(injectInto, config = {}) {
+    const {
+      verification = false
+    } = config;
     let {
       enableLogging = false,
-      verification = false,
       cacheInLocalStorage = true
     } = config;
 
@@ -123,7 +125,7 @@ export class Js {
           return new Ajax()
             .get(url)
             .then(response => {
-              let { text: responseText } = response;
+              const { text: responseText } = response;
 
               this.cache.set(responseText, 'js', url, singularBy);
 
@@ -159,9 +161,11 @@ export class Js {
 
 export class Css {
   constructor(injectInto, config = {}) {
+    const {
+      verification = false
+    } = config;
     let {
       enableLogging = false,
-      verification = false,
       cacheInLocalStorage = true
     } = config;
 

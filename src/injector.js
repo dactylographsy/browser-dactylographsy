@@ -18,7 +18,7 @@ export class Manifest {
     return new Ajax()
       .get(this.url)
       .then(response => {
-        let {
+        const {
           text: responseText,
           url: responseUrl
         } = response;
@@ -105,9 +105,7 @@ export default class Injector {
 
     return Promise.all(hashes.map(hash => {
       const dependency = manifest.hashes[hash];
-      let rootUrl;
-
-      rootUrl = [manifest.rootUrl, manifest.packageUrl].filter(_url => {
+      const rootUrl = [manifest.rootUrl, manifest.packageUrl].filter(_url => {
         return (
           _url !== undefined &&
           _url !== null
@@ -148,11 +146,9 @@ export default class Injector {
 
   urls(dependency, rootUrl = '') {
     const basename = this.basename(dependency.file);
-    let url;
-
     // Filter out potential null values
     // passed in as various parts of an url.
-    url = [this.prefix, rootUrl, dependency.path].filter(_url => {
+    const url = [this.prefix, rootUrl, dependency.path].filter(_url => {
       return (
         _url !== undefined &&
         _url !== null

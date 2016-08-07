@@ -1,10 +1,8 @@
 const getParams = function(url) {
     const query = url;
     const regex = /[?&;](.+?)=([^&;]+)/g;
-    let params;
+    const params = {};
     let match;
-
-    params = {};
 
     if (query) {
       while (match = regex.exec(query)) {
