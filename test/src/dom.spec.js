@@ -9,10 +9,9 @@ chai.should();
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 
-var
-  fixtureUrl = 'base/test/src/fixtures/code.js',
-  domUtils,
-  expect;
+const fixtureUrl = 'base/test/src/fixtures/code.js';
+let domUtils;
+let expect;
 
 describe('DOM', () => {
   before(() => {
@@ -50,13 +49,12 @@ describe('DOM', () => {
     });
 
     describe('inject', () => {
-      var
-        urls = {
-          printed: 'hashed-css-inject.css',
-          raw: 'raw-css-inject.css'
-        },
-        css,
-        code = '.foo {color: blue}';
+      let css;
+      const urls = {
+        printed: 'hashed-css-inject.css',
+        raw: 'raw-css-inject.css'
+      };
+      const code = '.foo {color: blue}';
 
       describe('an uncached file', () => {
         beforeEach(() => {
@@ -68,14 +66,14 @@ describe('DOM', () => {
         });
 
         it('should inject it by with its url', () => {
-          let injection = css.inject(urls);
+          const injection = css.inject(urls);
 
           injection.should.be.fulfilled;
         });
       });
 
       describe('with cacheInLocalStorage disabled', () => {
-        var cache = new Cache();
+        const cache = new Cache();
 
         it('should not cache the file in localStorage', () => {
           domUtils.removeAll();
@@ -85,7 +83,7 @@ describe('DOM', () => {
             cacheInLocalStorage: false
           });
 
-          let cachePromise = css.ensureCache(urls.printed);
+          const cachePromise = css.ensureCache(urls.printed);
 
           return cachePromise.then(res => {
             expect(res).to.equal('Caching in localStorage is disabled');
@@ -94,8 +92,7 @@ describe('DOM', () => {
       });
 
       describe('a cached file', () => {
-        var
-          cache = new Cache();
+        const cache = new Cache();
 
         beforeEach(() => {
           domUtils.removeAll();
@@ -110,7 +107,7 @@ describe('DOM', () => {
         it('should inject it by with its code inline', () => {
           cache.set(code, 'css', urls.printed);
 
-          let injection = css.inject(urls);
+          const injection = css.inject(urls);
 
           injection.should.be.fulfilled;
 
@@ -122,11 +119,11 @@ describe('DOM', () => {
         it('should not inject an invalid item from cache', () => {
           cache.set(code, 'css', urls.printed);
 
-          let injection = css.inject({
-              printed: urls.printed,
-              raw: urls.raw,
-              id: '123-abc'
-            });
+          const injection = css.inject({
+            printed: urls.printed,
+            raw: urls.raw,
+            id: '123-abc'
+          });
 
           injection.should.be.fulfilled;
 
@@ -138,9 +135,8 @@ describe('DOM', () => {
     });
 
     describe('injectWithText', () => {
-      var
-        css,
-        code = '.foo {color: red}';
+      let css;
+      const code = '.foo {color: red}';
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -151,36 +147,35 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when injecting', () => {
-        let injection = css.injectWithText(code, 'css-promise-check.js');
+        const injection = css.injectWithText(code, 'css-promise-check.js');
 
         injection.should.be.fulfilled;
       });
 
       it('should create a style-tag when injecting', () => {
-        let url = 'css-tag-check.css';
-        let injection = css.injectWithText(code, url);
+        const url = 'css-tag-check.css';
+        const injection = css.injectWithText(code, url);
 
         expect(domUtils.findCssByDataUrl(url)).to.have.length.above(0);
       });
 
       it('should should flag the injection with a data-url', () => {
-        let url = 'css-data-url-check.css';
-        let injection = css.injectWithText(code, url);
+        const url = 'css-data-url-check.css';
+        const injection = css.injectWithText(code, url);
 
         expect(domUtils.findCssByDataUrl(url)).to.have.length.above(0);
       });
 
       it('should should inject the code into the script-tag', () => {
-        let url = 'css-code-check.css';
-        let injection = css.injectWithText(code, url);
+        const url = 'css-code-check.css';
+        const injection = css.injectWithText(code, url);
 
         expect(domUtils.findCssByDataUrl(url)[0].textContent).to.equal(code);
       });
     });
 
     describe('injectWithUrl', () => {
-      var
-        css;
+      let css;
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -191,37 +186,37 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when injecting straight away', () => {
-        let urls = {
-            raw: 'promise-check.css'
-          },
-          injection = css.injectWithUrl(urls, 'raw');
+        const urls = {
+          raw: 'promise-check.css'
+        };
+        const injection = css.injectWithUrl(urls, 'raw');
 
         injection.should.be.fulfilled;
       });
 
       it('should create a style-tag when injecting', () => {
-        let urls = {
-            raw: 'css-tag-check.css'
-          },
-          injection = css.injectWithUrl(urls, 'raw');
+        const urls = {
+          raw: 'css-tag-check.css'
+        };
+        const injection = css.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
       });
 
       it('should should flag the injection with a data-url', () => {
-        let urls = {
-            raw: 'css-data-url-check.css'
-          },
-          injection = css.injectWithUrl(urls, 'raw');
+        const urls = {
+          raw: 'css-data-url-check.css'
+        };
+        const injection = css.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
       });
 
       it('should should set the href on the script-tag', () => {
-        let urls = {
-            raw: 'js-src-check.css'
-          },
-          injection = css.injectWithUrl(urls, 'raw');
+        const urls = {
+          raw: 'js-src-check.css'
+        };
+        const injection = css.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findCssByDataUrl(urls.raw)[0]).to.have.property('href');
       });
@@ -258,13 +253,12 @@ describe('DOM', () => {
     });
 
     describe('inject', () => {
-      var
-        urls = {
-          printed: 'hashed-js-inject.js',
-          raw: 'raw-js-inject.js'
-        },
-        js,
-        code = 'var a = "b"';
+      let js;
+      const urls = {
+        printed: 'hashed-js-inject.js',
+        raw: 'raw-js-inject.js'
+      };
+      const code = 'var a = "b"';
 
       describe('an uncached file', () => {
         beforeEach(() => {
@@ -276,7 +270,7 @@ describe('DOM', () => {
         });
 
         it('should inject it by with its url', () => {
-          let injection = js.inject(urls);
+          const injection = js.inject(urls);
 
           injection.should.be.fulfilled;
 
@@ -287,7 +281,7 @@ describe('DOM', () => {
       });
 
       describe('with cacheInLocalStorage disabled', () => {
-        var cache = new Cache();
+        const cache = new Cache();
 
         it('should not cache the file in localStorage', () => {
           domUtils.removeAll();
@@ -297,7 +291,7 @@ describe('DOM', () => {
             cacheInLocalStorage: false
           });
 
-          let cachePromise = js.ensureCache(urls.printed);
+          const cachePromise = js.ensureCache(urls.printed);
 
           return cachePromise.then(res => {
             expect(res).to.equal('Caching in localStorage is disabled');
@@ -306,8 +300,7 @@ describe('DOM', () => {
       });
 
       describe('a cached file', () => {
-        var
-          cache = new Cache();
+        const cache = new Cache();
 
         beforeEach(() => {
           domUtils.removeAll();
@@ -322,7 +315,7 @@ describe('DOM', () => {
         it('should inject it by with its code inline', () => {
           cache.set(code, 'js', urls.printed);
 
-          let injection = js.inject(urls);
+          const injection = js.inject(urls);
 
           injection.should.be.fulfilled;
 
@@ -334,11 +327,11 @@ describe('DOM', () => {
         it('should not inject an invalid item from cache', () => {
           cache.set(code, 'js', urls.printed);
 
-          let injection = js.inject({
-              printed: urls.printed,
-              raw: urls.raw,
-              id: '123-abc'
-            });
+          const injection = js.inject({
+            printed: urls.printed,
+            raw: urls.raw,
+            id: '123-abc'
+          });
 
           injection.should.be.fulfilled;
 
@@ -350,9 +343,8 @@ describe('DOM', () => {
     });
 
     describe('injectWithText', () => {
-      var
-        js,
-        code = 'var a="b";';
+      let js;
+      const code = 'var a="b";';
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -363,44 +355,43 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when injecting', () => {
-        let url = 'promise-check.js';
-        let injection = js.injectWithText(code, url);
+        const url = 'promise-check.js';
+        const injection = js.injectWithText(code, url);
 
         injection.should.be.fulfilled;
       });
 
       it('should create a script-tag when injecting', () => {
-        let url = 'js-tag-check.js';
-        let injection = js.injectWithText(code, url);
+        const url = 'js-tag-check.js';
+        const injection = js.injectWithText(code, url);
 
         expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
       });
 
       it('should flag the injection with a data-url', () => {
-        let url = 'js-data-url-check.js';
-        let injection = js.injectWithText(code, url);
+        const url = 'js-data-url-check.js';
+        const injection = js.injectWithText(code, url);
 
         expect(domUtils.findJsByDataUrl(url)).to.have.length.above(0);
       });
 
       it('should inject the code into the script-tag', () => {
-        let url = 'js-code-check.js';
-        let injection = js.injectWithText(code, url);
+        const url = 'js-code-check.js';
+        const injection = js.injectWithText(code, url);
 
         expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain(code);
       });
 
       it('should amend an "sourceURL" to injected code', () => {
-        let url = 'js-sourceurl-check.js';
-        let injection = js.injectWithText(code, url);
+        const url = 'js-sourceurl-check.js';
+        const injection = js.injectWithText(code, url);
 
         expect(domUtils.findJsByDataUrl(url)[0].textContent).to.contain('//# sourceURL=');
       });
     });
 
     describe('injectWithUrl', () => {
-      var
-        js;
+      let js;
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -411,46 +402,46 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when injecting straight away', () => {
-        let urls = {
-            raw: 'promise-check.js'
-          },
-          injection = js.injectWithUrl(urls, 'raw');
+        const urls = {
+          raw: 'promise-check.js'
+        };
+        const injection = js.injectWithUrl(urls, 'raw');
 
         injection.should.be.fulfilled;
       });
 
       it('should create a script-tag when injecting', () => {
-        let urls = {
-            raw: 'js-tag-check.js'
-          },
-          injection = js.injectWithUrl(urls, 'raw');
+        const urls = {
+          raw: 'js-tag-check.js'
+        };
+        const injection = js.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
       });
 
       it('should should flag the injection with a data-url', () => {
-        let urls = {
-            raw: 'js-data-url-check.js'
-          },
-          injection = js.injectWithUrl(urls, 'raw');
+        const urls = {
+          raw: 'js-data-url-check.js'
+        };
+        const injection = js.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findJsByDataUrl(urls.raw)).to.have.length.above(0);
       });
 
       it('should should set the src on the script-tag', () => {
-        let urls = {
-            raw: 'js-src-check.js'
-          },
-          injection = js.injectWithUrl(urls, 'raw');
+        const urls = {
+          raw: 'js-src-check.js'
+        };
+        const injection = js.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findJsByDataUrl(urls.raw)[0]).to.have.property('src');
       });
 
       it('should should flag the script not being async', () => {
-        let urls = {
-            raw: 'js-async-check.js'
-          },
-          injection = js.injectWithUrl(urls, 'raw');
+        const urls = {
+          raw: 'js-async-check.js'
+        };
+        const injection = js.injectWithUrl(urls, 'raw');
 
         expect(domUtils.findJsByDataUrl(urls.raw)[0].async).to.be.false;
       });

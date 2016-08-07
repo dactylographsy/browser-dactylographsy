@@ -14,7 +14,7 @@ describe('Cache', () => {
   describe('supported', () => {
     it('should indicate if local storage is not supported', () => {
       let cache;
-      let setItem = Storage.prototype.setItem;
+      const setItem = Storage.prototype.setItem;
 
       Storage.prototype.setItem = function() {
         throw false;
@@ -29,8 +29,8 @@ describe('Cache', () => {
 
     it('should indicate if local storage is supported', () => {
       let cache;
-      let setItem = Storage.prototype.setItem;
-      let removeItem = Storage.prototype.removeItem;
+      const setItem = Storage.prototype.setItem;
+      const removeItem = Storage.prototype.removeItem;
 
       Storage.prototype.setItem = function() {};
       Storage.prototype.removeItem = function() {};
@@ -87,8 +87,7 @@ describe('Cache', () => {
   });
 
   describe('set', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -141,8 +140,7 @@ describe('Cache', () => {
   });
 
   describe('has', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -166,9 +164,8 @@ describe('Cache', () => {
   });
 
   describe('flush', () => {
-    var
-      cache1,
-      cache2;
+    let cache1;
+    let cache2;
 
     beforeEach(() => {
       cache1 = new Cache({
@@ -203,8 +200,7 @@ describe('Cache', () => {
   });
 
   describe('get', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -278,8 +274,7 @@ describe('Cache', () => {
   });
 
   describe('remove', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -311,8 +306,7 @@ describe('Cache', () => {
   });
 
   describe('isItemValid', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({

@@ -7,9 +7,9 @@ export class DOMUtil {
   }
 
   findCssByDataUrl(url) {
-    let nodes = [];
-    let styles = document.querySelectorAll(`style[data-dactylographsy-url="${url}"]`);
-    let links = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`)
+    const nodes = [];
+    const styles = document.querySelectorAll(`style[data-dactylographsy-url="${url}"]`);
+    const links = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`)
 
     for (var i = 0; i < styles.length; i++) {
       nodes.push(styles[i]);
@@ -23,9 +23,9 @@ export class DOMUtil {
   }
 
   findAllCss() {
-    let nodes = [];
-    let styles = document.querySelectorAll('style[data-dactylographsy-url]');
-    let links = document.querySelectorAll('link[data-dactylographsy-url]')
+    const nodes = [];
+    const styles = document.querySelectorAll('style[data-dactylographsy-url]');
+    const links = document.querySelectorAll('link[data-dactylographsy-url]')
 
     for (var i = 0; i < styles.length; i++) {
       nodes.push(styles[i]);
@@ -43,18 +43,18 @@ export class DOMUtil {
   }
 
   removeAll() {
-    let nodes = [];
-    let scripts = this.findAllJs();
-    let styles = this.findAllCss();
+    const nodes = [];
+    const scripts = this.findAllJs();
+    const styles = this.findAllCss();
 
     for (var i = 0; i < styles.length; i++) {
-      let style = styles[i];
+      const style = styles[i];
 
       style.parentNode.removeChild(style);
     }
 
     for (var i = 0; i < scripts.length; i++) {
-      let script = scripts[i];
+      const script = scripts[i];
 
       script.parentNode.removeChild(script);
     }
