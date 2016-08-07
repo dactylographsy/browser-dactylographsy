@@ -4,9 +4,8 @@ import stringHash from 'string-hash';
 
 export default class Cache {
   constructor(options = {}) {
-    const
-      defaultPrefix = '__dactylographsy',
-      { enableLogging = false } = options;
+    const defaultPrefix = '__dactylographsy';
+    const { enableLogging = false } = options;
 
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
@@ -43,8 +42,7 @@ export default class Cache {
     return new Promise((resolve, reject) => {
       if (!this.isSupported) { reject(); }
 
-      let
-        _item = localStorage.getItem(`${this.cachePrefix}-${key}`);
+      let _item = localStorage.getItem(`${this.cachePrefix}-${key}`);
 
       if (_item === null && defaultValue !== undefined) {
         this.set(defaultValue, 'plain', key);
@@ -55,8 +53,7 @@ export default class Cache {
       }
 
       if (_item !== null && hash !== false) {
-        const
-          _parsed = this.parse(_item);
+        const _parsed = this.parse(_item);
 
         this.log.info(`Found item with key: ${key} in cache which needs validation...`);
 
@@ -130,8 +127,7 @@ export default class Cache {
   }
 
   supported() {
-    let
-      item = '__dactylographsy__feature-detection';
+    let item = '__dactylographsy__feature-detection';
 
     try {
       localStorage.setItem(item, item);
@@ -147,10 +143,8 @@ export default class Cache {
 
   dedupe(singularBy) {
     for (let key in localStorage) {
-      const
-        dactylographsyItem = key.indexOf(this.cachePrefix) >= 0;
-      let
-        item;
+      const dactylographsyItem = key.indexOf(this.cachePrefix) >= 0;
+      let item;
 
       if (!dactylographsyItem) { continue; }
 

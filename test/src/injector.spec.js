@@ -62,17 +62,14 @@ var
 describe('Injector', () => {
   describe('inject', () => {
     it('should inject all packages from the configured order', () => {
-      let
-        injections;
-      const
-        injector = new Injector(document.querySelector('body'), fixtureManifests, {
+      let injections;
+      const injector = new Injector(document.querySelector('body'), fixtureManifests, {
           enableLogging: false,
           order: ['vertical-1', 'vertical-2']
         });
 
       injections = injector.inject().then(packages => {
-        let
-          manifestDependencies = {};
+        let manifestDependencies = {};
 
         Object.assign(manifestDependencies, fixtureManifests[0].hashes);
         Object.assign(manifestDependencies, fixtureManifests[1].hashes);
@@ -90,18 +87,15 @@ describe('Injector', () => {
     var
       findInjectionBySrc = (injections, itemSrc) => {
         return injections.filter(injection => {
-          let
-            src = injection.src || injection.href;
+          let src = injection.src || injection.href;
 
           return src.indexOf(itemSrc) > -1;
         })
       };
 
     it('should inject all dependencies from a manifest', () => {
-      let
-        injections;
-      const
-        injector = new Injector(document.querySelector('body'), [], {
+      let injections;
+      const injector = new Injector(document.querySelector('body'), [], {
           enableLogging: false,
           order: []
         });
@@ -116,10 +110,8 @@ describe('Injector', () => {
     });
 
     it('should generate a url from package- and root url', () => {
-      let
-        injections;
-      const
-        injector = new Injector(document.querySelector('body'), [], {
+      let injections;
+      const injector = new Injector(document.querySelector('body'), [], {
           enableLogging: false,
           order: []
         });
@@ -139,10 +131,8 @@ describe('Injector', () => {
 
   describe('urls', () => {
     it('should generate a raw (unprinted) url', () => {
-      let
-        urls;
-      const
-        injector = new Injector(document.querySelector('body'), [], {
+      let urls;
+      const injector = new Injector(document.querySelector('body'), [], {
           enableLogging: false,
           order: []
         });
@@ -153,10 +143,8 @@ describe('Injector', () => {
     });
 
     it('should generate a printed url', () => {
-      let
-        urls;
-      const
-        injector = new Injector(document.querySelector('body'), [], {
+      let urls;
+      const injector = new Injector(document.querySelector('body'), [], {
           enableLogging: false,
           order: []
         });
@@ -167,10 +155,8 @@ describe('Injector', () => {
     });
 
     it('should generate a singlarBy (file) url', () => {
-      let
-        urls;
-      const
-        injector = new Injector(document.querySelector('body'), [], {
+      let urls;
+      const injector = new Injector(document.querySelector('body'), [], {
           enableLogging: false,
           order: []
         });

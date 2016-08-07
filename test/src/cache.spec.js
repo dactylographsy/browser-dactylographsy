@@ -13,9 +13,8 @@ describe('Cache', () => {
 
   describe('supported', () => {
     it('should indicate if local storage is not supported', () => {
-      let
-        cache,
-        setItem = Storage.prototype.setItem;
+      let cache;
+      let setItem = Storage.prototype.setItem;
 
       Storage.prototype.setItem = function() {
         throw false;
@@ -29,10 +28,9 @@ describe('Cache', () => {
     });
 
     it('should indicate if local storage is supported', () => {
-      let
-        cache,
-        setItem = Storage.prototype.setItem,
-        removeItem = Storage.prototype.removeItem;
+      let cache;
+      let setItem = Storage.prototype.setItem;
+      let removeItem = Storage.prototype.removeItem;
 
       Storage.prototype.setItem = function() {};
       Storage.prototype.removeItem = function() {};
@@ -56,36 +54,33 @@ describe('Cache', () => {
     });
 
     it('should allow specifying a custom cache prefix', () => {
-      const
-        prefix = '__karma-spec__',
-        cache = new Cache({
+      const prefix = '__karma-spec__';
+      const cache = new Cache({
           enableLogging: false,
           cachePrefix: prefix
-        });
+      });
 
       cache.getPrefix().should.be.equal(prefix);
     });
 
     it('should allow specifying an app prefix without an cache prefix', () => {
-      const
-        prefix = '__karma-runner__',
-        cache = new Cache({
+      const prefix = '__karma-runner__';
+      const cache = new Cache({
           enableLogging: false,
           appPrefix: prefix
-        });
+      });
 
       cache.getPrefix().should.be.equal(`__dactylographsy--${prefix}`);
     });
 
     it('should allow specifying an app prefix with an cache prefix', () => {
-      const
-        appPrefix = '__karma-runner__',
-        cachePrefix = 'karma-spec',
-        cache = new Cache({
+      const appPrefix = '__karma-runner__';
+      const cachePrefix = 'karma-spec';
+      const cache = new Cache({
           enableLogging: false,
           appPrefix: appPrefix,
           cachePrefix: cachePrefix
-        });
+      });
 
       cache.getPrefix().should.be.equal(`${cachePrefix}--${appPrefix}`);
     });
@@ -104,8 +99,7 @@ describe('Cache', () => {
     });
 
     it('should flag items with a date', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
       item.now.should.be.an.number;
@@ -113,24 +107,21 @@ describe('Cache', () => {
     });
 
     it('should flag items with the type', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
       item.type.should.be.equal('string');
     });
 
     it('should flag items with the url', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
       item.url.should.be.equal('karma-spec.com');
     });
 
     it('should save the value as code', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
       item.code.should.be.equal('foo');
@@ -162,8 +153,7 @@ describe('Cache', () => {
     });
 
     it('should indicate when finding an entry', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
 
@@ -194,9 +184,8 @@ describe('Cache', () => {
     });
 
     it('should flush the entire cache scoped to the prefix', () => {
-      const
-        item1 = cache1.set('foo', 'string', 'karma-spec.com'),
-        item2 = cache2.set('foo', 'string', 'karma-spec.com');
+      const item1 = cache1.set('foo', 'string', 'karma-spec.com');
+      const item2 = cache2.set('foo', 'string', 'karma-spec.com');
 
       item1.should.be.an.object;
       item2.should.be.an.object;
@@ -260,8 +249,7 @@ describe('Cache', () => {
     });
 
     it('should resolve the promise when validation is requested and passes', () => {
-      let
-        item;
+      let item;
 
       cache.set('foo', 'string', 'karma-spec.com');
 
@@ -271,8 +259,7 @@ describe('Cache', () => {
     });
 
     it('should reject the promise when validation is requested and fails', () => {
-      let
-        item;
+      let item;
 
       cache.set('foo', 'string', 'karma-spec.com');
 
