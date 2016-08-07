@@ -61,14 +61,12 @@ const fixtureManifests = [{
 describe('Injector', () => {
   describe('inject', () => {
     it('should inject all packages from the configured order', () => {
-      let injections;
       const injector = new Injector(document.querySelector('body'), fixtureManifests, {
         enableLogging: false,
         order: ['vertical-1', 'vertical-2']
       });
-
-      injections = injector.inject().then(packages => {
-        let manifestDependencies = {};
+      const injections = injector.inject().then(packages => {
+        const manifestDependencies = {};
 
         Object.assign(manifestDependencies, fixtureManifests[0].hashes);
         Object.assign(manifestDependencies, fixtureManifests[1].hashes);
@@ -85,20 +83,18 @@ describe('Injector', () => {
   describe('injectManifest', () => {
     const findInjectionBySrc = (injections, itemSrc) => {
       return injections.filter(injection => {
-        let src = injection.src || injection.href;
+        const src = injection.src || injection.href;
 
         return src.indexOf(itemSrc) > -1;
       })
     };
 
     it('should inject all dependencies from a manifest', () => {
-      let injections;
       const injector = new Injector(document.querySelector('body'), [], {
         enableLogging: false,
         order: []
       });
-
-      injections = injector.injectManifest(fixtureManifests[0]);
+      const injections = injector.injectManifest(fixtureManifests[0]);
 
       injections.then(injections => {
         findInjectionBySrc(injections, 'hash1').should.have.length(1);
@@ -108,13 +104,11 @@ describe('Injector', () => {
     });
 
     it('should generate a url from package- and root url', () => {
-      let injections;
       const injector = new Injector(document.querySelector('body'), [], {
         enableLogging: false,
         order: []
       });
-
-      injections = injector.injectManifest(fixtureManifests[0]);
+      const injections = injector.injectManifest(fixtureManifests[0]);
 
       injections.then(injections => {
         findInjectionBySrc(injections, fixtureManifests[0].rootUrl).should.have.length(3);
@@ -129,37 +123,31 @@ describe('Injector', () => {
 
   describe('urls', () => {
     it('should generate a raw (unprinted) url', () => {
-      let urls;
       const injector = new Injector(document.querySelector('body'), [], {
         enableLogging: false,
         order: []
       });
-
-      urls = injector.urls(fixtureManifests[0].hashes.hash1, 'root');
+      const urls = injector.urls(fixtureManifests[0].hashes.hash1, 'root');
 
       urls.raw.should.equal('/root/1.js');
     });
 
     it('should generate a printed url', () => {
-      let urls;
       const injector = new Injector(document.querySelector('body'), [], {
         enableLogging: false,
         order: []
       });
-
-      urls = injector.urls(fixtureManifests[0].hashes.hash1, 'root');
+      const urls = injector.urls(fixtureManifests[0].hashes.hash1, 'root');
 
       urls.printed.should.equal('/root/1-hash1.js');
     });
 
     it('should generate a singlarBy (file) url', () => {
-      let urls;
       const injector = new Injector(document.querySelector('body'), [], {
         enableLogging: false,
         order: []
       });
-
-      urls = injector.urls(fixtureManifests[0].hashes.hash1, 'root');
+      const urls = injector.urls(fixtureManifests[0].hashes.hash1, 'root');
 
       urls.singularBy.should.equal('/root/1.js');
     });
