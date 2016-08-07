@@ -5,6 +5,7 @@ module.exports = {
   },
   target: [
     '<%= paths.src.js %>**/*.js',
-    '<%= paths.src.lint %>'
+    '<%= paths.src.lint %>',
+    '<%= paths.test.lint %>'
   ]
 };

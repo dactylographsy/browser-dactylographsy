@@ -5,5 +5,8 @@
   },
   "dist": {
     "js": "dist/"
+  },
+  "test": {
+    "lint": "test/**/*.js"
   }
 }

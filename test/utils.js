@@ -24,8 +24,8 @@ export class DOMUtil {
 
   findAllCss() {
     let nodes = [];
-    let styles = document.querySelectorAll(`style[data-dactylographsy-url]`);
-    let links = document.querySelectorAll(`link[data-dactylographsy-url]`)
+    let styles = document.querySelectorAll('style[data-dactylographsy-url]');
+    let links = document.querySelectorAll('link[data-dactylographsy-url]')
 
     for (var i = 0; i < styles.length; i++) {
       nodes.push(styles[i]);
@@ -39,7 +39,7 @@ export class DOMUtil {
   }
 
   findAllJs() {
-    return document.querySelectorAll(`script[data-dactylographsy-url]`);
+    return document.querySelectorAll('script[data-dactylographsy-url]');
   }
 
   removeAll() {
