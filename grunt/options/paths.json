@@ -1,6 +1,6 @@
 {
   "src": {
-    "lint": "tasks/**/*.js",
+    "lint": "src/**/*.js",
     "js": "src/"
   },
   "dist": {
