@@ -11,7 +11,7 @@
   },
   "engineStrict": true,
   "engines": {
-      "node": ">= 4"
+    "node": ">= 4"
   },
   "keywords": [
     "grunt",
