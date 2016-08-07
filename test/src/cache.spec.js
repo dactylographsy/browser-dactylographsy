@@ -13,14 +13,12 @@ describe('Cache', () => {
 
   describe('supported', () => {
     it('should indicate if local storage is not supported', () => {
-      let cache;
-      let setItem = Storage.prototype.setItem;
+      const cache = new Cache();;
+      const setItem = Storage.prototype.setItem;
 
       Storage.prototype.setItem = function() {
         throw false;
       };
-
-      cache = new Cache();
 
       cache.supported().should.be.false;
 
@@ -28,14 +26,12 @@ describe('Cache', () => {
     });
 
     it('should indicate if local storage is supported', () => {
-      let cache;
-      let setItem = Storage.prototype.setItem;
-      let removeItem = Storage.prototype.removeItem;
+      const cache = new Cache();;
+      const setItem = Storage.prototype.setItem;
+      const removeItem = Storage.prototype.removeItem;
 
       Storage.prototype.setItem = function() {};
       Storage.prototype.removeItem = function() {};
-
-      cache = new Cache();
 
       cache.supported().should.be.true;
 
@@ -87,8 +83,7 @@ describe('Cache', () => {
   });
 
   describe('set', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -141,8 +136,7 @@ describe('Cache', () => {
   });
 
   describe('has', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -166,9 +160,8 @@ describe('Cache', () => {
   });
 
   describe('flush', () => {
-    var
-      cache1,
-      cache2;
+    let cache1;
+    let cache2;
 
     beforeEach(() => {
       cache1 = new Cache({
@@ -203,8 +196,7 @@ describe('Cache', () => {
   });
 
   describe('get', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -249,21 +241,17 @@ describe('Cache', () => {
     });
 
     it('should resolve the promise when validation is requested and passes', () => {
-      let item;
-
       cache.set('foo', 'string', 'karma-spec.com');
 
-      item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb13');
+      const item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb13');
 
       item.should.be.resolved;
     });
 
     it('should reject the promise when validation is requested and fails', () => {
-      let item;
-
       cache.set('foo', 'string', 'karma-spec.com');
 
-      item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb14');
+      const item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb14');
 
       item.should.be.rejected;
     });
@@ -278,8 +266,7 @@ describe('Cache', () => {
   });
 
   describe('remove', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -311,8 +298,7 @@ describe('Cache', () => {
   });
 
   describe('isItemValid', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({

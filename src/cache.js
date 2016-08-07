@@ -42,7 +42,7 @@ export default class Cache {
     return new Promise((resolve, reject) => {
       if (!this.isSupported) { reject(); }
 
-      let _item = localStorage.getItem(`${this.cachePrefix}-${key}`);
+      const _item = localStorage.getItem(`${this.cachePrefix}-${key}`);
 
       if (_item === null && defaultValue !== undefined) {
         this.set(defaultValue, 'plain', key);
@@ -96,7 +96,7 @@ export default class Cache {
     if (!this.isSupported) { return false; }
     if (singularBy) { this.dedupe(singularBy); }
 
-    let cached = {
+    const cached = {
       now: +new Date(),
       url: key,
       code: code,
@@ -115,7 +115,7 @@ export default class Cache {
   flush() {
     if (!this.isSupported) { return false; }
 
-    for (let key in localStorage) {
+    for (const key in localStorage) {
       if (key.indexOf(this.cachePrefix) >= 0) {
         this.log.log(`Removing item ${key} requested by flush.`);
 
@@ -127,7 +127,7 @@ export default class Cache {
   }
 
   supported() {
-    let item = '__dactylographsy__feature-detection';
+    const item = '__dactylographsy__feature-detection';
 
     try {
       localStorage.setItem(item, item);
@@ -142,13 +142,12 @@ export default class Cache {
   }
 
   dedupe(singularBy) {
-    for (let key in localStorage) {
+    for (const key in localStorage) {
       const dactylographsyItem = key.indexOf(this.cachePrefix) >= 0;
-      let item;
 
       if (!dactylographsyItem) { continue; }
 
-      item = JSON.parse(localStorage.getItem(key));
+      const item = JSON.parse(localStorage.getItem(key));
 
       if (
         ( (typeof singularBy === 'string') && (typeof item.singularBy === 'string') ) &&
