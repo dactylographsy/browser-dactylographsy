@@ -1,7 +1,7 @@
 /* globals module */
 module.exports = {
   options: {
-    configFile: 'eslint.json'
+    configFile: '.eslintrc'
   },
   target: [
     '<%= paths.src.lint %>',
