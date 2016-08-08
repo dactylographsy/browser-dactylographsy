@@ -162,10 +162,25 @@ describe('Injector', () => {
       js,
       injector,
       cache,
-      code;
+      code,
+      originalEvent;
 
     before(() => {
       cache = new Cache();
+
+      (function () {
+        function CustomEvent ( event, params ) {
+          params = params || { bubbles: false, cancelable: false, detail: undefined };
+          var evt = document.createEvent( 'CustomEvent' );
+          evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+          return evt;
+        }
+
+        CustomEvent.prototype = window.Event.prototype;
+        originalEvent = window.Event;
+        window.Event = CustomEvent;
+      })();
+
     });
 
     beforeEach(() => {
@@ -186,7 +201,11 @@ describe('Injector', () => {
       });
     });
 
-    describe.only('with cached and uncached dependencies', () => {
+    after(() => {
+      window.Event = originalEvent;
+    })
+
+    describe('with cached and uncached dependencies', () => {
       describe('CSS', () => {
         let urls;
 
@@ -293,18 +312,17 @@ describe('Injector', () => {
           };
         });
 
-        xit('should inject multiple assets some existing some not as expected', () => {
+        it('should inject multiple assets some existing some not as expected', () => {
           return Promise.all([js.tags(jsUrls), css.tags(cssUrls)]).then(tags => {
             injector.injectIntoDOM(tags);
 
             expect(domUtils.findJsByDataUrl(jsUrls.printed)).to.have.length.above(0);
-            expect(domUtils.findCssByDataUrl(cssUrls.printed)).to.have.length.above(0);
 
             let errorEvent = new Event('error');
             domUtils.findJsByDataUrl(jsUrls.printed)[0].dispatchEvent(errorEvent);
 
             expect(domUtils.findJsByDataUrl(jsUrls.raw)).to.have.length.above(0);
-            expect(domUtils.findCssByDataUrl(cssUrls.raw)).to.have.length.equal(0);
+            expect(domUtils.findCssByDataUrl(cssUrls.printed)).to.have.length.above(0);
           })
         });
       });
