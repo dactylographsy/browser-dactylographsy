@@ -120,6 +120,28 @@ export default class Injector {
   }
 
   injectIntoDOM(dependencies, idx = 0, type = null) {
+    const inject = (elem, type) => {
+      if (this.injectInto) {
+        this.log.info(`Injecting ${type} tag`, elem);
+
+        this.injectInto.appendChild(elem);
+      }
+    };
+
+    const next = (dependencies, idx) => {
+      this.injectIntoDOM(dependencies, ++idx);
+    };
+
+    const fallback = (dependencies, idx, type) => {
+      if (type !== 'raw') {
+          this.injectIntoDOM(dependencies, idx, 'raw');
+      } else {
+        this.injectIntoDOM(dependencies, ++idx);
+
+        this.log.error('Failed loading dependency as raw', elem);
+      }
+    };
+
     if (idx >= dependencies.length) { return; }
 
     // inject order: explicitly provided < cached in local storage < printed
@@ -129,35 +151,38 @@ export default class Injector {
 
     if (elem === undefined) { return; }
     else if (type === 'printed') {
-      if (this.injectInto) {
-        this.log.info(`Injecting ${type} tag:`, elem);
+      if (elem instanceof HTMLLinkElement) {
+        let request = new Ajax().head(elem.href);
 
-        this.injectInto.appendChild(elem);
+        request
+          .then(() => {
+            inject(elem, type);
+            next(dependencies, idx);
+          })
+          .catch(() => {
+            fallback(dependencies, idx, type);
+          });
+
+      } else {
+        inject(elem, type);
+
+        elem.addEventListener('load', () => {
+          next(dependencies, idx);
+        });
+
+        // fallback in case printed tag cannot be loaded
+        elem.addEventListener('error', () => {
+          fallback(dependencies, idx, type);
+        });
+
       }
 
-      elem.addEventListener('load', () => {
-        this.injectIntoDOM(dependencies, ++idx);
-      });
+    } else if (type === 'cached' || type === 'raw') {
+      inject(elem, type);
+      next(dependencies, idx);
 
-      // fallback in case printed tag cannot be loaded
-      elem.addEventListener('error', () => {
-        if (type !== 'raw') {
-          this.injectIntoDOM(dependencies, idx, 'raw');
-        } else {
-          this.injectIntoDOM(dependencies, ++idx);
-
-          this.log.error('Failed loading dependency as raw', elem);
-        }
-      });
-    } else {
-      if (this.injectInto) {
-        this.log.info(`Injecting ${type} tag`, elem);
-
-        this.injectInto.appendChild(elem);
-      }
-
-      this.injectIntoDOM(dependencies, ++idx);
     }
+
   };
 
   basename(path) {

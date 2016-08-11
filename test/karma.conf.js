@@ -5,7 +5,7 @@ module.exports = function(config) {
     frameworks: ['mocha'],
     files: [
       'test/src/**/*.spec.js', {
-        pattern: 'test/src/fixtures/**/*.json',
+        pattern: 'test/src/fixtures/**/*',
         watched: true,
         served: true,
         included: false

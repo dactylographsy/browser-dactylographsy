@@ -6,6 +6,24 @@ export class DOMUtil {
     return document.querySelectorAll(`script[data-dactylographsy-url="${url}"]`);
   }
 
+  eventuallyFindCssByDataUrl(url) {
+    return new Promise((resolve, reject) => {
+      let interval = window.setInterval(() => {
+        let link = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`);
+
+        if (link.length) {
+          window.clearInterval(interval);
+          resolve(link);
+        }
+      }, 50);
+
+      window.setTimeout(() => {
+        window.clearInterval(interval);
+        reject();
+      }, 2000);
+    });
+  }
+
   findCssByDataUrl(url) {
     let
       nodes = [],

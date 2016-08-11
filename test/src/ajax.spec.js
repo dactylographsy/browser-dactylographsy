@@ -62,4 +62,52 @@ describe('Ajax', () => {
       });
     });
   });
+
+  describe('head', () => {
+    it('should resolve the promise when checking a file', () => {
+      let request = new Ajax().head(fixtureUrl);
+
+      request.should.be.fulfilled;
+    });
+
+    it('should resolve the promise with properties xhr url and text', () => {
+      let request = new Ajax().head(fixtureUrl);
+
+      request.should.to.eventually.have.property('xhr');
+      request.should.to.eventually.have.property('url');
+      request.should.to.eventually.have.property('text');
+    });
+
+    it('should expose the url on resolving the promise', () => {
+      let request = new Ajax().head(fixtureUrl);
+
+      request.then(result => {
+        chai.expect(result.url).to.endsWith(fixtureUrl);
+      });
+    });
+
+    it('should not contain any data', () => {
+      let request = new Ajax().head(fixtureUrl);
+
+      request.then(result => {
+        chai.expect(result.text).to.be.undefined;
+      });
+    });
+
+    it('should reject then promise when not finding a file', () => {
+      let request = new Ajax().head(fixtureUrl + '--');
+
+      request.should.be.rejected;
+    });
+
+    it('should set the withCredentials flag on the xhr', () => {
+      let request = new Ajax().head(fixtureUrl, {
+        withCredentials: true
+      });
+
+      request.then(result => {
+        result.xhr.withCredentials.should.be.true;
+      });
+    });
+  });
 });

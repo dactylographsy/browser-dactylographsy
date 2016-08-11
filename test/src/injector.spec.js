@@ -210,9 +210,9 @@ describe('Injector', () => {
         let urls;
 
         before(() => {
-          code = 'foo { color: blue}';
+          code = 'body { background-color: mediumseagreen; }';
           urls = {
-            printed: 'hashed-css-inject.css',
+            printed: 'base/test/src/fixtures/raw-css-inject.css',
             raw: 'raw-css-inject.css'
           };
         });
@@ -222,19 +222,19 @@ describe('Injector', () => {
 
           return tags.then(tags => {
             injector.injectIntoDOM([tags]);
-            expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
+            expect(domUtils.eventuallyFindCssByDataUrl(urls.printed)).to.eventually.have.length.above(0);
           });
         });
 
         it('should inject fallback to non-printed css on error', () => {
-          let tags = css.tags(urls);
+          let tags = css.tags({
+            printed: 'printed-css-inject.css',
+            raw: 'base/test/src/fixtures/raw-css-inject.css'
+          });
 
           return tags.then(tags => {
             injector.injectIntoDOM([tags]);
-            let errorEvent = new Event('error');
-            domUtils.findCssByDataUrl(urls.printed)[0].dispatchEvent(errorEvent);
-
-            expect(domUtils.findCssByDataUrl(urls.raw)).to.have.length.above(0);
+            expect(domUtils.eventuallyFindCssByDataUrl(urls.raw)).to.eventually.have.length.above(0);
 
           });
         });
@@ -304,10 +304,10 @@ describe('Injector', () => {
         before(() => {
           cssUrls = {
             printed: 'hashed-css-inject.css',
-            raw: 'raw-css-inject.css'
+            raw: 'base/test/src/fixtures/raw-css-inject.css'
           };
           jsUrls = {
-            printed: 'hashed-js-inject.js',
+            printed: 'base/test/src/fixtures/hashed-js-inject.js',
             raw: 'raw-js-inject.js'
           };
         });
@@ -318,11 +318,7 @@ describe('Injector', () => {
 
             expect(domUtils.findJsByDataUrl(jsUrls.printed)).to.have.length.above(0);
 
-            let errorEvent = new Event('error');
-            domUtils.findJsByDataUrl(jsUrls.printed)[0].dispatchEvent(errorEvent);
-
-            expect(domUtils.findJsByDataUrl(jsUrls.raw)).to.have.length.above(0);
-            expect(domUtils.findCssByDataUrl(cssUrls.printed)).to.have.length.above(0);
+            expect(domUtils.eventuallyFindCssByDataUrl(cssUrls.raw)).to.eventually.have.length.above(0);
           })
         });
       });

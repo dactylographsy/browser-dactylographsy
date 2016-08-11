@@ -4,16 +4,24 @@ export default class Ajax {
   }
 
   get(url, options = {}) {
+    return this.request(url, options);
+  }
+
+  head(url, options = {}) {
+    return this.request(url, options, 'HEAD');
+  }
+
+  request(url, options = {}, method = 'GET') {
     return new Promise((resolve, reject) => {
       let xhr = new XMLHttpRequest();
 
       if ('withCredentials' in xhr) {
         // XHR for Chrome/Firefox/Opera/Safari.
-        xhr.open('GET', url, true);
+        xhr.open(method, url, true);
       } else if (typeof XDomainRequest !== 'undefined') {
         // XDomainRequest for IE.
         xhr = new XDomainRequest();
-        xhr.open('GET', url);
+        xhr.open(method, url);
       } else {
         // CORS not supported.
         xhr = null;
