@@ -1,1 +1,1 @@
-console.log('foo bar hoorah!');
+console.log('loaded correct js fixture');
