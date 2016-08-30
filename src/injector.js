@@ -152,7 +152,7 @@ export default class Injector {
     if (elem === undefined) { return; }
     else if (type === 'printed') {
       if (elem instanceof HTMLLinkElement) {
-        let request = new Ajax().head(elem.href);
+        let request = new Ajax().get(elem.href);
 
         request
           .then(() => {
