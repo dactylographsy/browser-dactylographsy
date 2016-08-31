@@ -8,20 +8,16 @@ chai.use(sinonChai);
 chai.use(chaiAsPromised);
 
 describe('Cache', () => {
-  beforeEach(function() {
-  });
+  beforeEach(function() {});
 
   describe('supported', () => {
     it('should indicate if local storage is not supported', () => {
-      let
-        cache,
-        setItem = Storage.prototype.setItem;
+      const cache = new Cache();;
+      const setItem = Storage.prototype.setItem;
 
       Storage.prototype.setItem = function() {
         throw false;
       };
-
-      cache = new Cache();
 
       cache.supported().should.be.false;
 
@@ -29,15 +25,12 @@ describe('Cache', () => {
     });
 
     it('should indicate if local storage is supported', () => {
-      let
-        cache,
-        setItem = Storage.prototype.setItem,
-        removeItem = Storage.prototype.removeItem;
+      const cache = new Cache();;
+      const setItem = Storage.prototype.setItem;
+      const removeItem = Storage.prototype.removeItem;
 
       Storage.prototype.setItem = function() {};
       Storage.prototype.removeItem = function() {};
-
-      cache = new Cache();
 
       cache.supported().should.be.true;
 
@@ -56,44 +49,40 @@ describe('Cache', () => {
     });
 
     it('should allow specifying a custom cache prefix', () => {
-      const
-        prefix = '__karma-spec__',
-        cache = new Cache({
-          enableLogging: false,
-          cachePrefix: prefix
-        });
+      const prefix = '__karma-spec__';
+      const cache = new Cache({
+        enableLogging: false,
+        cachePrefix: prefix
+      });
 
       cache.getPrefix().should.be.equal(prefix);
     });
 
     it('should allow specifying an app prefix without an cache prefix', () => {
-      const
-        prefix = '__karma-runner__',
-        cache = new Cache({
-          enableLogging: false,
-          appPrefix: prefix
-        });
+      const prefix = '__karma-runner__';
+      const cache = new Cache({
+        enableLogging: false,
+        appPrefix: prefix
+      });
 
       cache.getPrefix().should.be.equal(`__dactylographsy--${prefix}`);
     });
 
     it('should allow specifying an app prefix with an cache prefix', () => {
-      const
-        appPrefix = '__karma-runner__',
-        cachePrefix = 'karma-spec',
-        cache = new Cache({
-          enableLogging: false,
-          appPrefix: appPrefix,
-          cachePrefix: cachePrefix
-        });
+      const appPrefix = '__karma-runner__';
+      const cachePrefix = 'karma-spec';
+      const cache = new Cache({
+        enableLogging: false,
+        appPrefix: appPrefix,
+        cachePrefix: cachePrefix
+      });
 
       cache.getPrefix().should.be.equal(`${cachePrefix}--${appPrefix}`);
     });
   });
 
   describe('set', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -104,8 +93,7 @@ describe('Cache', () => {
     });
 
     it('should flag items with a date', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
       item.now.should.be.an.number;
@@ -113,24 +101,21 @@ describe('Cache', () => {
     });
 
     it('should flag items with the type', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
       item.type.should.be.equal('string');
     });
 
     it('should flag items with the url', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
       item.url.should.be.equal('karma-spec.com');
     });
 
     it('should save the value as code', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
       item.code.should.be.equal('foo');
@@ -150,8 +135,7 @@ describe('Cache', () => {
   });
 
   describe('has', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -162,8 +146,7 @@ describe('Cache', () => {
     });
 
     it('should indicate when finding an entry', () => {
-      const
-        item = cache.set('foo', 'string', 'karma-spec.com');
+      const item = cache.set('foo', 'string', 'karma-spec.com');
 
       item.should.be.an.object;
 
@@ -176,9 +159,8 @@ describe('Cache', () => {
   });
 
   describe('flush', () => {
-    var
-      cache1,
-      cache2;
+    let cache1;
+    let cache2;
 
     beforeEach(() => {
       cache1 = new Cache({
@@ -194,9 +176,8 @@ describe('Cache', () => {
     });
 
     it('should flush the entire cache scoped to the prefix', () => {
-      const
-        item1 = cache1.set('foo', 'string', 'karma-spec.com'),
-        item2 = cache2.set('foo', 'string', 'karma-spec.com');
+      const item1 = cache1.set('foo', 'string', 'karma-spec.com');
+      const item2 = cache2.set('foo', 'string', 'karma-spec.com');
 
       item1.should.be.an.object;
       item2.should.be.an.object;
@@ -214,8 +195,7 @@ describe('Cache', () => {
   });
 
   describe('get', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -260,23 +240,17 @@ describe('Cache', () => {
     });
 
     it('should resolve the promise when validation is requested and passes', () => {
-      let
-        item;
-
       cache.set('foo', 'string', 'karma-spec.com');
 
-      item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb13');
+      const item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb13');
 
       item.should.be.resolved;
     });
 
     it('should reject the promise when validation is requested and fails', () => {
-      let
-        item;
-
       cache.set('foo', 'string', 'karma-spec.com');
 
-      item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb14');
+      const item = cache.get('karma-spec.com', undefined, 'cdc735c00a1028854ab9e7d568156a293a92fb14');
 
       item.should.be.rejected;
     });
@@ -291,8 +265,7 @@ describe('Cache', () => {
   });
 
   describe('remove', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({
@@ -324,8 +297,7 @@ describe('Cache', () => {
   });
 
   describe('isItemValid', () => {
-    var
-      cache;
+    let cache;
 
     beforeEach(() => {
       cache = new Cache({

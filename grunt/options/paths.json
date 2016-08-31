@@ -1,9 +1,12 @@
 {
   "src": {
-    "lint": "tasks/**/*.js",
+    "lint": "src/**/*.js",
     "js": "src/"
   },
   "dist": {
     "js": "dist/"
+  },
+  "test": {
+    "lint": "test/**/*.js"
   }
 }

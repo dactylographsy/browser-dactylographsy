@@ -1,11 +1,16 @@
-import {Css, Js} from './dom';
+import {
+  Css,
+  Js
+} from './dom';
 import Ajax from './ajax';
 import Log from './log';
 import getUrlParam from './url';
 
 export class Manifest {
   constructor(url, config) {
-    const { enableLogging = false } = config;
+    const {
+      enableLogging = false
+    } = config;
 
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
@@ -18,7 +23,7 @@ export class Manifest {
     return new Ajax()
       .get(this.url)
       .then(response => {
-        let {
+        const {
           text: responseText,
           url: responseUrl
         } = response;
@@ -45,7 +50,9 @@ export default class Injector {
     this.manifests = {};
     this.injectInto = injectInto;
 
-    manifests.forEach(manifest => { this.manifests[manifest.package] = manifest; });
+    manifests.forEach(manifest => {
+      this.manifests[manifest.package] = manifest;
+    });
 
     this.options = options;
     this.prefix = options.prefix;
@@ -53,10 +60,9 @@ export default class Injector {
   }
 
   inject() {
-    const
-      flatten = list => list.reduce(
-        (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
-      );
+    const flatten = list => list.reduce(
+      (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
+    );
 
     return Promise.all(
       this.order.map(_package => {
@@ -78,15 +84,11 @@ export default class Injector {
   }
 
   injectManifest(manifest) {
-    let
-      hashes = Object.keys(manifest.hashes);
+    const hashes = Object.keys(manifest.hashes);
 
     return Promise.all(hashes.map(hash => {
-      let
-        dependency = manifest.hashes[hash],
-        rootUrl;
-
-      rootUrl = [manifest.rootUrl, manifest.packageUrl].filter(_url => {
+      const dependency = manifest.hashes[hash];
+      const rootUrl = [manifest.rootUrl, manifest.packageUrl].filter(_url => {
         return (
           _url !== undefined &&
           _url !== null
@@ -134,7 +136,7 @@ export default class Injector {
 
     const fallback = (dependencies, idx, type) => {
       if (type !== 'raw') {
-          this.injectIntoDOM(dependencies, idx, 'raw');
+        this.injectIntoDOM(dependencies, idx, 'raw');
       } else {
         this.injectIntoDOM(dependencies, ++idx);
 
@@ -142,17 +144,20 @@ export default class Injector {
       }
     };
 
-    if (idx >= dependencies.length) { return; }
+    if (idx >= dependencies.length) {
+      return;
+    }
 
     // inject order: explicitly provided < cached in local storage < printed
     // raw only as fallback if printed fails
-    type = (dependencies[idx][type] && type) || (dependencies[idx]['cached'] && 'cached') || (dependencies[idx]['printed'] && 'printed');
+    type = (dependencies[idx][type] && type) || (dependencies[idx]['cached'] && 'cached') ||  (dependencies[idx]['printed'] && 'printed');
     const elem = dependencies[idx][type];
 
-    if (elem === undefined) { return; }
-    else if (type === 'printed') {
+    if (elem === undefined) {
+      return;
+    } else if (type === 'printed') {
       if (elem instanceof HTMLLinkElement) {
-        let request = new Ajax().get(elem.href);
+        const request = new Ajax().get(elem.href);
 
         request
           .then(() => {
@@ -177,7 +182,7 @@ export default class Injector {
 
       }
 
-    } else if (type === 'cached' || type === 'raw') {
+    } else if (type === 'cached' ||  type === 'raw') {
       inject(elem, type);
       next(dependencies, idx);
 
@@ -190,13 +195,10 @@ export default class Injector {
   }
 
   urls(dependency, rootUrl = '') {
-    let
-      basename = this.basename(dependency.file),
-      url;
-
+    const basename = this.basename(dependency.file);
     // Filter out potential null values
     // passed in as various parts of an url.
-    url = [this.prefix, rootUrl, dependency.path].filter(_url => {
+    const url = [this.prefix, rootUrl, dependency.path].filter(_url => {
       return (
         _url !== undefined &&
         _url !== null

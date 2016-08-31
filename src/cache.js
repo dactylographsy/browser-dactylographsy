@@ -4,9 +4,10 @@ import stringHash from 'string-hash';
 
 export default class Cache {
   constructor(options = {}) {
-    const
-      defaultPrefix = '__dactylographsy',
-      { enableLogging = false } = options;
+    const defaultPrefix = '__dactylographsy';
+    const {
+      enableLogging = false
+    } = options;
 
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
@@ -28,7 +29,9 @@ export default class Cache {
   }
 
   isItemValid(code, hash) {
-    if (typeof code !== 'string') { return false; }
+    if (typeof code !== 'string') {
+      return false;
+    }
 
     return (
       stringHash(code) === hash
@@ -41,10 +44,11 @@ export default class Cache {
 
   get(key, defaultValue, hash = false) {
     return new Promise((resolve, reject) => {
-      if (!this.isSupported) { reject(); }
+      if (!this.isSupported) {
+        reject();
+      }
 
-      let
-        _item = localStorage.getItem(`${this.cachePrefix}-${key}`);
+      const _item = localStorage.getItem(`${this.cachePrefix}-${key}`);
 
       if (_item === null && defaultValue !== undefined) {
         this.set(defaultValue, 'plain', key);
@@ -55,8 +59,7 @@ export default class Cache {
       }
 
       if (_item !== null && hash !== false) {
-        const
-          _parsed = this.parse(_item);
+        const _parsed = this.parse(_item);
 
         this.log.info(`Found item with key: ${key} in cache which needs validation...`);
 
@@ -84,27 +87,35 @@ export default class Cache {
   }
 
   has(key) {
-    if (!this.isSupported) { return false; }
+    if (!this.isSupported) {
+      return false;
+    }
 
     return localStorage.getItem(`${this.cachePrefix}-${key}`) !== null;
   }
 
   remove(key) {
-    if (!this.isSupported) { return false; }
+    if (!this.isSupported) {
+      return false;
+    }
 
     return localStorage.removeItem(`${this.cachePrefix}-${key}`);;
   }
 
   set(code, type, key, singularBy = false) {
-    if (!this.isSupported) { return false; }
-    if (singularBy) { this.dedupe(singularBy); }
+    if (!this.isSupported) {
+      return false;
+    }
+    if (singularBy) {
+      this.dedupe(singularBy);
+    }
 
-    let cached = {
+    const cached = {
       now: +new Date(),
       url: key,
       code: code,
       type: type,
-      singularBy: ( typeof singularBy === 'string' ) ? singularBy : undefined
+      singularBy: (typeof singularBy === 'string') ? singularBy : undefined
     };
 
     localStorage.setItem(
@@ -116,9 +127,11 @@ export default class Cache {
   }
 
   flush() {
-    if (!this.isSupported) { return false; }
+    if (!this.isSupported) {
+      return false;
+    }
 
-    for (let key in localStorage) {
+    for (const key in localStorage) {
       if (key.indexOf(this.cachePrefix) >= 0) {
         this.log.log(`Removing item ${key} requested by flush.`);
 
@@ -130,15 +143,14 @@ export default class Cache {
   }
 
   supported() {
-    let
-      item = '__dactylographsy__feature-detection';
+    const item = '__dactylographsy__feature-detection';
 
     try {
       localStorage.setItem(item, item);
       localStorage.removeItem(item);
 
       return true;
-    } catch(e) {
+    } catch (e) {
       this.log.warn('Localstorage not supported in browser - no caching!');
 
       return false;
@@ -146,18 +158,17 @@ export default class Cache {
   }
 
   dedupe(singularBy) {
-    for (let key in localStorage) {
-      const
-        dactylographsyItem = key.indexOf(this.cachePrefix) >= 0;
-      let
-        item;
+    for (const key in localStorage) {
+      const dactylographsyItem = key.indexOf(this.cachePrefix) >= 0;
 
-      if (!dactylographsyItem) { continue; }
+      if (!dactylographsyItem) {
+        continue;
+      }
 
-      item = JSON.parse(localStorage.getItem(key));
+      const item = JSON.parse(localStorage.getItem(key));
 
       if (
-        ( (typeof singularBy === 'string') && (typeof item.singularBy === 'string') ) &&
+        ((typeof singularBy === 'string') && (typeof item.singularBy === 'string')) &&
         item.singularBy === singularBy
       ) {
         this.log.log(`Deduping by ${singularBy} before adding dupe in ${key}.`);

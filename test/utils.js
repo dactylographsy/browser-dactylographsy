@@ -8,8 +8,8 @@ export class DOMUtil {
 
   eventuallyFindCssByDataUrl(url) {
     return new Promise((resolve, reject) => {
-      let interval = window.setInterval(() => {
-        let link = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`);
+      const interval = window.setInterval(() => {
+        const link = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`);
 
         if (link.length) {
           window.clearInterval(interval);
@@ -25,10 +25,9 @@ export class DOMUtil {
   }
 
   findCssByDataUrl(url) {
-    let
-      nodes = [],
-      styles = document.querySelectorAll(`style[data-dactylographsy-url="${url}"]`),
-      links = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`)
+    const nodes = [];
+    const styles = document.querySelectorAll(`style[data-dactylographsy-url="${url}"]`);
+    const links = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`)
 
     for (var i = 0; i < styles.length; i++) {
       nodes.push(styles[i]);
@@ -50,10 +49,9 @@ export class DOMUtil {
   }
 
   findAllCss() {
-    let
-      nodes = [],
-      styles = document.querySelectorAll(`style[data-dactylographsy-url]`),
-      links = document.querySelectorAll(`link[data-dactylographsy-url]`)
+    const nodes = [];
+    const styles = document.querySelectorAll('style[data-dactylographsy-url]');
+    const links = document.querySelectorAll('link[data-dactylographsy-url]')
 
     for (var i = 0; i < styles.length; i++) {
       nodes.push(styles[i]);
@@ -67,25 +65,22 @@ export class DOMUtil {
   }
 
   findAllJs() {
-    return document.querySelectorAll(`script[data-dactylographsy-url]`);
+    return document.querySelectorAll('script[data-dactylographsy-url]');
   }
 
   removeAll() {
-    let
-      nodes = [],
-      scripts = this.findAllJs(),
-      styles = this.findAllCss();
+    const nodes = [];
+    const scripts = this.findAllJs();
+    const styles = this.findAllCss();
 
     for (var i = 0; i < styles.length; i++) {
-      let
-        style = styles[i];
+      const style = styles[i];
 
       style.parentNode.removeChild(style);
     }
 
     for (var i = 0; i < scripts.length; i++) {
-      let
-        script = scripts[i];
+      const script = scripts[i];
 
       script.parentNode.removeChild(script);
     }

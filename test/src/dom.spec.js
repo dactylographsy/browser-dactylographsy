@@ -1,18 +1,22 @@
-import { Css, Js } from '../../src/dom';
+import {
+  Css,
+  Js
+} from '../../src/dom';
 import Cache from '../../src/cache';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import chaiAsPromised from 'chai-as-promised';
-import { DOMUtil } from '../utils';
+import {
+  DOMUtil
+} from '../utils';
 
 chai.should();
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 
-let
-  fixtureUrl = 'base/test/src/fixtures/code.js',
-  domUtils,
-  expect;
+const fixtureUrl = 'base/test/src/fixtures/code.js';
+let domUtils;
+let expect;
 
 describe('DOM', () => {
   let rootElem;
@@ -26,8 +30,7 @@ describe('DOM', () => {
 
   describe('Css', () => {
     describe('API', () => {
-      let
-        css;
+      let css;
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -55,13 +58,12 @@ describe('DOM', () => {
     });
 
     describe('tags', () => {
-      let
-        urls = {
-          printed: 'hashed-css-inject.css',
-          raw: 'raw-css-inject.css'
-        },
-        css,
-        code = '.foo {color: blue}';
+      const urls = {
+        printed: 'hashed-css-inject.css',
+        raw: 'raw-css-inject.css'
+      };
+      const code = '.foo {color: blue}';
+      let css;
 
       describe('an uncached file', () => {
         beforeEach(() => {
@@ -73,8 +75,7 @@ describe('DOM', () => {
         });
 
         it('should resolve tags with only the printed and the unprinted version', () => {
-          let
-            tags = css.tags(urls);
+          const tags = css.tags(urls);
 
           tags.should.be.fulfilled;
 
@@ -93,7 +94,7 @@ describe('DOM', () => {
       });
 
       describe('with cacheInLocalStorage disabled', () => {
-        var cache = new Cache();
+        const cache = new Cache();
 
         it('should not cache the file in localStorage', () => {
           domUtils.removeAll();
@@ -103,7 +104,7 @@ describe('DOM', () => {
             cacheInLocalStorage: false
           });
 
-          let cachePromise = css.ensureCache(urls.printed);
+          const cachePromise = css.ensureCache(urls.printed);
 
           return cachePromise.then(res => {
             expect(res).to.equal('Caching in localStorage is disabled');
@@ -112,8 +113,7 @@ describe('DOM', () => {
       });
 
       describe('a cached file', () => {
-        var
-          cache = new Cache();
+        const cache = new Cache();
 
         beforeEach(() => {
           domUtils.removeAll();
@@ -128,8 +128,7 @@ describe('DOM', () => {
         it('should resolve with tag with code inline whenever cached', () => {
           cache.set(code, 'css', urls.printed);
 
-          let
-            tags = css.tags(urls);
+          const tags = css.tags(urls);
 
           tags.should.be.fulfilled;
 
@@ -147,12 +146,11 @@ describe('DOM', () => {
         it('should not resolve with an invalid tag from cache', () => {
           cache.set(code, 'css', urls.printed);
 
-          let
-            tags = css.tags({
-              printed: urls.printed,
-              raw: urls.raw,
-              id: '123-abc'
-            });
+          const tags = css.tags({
+            printed: urls.printed,
+            raw: urls.raw,
+            id: '123-abc'
+          });
 
           tags.should.be.fulfilled;
 
@@ -166,9 +164,8 @@ describe('DOM', () => {
     });
 
     describe('prepareWithText', () => {
-      var
-        css,
-        code = '.foo {color: red}';
+      let css;
+      const code = '.foo {color: red}';
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -179,15 +176,14 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when preparing', () => {
-        let preparation = css.prepareWithText(code, 'css-promise-check.js');
+        const preparation = css.prepareWithText(code, 'css-promise-check.js');
 
         preparation.should.be.fulfilled;
       });
 
       it('should create a style-tag when preparing', () => {
-        let
-          url = 'css-tag-check.css',
-          preparation = css.prepareWithText(code, url);
+        const url = 'css-tag-check.css';
+        const preparation = css.prepareWithText(code, url);
 
         return preparation.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -197,9 +193,8 @@ describe('DOM', () => {
       });
 
       it('should flag the tag with a data-url', () => {
-        let
-          url = 'css-data-url-check.css',
-          preparation = css.prepareWithText(code, url);
+        const url = 'css-data-url-check.css';
+        const preparation = css.prepareWithText(code, url);
 
         return preparation.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -209,9 +204,8 @@ describe('DOM', () => {
       });
 
       it('should inject the code into the script-tag', () => {
-        let
-          url = 'css-code-check.css',
-          preparation = css.prepareWithText(code, url);
+        const url = 'css-code-check.css';
+        const preparation = css.prepareWithText(code, url);
 
         return preparation.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -222,8 +216,7 @@ describe('DOM', () => {
     });
 
     describe('prepareWithUrl', () => {
-      var
-        css;
+      let css;
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -234,21 +227,19 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when creating tags straight away', () => {
-        let
-          urls = {
-            raw: 'promise-check.css'
-          },
-          preparations = css.prepareWithUrl(urls);
+        const urls = {
+          raw: 'promise-check.css'
+        };
+        const preparations = css.prepareWithUrl(urls);
 
         preparations.should.be.fulfilled;
       });
 
       it('should create a style-tag', () => {
-        let
-          urls = {
-            raw: 'css-tag-check.css'
-          },
-          preparations = css.prepareWithUrl(urls);
+        const urls = {
+          raw: 'css-tag-check.css'
+        };
+        const preparations = css.prepareWithUrl(urls);
 
         return preparations.then((tags) => {
           expect(tags.printed).to.be.defined;
@@ -261,11 +252,10 @@ describe('DOM', () => {
       });
 
       it('should should flag the tag with a data-url', () => {
-        let
-          urls = {
-            raw: 'css-data-url-check.css'
-          },
-          preparations = css.prepareWithUrl(urls);
+        const urls = {
+          raw: 'css-data-url-check.css'
+        };
+        const preparations = css.prepareWithUrl(urls);
 
         return preparations.then((tags) => {
           domUtils.injectTag(tags.raw, document.querySelector('body'));
@@ -275,11 +265,10 @@ describe('DOM', () => {
       });
 
       it('should should set the href on the script-tag', () => {
-        let
-          urls = {
-            raw: 'js-src-check.css'
-          },
-          preparations = css.prepareWithUrl(urls);
+        const urls = {
+          raw: 'js-src-check.css'
+        };
+        const preparations = css.prepareWithUrl(urls);
 
         return preparations.then((tags) => {
           domUtils.injectTag(tags.raw, document.querySelector('body'));
@@ -290,10 +279,10 @@ describe('DOM', () => {
     });
   });
 
+
   describe('Js', () => {
     describe('API', () => {
-      let
-        js;
+      let js;
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -321,13 +310,12 @@ describe('DOM', () => {
     });
 
     describe('tags', () => {
-      var
-        urls = {
-          printed: 'hashed-js-inject.js',
-          raw: 'raw-js-inject.js'
-        },
-        js,
-        code = 'var a = "b"';
+      const urls = {
+        printed: 'hashed-js-inject.js',
+        raw: 'raw-js-inject.js'
+      };
+      const code = 'var a = "b"';
+      let js;
 
       describe('an uncached file', () => {
         beforeEach(() => {
@@ -339,8 +327,7 @@ describe('DOM', () => {
         });
 
         it('should create tags by with its url', () => {
-          let
-            tags = js.tags(urls);
+          const tags = js.tags(urls);
 
           tags.should.be.fulfilled;
 
@@ -360,7 +347,7 @@ describe('DOM', () => {
       });
 
       describe('with cacheInLocalStorage disabled', () => {
-        var cache = new Cache();
+        const cache = new Cache();
 
         it('should not cache the file in localStorage', () => {
           domUtils.removeAll();
@@ -370,7 +357,7 @@ describe('DOM', () => {
             cacheInLocalStorage: false
           });
 
-          let cachePromise = js.ensureCache(urls.printed);
+          const cachePromise = js.ensureCache(urls.printed);
 
           return cachePromise.then(res => {
             expect(res).to.equal('Caching in localStorage is disabled');
@@ -379,8 +366,7 @@ describe('DOM', () => {
       });
 
       describe('a cached file', () => {
-        var
-          cache = new Cache();
+        const cache = new Cache();
 
         beforeEach(() => {
           domUtils.removeAll();
@@ -395,8 +381,7 @@ describe('DOM', () => {
         it('should create tags with its code inline whenever cached', () => {
           cache.set(code, 'js', urls.printed);
 
-          let
-            tags = js.tags(urls);
+          const tags = js.tags(urls);
 
           tags.should.be.fulfilled;
 
@@ -414,12 +399,11 @@ describe('DOM', () => {
         it('should not create tags with an invalid item from cache', () => {
           cache.set(code, 'js', urls.printed);
 
-          let
-            tags = js.tags({
-              printed: urls.printed,
-              raw: urls.raw,
-              id: '123-abc'
-            });
+          const tags = js.tags({
+            printed: urls.printed,
+            raw: urls.raw,
+            id: '123-abc'
+          });
 
           tags.should.be.fulfilled;
 
@@ -433,9 +417,8 @@ describe('DOM', () => {
     });
 
     describe('prepareWithText', () => {
-      var
-        js,
-        code = 'var a="b";';
+      const code = 'var a="b";';
+      let js;
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -446,17 +429,15 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when preparing', () => {
-        let
-          url = 'promise-check.js',
-          preparation = js.prepareWithText(code, url);
+        const url = 'promise-check.js';
+        const preparation = js.prepareWithText(code, url);
 
         preparation.should.be.fulfilled;
       });
 
       it('should create a script-tag when preparing', () => {
-        let
-          url = 'js-tag-check.js',
-          preparation = js.prepareWithText(code, url);
+        const url = 'js-tag-check.js';
+        const preparation = js.prepareWithText(code, url);
 
         return preparation.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -466,9 +447,8 @@ describe('DOM', () => {
       });
 
       it('should flag the tag with a data-url', () => {
-        let
-          url = 'js-data-url-check.js',
-          preparation = js.prepareWithText(code, url);
+        const url = 'js-data-url-check.js';
+        const preparation = js.prepareWithText(code, url);
 
         return preparation.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -478,9 +458,8 @@ describe('DOM', () => {
       });
 
       it('should inject the code into the script-tag', () => {
-        let
-          url = 'js-code-check.js',
-          preparation = js.prepareWithText(code, url);
+        const url = 'js-code-check.js';
+        const preparation = js.prepareWithText(code, url);
 
         return preparation.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -490,9 +469,8 @@ describe('DOM', () => {
       });
 
       it('should amend an "sourceURL" to injected code', () => {
-        let
-          url = 'js-sourceurl-check.js',
-          preparation = js.prepareWithText(code, url);
+        const url = 'js-sourceurl-check.js';
+        const preparation = js.prepareWithText(code, url);
 
         return preparation.then((tag) => {
           domUtils.injectTag(tag, document.querySelector('body'));
@@ -503,8 +481,7 @@ describe('DOM', () => {
     });
 
     describe('prepareWithUrl', () => {
-      var
-        js;
+      let js;
 
       beforeEach(() => {
         domUtils.removeAll();
@@ -515,21 +492,19 @@ describe('DOM', () => {
       });
 
       it('should resolve the promise when preparing straight away', () => {
-        let
-          urls = {
-            raw: 'promise-check.js'
-          },
-          preparations = js.prepareWithUrl(urls);
+        const urls = {
+          raw: 'promise-check.js'
+        };
+        const preparations = js.prepareWithUrl(urls);
 
         preparations.should.be.fulfilled;
       });
 
       it('should create a script-tag when preparing', () => {
-        let
-          urls = {
-            raw: 'js-tag-check.js'
-          },
-          preparations = js.prepareWithUrl(urls);
+        const urls = {
+          raw: 'js-tag-check.js'
+        };
+        const preparations = js.prepareWithUrl(urls);
 
         return preparations.then((tags) => {
           expect(tags.printed).to.be.defined;
@@ -542,11 +517,10 @@ describe('DOM', () => {
       });
 
       it('should should flag the tag with a data-url', () => {
-        let
-          urls = {
-            raw: 'js-data-url-check.js'
-          },
-          preparations = js.prepareWithUrl(urls);
+        const urls = {
+          raw: 'js-data-url-check.js'
+        };
+        const preparations = js.prepareWithUrl(urls);
 
         return preparations.then((tags) => {
           domUtils.injectTag(tags.raw, document.querySelector('body'));
@@ -556,11 +530,10 @@ describe('DOM', () => {
       });
 
       it('should should set the src on the script-tag', () => {
-        let
-          urls = {
-            raw: 'js-src-check.js'
-          },
-          preparations = js.prepareWithUrl(urls);
+        const urls = {
+          raw: 'js-src-check.js'
+        };
+        const preparations = js.prepareWithUrl(urls);
 
         return preparations.then((tags) => {
           domUtils.injectTag(tags.raw, document.querySelector('body'));
@@ -570,11 +543,10 @@ describe('DOM', () => {
       });
 
       it('should should flag the script not being async', () => {
-        let
-          urls = {
-            raw: 'js-async-check.js'
-          },
-          preparations = js.prepareWithUrl(urls);
+        const urls = {
+          raw: 'js-async-check.js'
+        };
+        const preparations = js.prepareWithUrl(urls);
 
         return preparations.then((tags) => {
           domUtils.injectTag(tags.raw, document.querySelector('body'));

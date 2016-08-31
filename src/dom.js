@@ -5,10 +5,12 @@ import getUrlParam from './url';
 
 export class Js {
   constructor(config = {}) {
+    const {
+        verification = false
+    } = config;
     let {
-      enableLogging = false,
-      verification = false,
-      cacheInLocalStorage = true
+        cacheInLocalStorage = true,
+        enableLogging = false
     } = config;
 
     enableLogging = getUrlParam(
@@ -34,7 +36,7 @@ export class Js {
   }
 
   prepareWithText(text, url) {
-    let script = document.createElement('script');
+    const script = document.createElement('script');
 
     this.log.info(`Creating <script />-tag with text for ${url}.`);
 
@@ -52,9 +54,8 @@ export class Js {
   }
 
   prepareWithUrl(urls, whichUrl = 'printed') {
-    const
-      urlKeys = Object.keys(urls).filter((key) => (['printed', 'raw'].indexOf(key) > -1)),
-      scriptTags = {};
+    const urlKeys = Object.keys(urls).filter((key) => (['printed', 'raw'].indexOf(key) > -1));
+    const scriptTags = {};
 
     urlKeys.forEach((urlKey) => {
       const script = document.createElement('script');
@@ -70,7 +71,9 @@ export class Js {
 
       // Bind `load` listener on script element to cache asset
       script.addEventListener('load', () => {
-          if (urlKey === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
+        if (urlKey === 'printed') {
+          this.ensureCache(url, urls.singularBy, this.cacheDelay);
+        }
       });
 
       script.src = url;
@@ -83,27 +86,33 @@ export class Js {
 
   ensureCache(url, singularBy = false, delay = 0) {
     return new Promise((resolve, reject) => {
-        if (this.cache.has(url)) { return resolve(); }
-        if (!this.cacheInLocalStorage) { return resolve('Caching in localStorage is disabled'); }
+      if (this.cache.has(url)) {
+        return resolve();
+      }
+      if (!this.cacheInLocalStorage) {
+        return resolve('Caching in localStorage is disabled');
+      }
 
-        this.log.info(`Loading JavaScript from ${url} for cache in ${delay}.`);
+      this.log.info(`Loading JavaScript from ${url} for cache in ${delay}.`);
 
-        window.setTimeout(() => {
-          return new Ajax()
-            .get(url)
-            .then(response => {
-              let { text: responseText } = response;
+      window.setTimeout(() => {
+        return new Ajax()
+          .get(url)
+          .then(response => {
+            const {
+              text: responseText
+            } = response;
 
-              this.cache.set(responseText, 'js', url, singularBy);
+            this.cache.set(responseText, 'js', url, singularBy);
 
-              this.log.info(`Loaded JavaScript from ${url} now cached.`);
+            this.log.info(`Loaded JavaScript from ${url} now cached.`);
 
-              resolve();
-            })
-            .catch(() => {
-              this.log.info(`Failed attempting to cache JavaScript from ${url}.`);
-            });
-        }, delay);
+            resolve();
+          })
+          .catch(() => {
+            this.log.info(`Failed attempting to cache JavaScript from ${url}.`);
+          });
+      }, delay);
     });
   }
 
@@ -121,7 +130,9 @@ export class Js {
     ).then(text => {
       return this.prepareWithText(
         text, urls.printed
-      ).then((cached) => ({cached}));
+      ).then((cached) => ({
+        cached
+      }));
     }, () => {
       return this.prepareWithUrl(urls);
     });
@@ -130,10 +141,12 @@ export class Js {
 
 export class Css {
   constructor(config = {}) {
+    const {
+        verification = false
+    } = config;
     let {
-      enableLogging = false,
-      verification = false,
-      cacheInLocalStorage = true
+        cacheInLocalStorage = true,
+        enableLogging = false
     } = config;
 
     enableLogging = getUrlParam(
@@ -159,8 +172,12 @@ export class Css {
 
   ensureCache(url, singularBy = false, delay = 0) {
     return new Promise((resolve, reject) => {
-      if (this.cache.has(url)) { return resolve(); }
-      if (!this.cacheInLocalStorage) { return resolve('Caching in localStorage is disabled'); }
+      if (this.cache.has(url)) {
+        return resolve();
+      }
+      if (!this.cacheInLocalStorage) {
+        return resolve('Caching in localStorage is disabled');
+      }
 
       this.log.info(`Loading CSS from ${url} for cache in ${delay}.`);
 
@@ -168,7 +185,9 @@ export class Css {
         return new Ajax()
           .get(url)
           .then(response => {
-            let { text: responseText } = response;
+            const {
+              text: responseText
+            } = response;
 
             this.cache.set(responseText, 'css', url, singularBy);
 
@@ -183,9 +202,8 @@ export class Css {
   }
 
   prepareWithUrl(urls) {
-    const
-      urlKeys = Object.keys(urls).filter((key) => (['printed', 'raw'].indexOf(key) > -1)),
-      linkTags = {};
+    const urlKeys = Object.keys(urls).filter((key) => (['printed', 'raw'].indexOf(key) > -1));
+    const linkTags = {};
 
     urlKeys.forEach((urlKey) => {
       const link = document.createElement('link');
@@ -201,7 +219,9 @@ export class Css {
 
       // Bind `load` listener on link element to cache asset
       link.addEventListener('load', () => {
-          if (urlKey === 'printed') { this.ensureCache(url, urls.singularBy, this.cacheDelay); }
+        if (urlKey === 'printed') {
+          this.ensureCache(url, urls.singularBy, this.cacheDelay);
+        }
       });
 
       link.href = url;
@@ -213,12 +233,9 @@ export class Css {
   }
 
   prepareWithText(text, url) {
-    let
-      link = document.createElement('link');
+    const link = document.createElement('link');
 
     this.log.info(`Creating <link />-tag with text for url: ${url}.`);
-
-    link = document.createElement('style');
 
     link.setAttribute('data-dactylographsy-url', url);
 
@@ -241,7 +258,9 @@ export class Css {
     ).then(text => {
       return this.prepareWithText(
         text, urls.printed
-      ).then((cached) => ({cached}));
+      ).then((cached) => ({
+        cached
+      }));
     }, () => {
       return this.prepareWithUrl(urls);
     });
