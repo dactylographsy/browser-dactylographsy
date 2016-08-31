@@ -240,6 +240,7 @@ describe('Injector', () => {
 
           return tags.then(tags => {
             injector.injectIntoDOM([tags]);
+
             expect(domUtils.findCssByDataUrl(urls.printed)).to.have.length.above(0);
             expect(domUtils.findCssByDataUrl(urls.printed)[0].innerText).to.equal(code);
           });
@@ -288,8 +289,9 @@ describe('Injector', () => {
 
           return tags.then(tags => {
             injector.injectIntoDOM([tags]);
+
             expect(domUtils.findJsByDataUrl(urls.printed)).to.have.length.above(0);
-            expect(domUtils.findJsByDataUrl(urls.printed)[0].innerHTML).to.contain(code);
+            expect(domUtils.findJsByDataUrl(urls.printed)[0].innerText).to.contain(code);
           });
         });
       });
