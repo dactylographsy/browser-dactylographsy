@@ -10,22 +10,32 @@ export default class Log {
   }
 
   log() {
-    if (this.enabled) { this.console.log(...arguments); }
+    if (this.enabled) {
+      this.console.log(...arguments);
+    }
   }
 
   info() {
-    if (this.enabled) { this.console.info(...arguments); }
+    if (this.enabled) {
+      this.console.info(...arguments);
+    }
   }
 
   warn() {
-    if (this.enabled) { this.console.warn(...arguments); }
+    if (this.enabled) {
+      this.console.warn(...arguments);
+    }
   }
 
   debug() {
-    if (this.enabled) { this.console.debug(...arguments); }
+    if (this.enabled) {
+      this.console.debug(...arguments);
+    }
   }
 
   error() {
-    if (this.enabled) { this.console.error(...arguments); }
+    if (this.enabled) {
+      this.console.error(...arguments);
+    }
   }
 }

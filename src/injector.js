@@ -1,11 +1,16 @@
-import { Css, Js } from './dom';
+import {
+  Css,
+  Js
+} from './dom';
 import Ajax from './ajax';
 import Log from './log';
 import getUrlParam from './url';
 
 export class Manifest {
   constructor(url, config) {
-    const { enableLogging = false } = config;
+    const {
+      enableLogging = false
+    } = config;
 
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
@@ -45,7 +50,9 @@ export default class Injector {
     this.manifests = {};
     this.injectInto = injectInto;
 
-    manifests.forEach(manifest => { this.manifests[manifest.package] = manifest; });
+    manifests.forEach(manifest => {
+      this.manifests[manifest.package] = manifest;
+    });
 
     this.options = options;
     this.prefix = options.prefix;
@@ -54,32 +61,8 @@ export default class Injector {
 
   inject() {
     const flatten = list => list.reduce(
-        (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
-      ),
-      injectIntoDOM = (dependencies, idx = 0) => {
-        const elem = dependencies[idx];
-
-        if (elem === undefined) { return; }
-        else if (elem.getAttribute('data-dactylographsy-uncached-js')) {
-          if (this.injectInto) {
-            this.log.info('Injecting tag:', elem);
-
-            this.injectInto.appendChild(elem);
-          }
-
-          elem.addEventListener('load', () => {
-            injectIntoDOM(dependencies, ++idx);
-          });
-
-          elem.addEventListener('error', () => {
-            injectIntoDOM(dependencies, ++idx);
-          });
-        } else {
-          if (this.injectInto) { this.injectInto.appendChild(elem); }
-
-          injectIntoDOM(dependencies, ++idx);
-        }
-      };
+      (a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []
+    );
 
     return Promise.all(
       this.order.map(_package => {
@@ -94,7 +77,7 @@ export default class Injector {
     ).then(manifests => {
       const dependencies = flatten(manifests);
 
-      injectIntoDOM(dependencies);
+      this.injectIntoDOM(dependencies);
 
       return Promise.resolve(dependencies);
     });
@@ -123,22 +106,89 @@ export default class Injector {
     switch (dependency.extension) {
       case '.css':
         return new Css(
-          undefined,
           this.options
-        ).inject(
+        ).tags(
           this.urls(dependency, rootUrl)
         );
       case '.js':
         return new Js(
-          undefined,
           this.options
-        ).inject(
+        ).tags(
           this.urls(dependency, rootUrl)
         );
       default:
         Promise.resolve(false);
     }
   }
+
+  injectIntoDOM(dependencies, idx = 0, type = null) {
+    const inject = (elem, type) => {
+      if (this.injectInto) {
+        this.log.info(`Injecting ${type} tag`, elem);
+
+        this.injectInto.appendChild(elem);
+      }
+    };
+
+    const next = (dependencies, idx) => {
+      this.injectIntoDOM(dependencies, ++idx);
+    };
+
+    const fallback = (dependencies, idx, type) => {
+      if (type !== 'raw') {
+        this.injectIntoDOM(dependencies, idx, 'raw');
+      } else {
+        this.injectIntoDOM(dependencies, ++idx);
+
+        this.log.error('Failed loading dependency as raw', elem);
+      }
+    };
+
+    if (idx >= dependencies.length) {
+      return;
+    }
+
+    // inject order: explicitly provided < cached in local storage < printed
+    // raw only as fallback if printed fails
+    type = (dependencies[idx][type] && type) || (dependencies[idx]['cached'] && 'cached') ||  (dependencies[idx]['printed'] && 'printed');
+    const elem = dependencies[idx][type];
+
+    if (elem === undefined) {
+      return;
+    } else if (type === 'printed') {
+      if (elem instanceof HTMLLinkElement) {
+        const request = new Ajax().get(elem.href);
+
+        request
+          .then(() => {
+            inject(elem, type);
+            next(dependencies, idx);
+          })
+          .catch(() => {
+            fallback(dependencies, idx, type);
+          });
+
+      } else {
+        inject(elem, type);
+
+        elem.addEventListener('load', () => {
+          next(dependencies, idx);
+        });
+
+        // fallback in case printed tag cannot be loaded
+        elem.addEventListener('error', () => {
+          fallback(dependencies, idx, type);
+        });
+
+      }
+
+    } else if (type === 'cached' ||  type === 'raw') {
+      inject(elem, type);
+      next(dependencies, idx);
+
+    }
+
+  };
 
   basename(path) {
     return path.replace(/.*\/|\.[^.]*$/g, '');

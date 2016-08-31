@@ -1,12 +1,18 @@
 import Cache from './cache';
-import Injector, {Manifest} from './injector';
+import Injector, {
+  Manifest
+} from './injector';
 import Log from './log';
 import getUrlParam from './url';
 
 export default class Dactylographsy {
   constructor(options = {}) {
-    const { autorun = false } = options;
-    const { enableLogging = false } = options;
+    const {
+      autorun = false
+    } = options;
+    const {
+      enableLogging = false
+    } = options;
 
     this.log = new Log(
       getUrlParam('dactylographsy-enableLogging', enableLogging)
@@ -18,11 +24,15 @@ export default class Dactylographsy {
       appPrefix: this.config.appPrefix
     });
 
-    if (autorun) { this.run(); }
+    if (autorun) {
+      this.run();
+    }
   }
 
   hookIntoDom() {
-    if (typeof document === 'undefined') { return; }
+    if (typeof document === 'undefined') {
+      return;
+    }
 
     this.executingScript = document.getElementById('dactylographsy');
     this.injectInto = document.body || document.head || document.getElementsByTagName('script')[0];
@@ -65,7 +75,9 @@ export default class Dactylographsy {
   }
 
   readAttrOnScript(attr) {
-    if (!this.executingScript) { return false; }
+    if (!this.executingScript) {
+      return false;
+    }
 
     const _attr = this.executingScript.getAttribute('data-' + attr);
 
@@ -95,17 +107,19 @@ export default class Dactylographsy {
     }
 
     // Prefetching means fetching all manifests without injecting
-    if (this.config.cacheOnly) { return this.refresh(false); }
+    if (this.config.cacheOnly) {
+      return this.refresh(false);
+    }
     // ...else restore or refresh the app (with injection of dependencies)
     else {
       // Either the configuration of non cached
       // manifests or requested bundle verification
       // forces a refresh of all manifests.
       return (
-        this.config.cachedManifests === false ||
-        this.config.verification === true ||
-        this.config.cacheInLocalStorage === false
-      ) ? this.refresh() : this.restore()
+          this.config.cachedManifests === false ||
+          this.config.verification === true ||
+          this.config.cacheInLocalStorage === false
+        ) ? this.refresh() : this.restore()
         .then(injectedFromCache => {
           const {
             refreshDelay = 5000
@@ -115,7 +129,7 @@ export default class Dactylographsy {
             window.setTimeout(() => {
               this.refresh(injectedFromCache)
                 .then(resolve, reject);
-            }, refreshDelay );
+            }, refreshDelay);
           });
         }).catch(() => {
           this.log.info('No manifests in cache, refreshing via network.');

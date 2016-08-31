@@ -6,6 +6,24 @@ export class DOMUtil {
     return document.querySelectorAll(`script[data-dactylographsy-url="${url}"]`);
   }
 
+  eventuallyFindCssByDataUrl(url) {
+    return new Promise((resolve, reject) => {
+      const interval = window.setInterval(() => {
+        const link = document.querySelectorAll(`link[data-dactylographsy-url="${url}"]`);
+
+        if (link.length) {
+          window.clearInterval(interval);
+          resolve(link);
+        }
+      }, 50);
+
+      window.setTimeout(() => {
+        window.clearInterval(interval);
+        reject();
+      }, 2000);
+    });
+  }
+
   findCssByDataUrl(url) {
     const nodes = [];
     const styles = document.querySelectorAll(`style[data-dactylographsy-url="${url}"]`);
@@ -20,6 +38,14 @@ export class DOMUtil {
     }
 
     return nodes;
+  }
+
+  injectTag(tag, intoNode) {
+    if (!intoNode) { return; }
+
+    intoNode.appendChild(tag);
+
+    return tag;
   }
 
   findAllCss() {

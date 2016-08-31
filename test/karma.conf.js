@@ -5,7 +5,7 @@ module.exports = function(config) {
     frameworks: ['mocha'],
     files: [
       'test/src/**/*.spec.js', {
-        pattern: 'test/src/fixtures/**/*.json',
+        pattern: 'test/src/fixtures/**/*',
         watched: true,
         served: true,
         included: false
@@ -87,11 +87,11 @@ module.exports = function(config) {
         browser: 'chrome',
         os_version: 'Mavericks'
       },
-      bs_yosemite_firefox_40: {
+      bs_yosemite_firefox_48: {
         base: 'BrowserStack',
         device: null,
         os: 'OS X',
-        browser_version: '40.0',
+        browser_version: '48.0',
         browser: 'firefox',
         os_version: 'Yosemite'
       },

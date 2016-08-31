@@ -8,8 +8,7 @@ chai.use(sinonChai);
 chai.use(chaiAsPromised);
 
 describe('Cache', () => {
-  beforeEach(function() {
-  });
+  beforeEach(function() {});
 
   describe('supported', () => {
     it('should indicate if local storage is not supported', () => {
@@ -52,8 +51,8 @@ describe('Cache', () => {
     it('should allow specifying a custom cache prefix', () => {
       const prefix = '__karma-spec__';
       const cache = new Cache({
-          enableLogging: false,
-          cachePrefix: prefix
+        enableLogging: false,
+        cachePrefix: prefix
       });
 
       cache.getPrefix().should.be.equal(prefix);
@@ -62,8 +61,8 @@ describe('Cache', () => {
     it('should allow specifying an app prefix without an cache prefix', () => {
       const prefix = '__karma-runner__';
       const cache = new Cache({
-          enableLogging: false,
-          appPrefix: prefix
+        enableLogging: false,
+        appPrefix: prefix
       });
 
       cache.getPrefix().should.be.equal(`__dactylographsy--${prefix}`);
@@ -73,9 +72,9 @@ describe('Cache', () => {
       const appPrefix = '__karma-runner__';
       const cachePrefix = 'karma-spec';
       const cache = new Cache({
-          enableLogging: false,
-          appPrefix: appPrefix,
-          cachePrefix: cachePrefix
+        enableLogging: false,
+        appPrefix: appPrefix,
+        cachePrefix: cachePrefix
       });
 
       cache.getPrefix().should.be.equal(`${cachePrefix}--${appPrefix}`);
