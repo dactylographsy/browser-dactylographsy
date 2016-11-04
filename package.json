@@ -52,7 +52,7 @@
     "grunt-karma": "1.0.0",
     "grunt-mocha-cov": "0.4.0",
     "grunt-mocha-test": "0.13.2",
-    "grunt-shell": "2.0.0",
+    "grunt-shell": "2.1.0",
     "grunt-webpack": "1.0.18",
     "karma": "1.3.0",
     "karma-browserstack-launcher": "1.1.1",
