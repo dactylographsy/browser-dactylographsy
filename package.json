@@ -1,6 +1,6 @@
 {
   "name": "browser-dactylographsy",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": " Front end components for consuming manifests produced by grunt-dactylographsy.",
   "scripts": {
     "test": "grunt ci-test"
