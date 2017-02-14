@@ -28,7 +28,7 @@
   "homepage": "https://github.com/dactylographsy/browser-dactylographsy",
   "dependencies": {},
   "devDependencies": {
-    "babel": "6.5.2",
+    "babel": "6.23.0",
     "babel-core": "6.22.1",
     "babel-eslint": "7.1.1",
     "babel-loader": "6.2.10",
