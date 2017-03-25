@@ -69,7 +69,7 @@
     "sinon-chai": "2.8.0",
     "string-hash": "^1.1.0",
     "time-grunt": "1.4.0",
-    "webpack": "1.14.0",
+    "webpack": "2.3.2",
     "webpack-dev-server": "1.16.2"
   },
   "peerDependencies": {
