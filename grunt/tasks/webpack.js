@@ -23,13 +23,15 @@ module.exports = {
     progress: true,
     failOnError: true,
     module: {
-      loaders: [{
+      rules: [{
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          presets: ['es2015']
-        }
+        use: [{
+          loader: 'babel',
+          query: {
+            presets: ['es2015']
+          }
+        }]
       }]
     }
   }

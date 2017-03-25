@@ -23,29 +23,35 @@ module.exports = function(config) {
       devtool: 'inline-source-map',
       resolve: {
         alias: {},
-        modulesDirectories: [
+        modules: [
           'src',
           'bower_modules',
           'node_modules',
           'test'
         ],
-        extensions: ['', '.js']
+        extensions: ['.js']
       },
       externals: {},
       module: {
-        loaders: [{
+        rules: [{
           test: /\.json/,
-          loader: 'json-loader'
+          use: [{
+            loader: 'json-loader'
+          }]
         }, {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'babel',
-          query: {
-            presets: ['es2015']
-          }
+          use: [{
+            loader: 'babel-loader',
+            options: {
+              presets: ['es2015']
+            }
+          }]
         }, {
           test: /\.css/,
-          loader: 'style-loader!css-loader'
+          use: [{
+            loader: 'style-loader!css-loader'
+          }]
         }]
       }
     },
