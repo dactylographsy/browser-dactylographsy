@@ -1,20 +1,23 @@
 /* globals module */
+const path = require('path');
+
 module.exports = {
   build: {
     target: 'web',
-    debug: true,
     devtool: 'inline-source-map',
     entry: [
       './src/index.js'
     ],
     output: {
-      path: './dist/',
+      path: path.resolve(__dirname, '../../dist'),
       filename: 'dactylographsy.js',
     },
-    modulesDirectories: [
-      'node_modules',
-      './src'
-    ],
+    resolve: {
+      modules: [
+        'node_modules',
+        './src'
+      ],
+    },
     stats: {
       colors: false,
       modules: true,
@@ -27,8 +30,8 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [{
-          loader: 'babel',
-          query: {
+          loader: 'babel-loader',
+          options: {
             presets: ['es2015']
           }
         }]
